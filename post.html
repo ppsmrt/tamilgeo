@@ -7,19 +7,19 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app">
-    <header>
-      <button onclick="history.back()">← Back</button>
-    </header>
-    <main id="post-content">Loading...</main>
+  <div class="app-header">
+    <button onclick="history.back()">← Back</button>
   </div>
+  <main id="post-content" style="padding: 1rem;">Loading...</main>
+
   <script>
-    const postId = new URLSearchParams(window.location.search).get("id");
+    const postId = new URLSearchParams(location.search).get("id");
     fetch(`https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/posts/${postId}`)
       .then(res => res.json())
       .then(post => {
         document.getElementById("post-content").innerHTML = `
           <h2>${post.title}</h2>
+          <p><em>By ${post.author.name} on ${new Date(post.date).toLocaleString()}</em></p>
           <div>${post.content}</div>
         `;
       });
