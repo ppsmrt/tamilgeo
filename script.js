@@ -12,14 +12,19 @@ async function loadPosts() {
 
     posts.forEach(post => {
       const title = post.title.rendered;
-      const excerpt = post.excerpt.rendered.replace(/<[^>]*>?/gm, "").substring(0, 150) + "...";
+      const excerpt = post.excerpt.rendered.replace(/<[^>]+>/g, "").slice(0, 150) + "...";
       const link = post.link;
 
-      // Get image
-      const featuredMedia = post._embedded['wp:featuredmedia'];
-      const imageUrl = featuredMedia && featuredMedia[0] && featuredMedia[0].source_url 
-        ? featuredMedia[0].source_url 
-        : "https://via.placeholder.com/600x300?text=No+Image";
+      // ✅ FIXED: Proper way to get featured image from _embedded
+      let imageUrl = "https://via.placeholder.com/600x300?text=No+Image";
+      if (
+        post._embedded &&
+        post._embedded['wp:featuredmedia'] &&
+        post._embedded['wp:featuredmedia'][0] &&
+        post._embedded['wp:featuredmedia'][0].source_url
+      ) {
+        imageUrl = post._embedded['wp:featuredmedia'][0].source_url;
+      }
 
       const card = document.createElement("div");
       card.className = "post-card";
@@ -28,14 +33,14 @@ async function loadPosts() {
         <h2>${title}</h2>
         <p>${excerpt}</p>
       `;
-      card.onclick = () => window.open(link, "_blank");
 
+      card.addEventListener("click", () => window.open(link, "_blank"));
       container.appendChild(card);
     });
 
   } catch (error) {
-    console.error("Failed to fetch posts", error);
-    container.innerHTML = "<p>Failed to load posts. Try again later.</p>";
+    console.error("Error loading posts:", error);
+    container.innerHTML = "<p>Unable to load posts at the moment.</p>";
   }
 }
 
