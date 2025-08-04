@@ -1,31 +1,61 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!-- index.html --><!DOCTYPE html><html lang="ta">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TamilGeo Blog</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to bottom right, #f9f9f9, #e0e0ff);
+    }
+    .app-header {
+      background: #002f6c;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .logo {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    #search {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      width: 90%;
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .post-list {
+      padding: 1rem;
+    }
+    .post-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
+    }
+    .post-card:hover {
+      transform: scale(1.01);
+    }
+  </style>
 </head>
 <body>
+  <!-- Header -->
   <header class="app-header">
-    <h1>TamilGeo</h1>
-    <input id="search" type="text" placeholder="Search posts..." />
-  </header>
-
-  <nav class="category-bar">
-    <button onclick="filterPosts('all')">All</button>
-    <button onclick="filterPosts('wordpress')">WordPress</button>
-    <button onclick="filterPosts('user')">User Posts</button>
-  </nav>
-
-  <main id="posts" class="post-list"></main>
-
-  <footer class="bottom-nav">
-    <button onclick="location.href='index.html'">🏠</button>
-    <button onclick="location.href='chat.html'">💬</button>
-    <button onclick="location.href='account.html'">👤</button>
-  </footer>
-
-  <script src="script.js"></script>
-</body>
+    <h1 class="logo">📘 TamilGeo</h1>
+    <input id="search" type="text" placeholder="🔍 Search posts..." />
+  </header>  <!-- Main Content Area -->  <main id="posts" class="post-list">
+    <!-- Example Card -->
+    <div class="post-card">
+      <h2>🌟 Sample Blog Post</h2>
+      <p>This is a preview of the blog content that will show up in your new UI.</p>
+    </div>
+  </main>  <!-- Script -->  <script src="script.js"></script></body>
 </html>
