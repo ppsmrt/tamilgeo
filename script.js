@@ -1,77 +1,42 @@
-const postContainer = document.getElementById("posts");
-let allPosts = [];
+const API_URL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed";
 
-function renderPost(post, source) {
-  const div = document.createElement("div");
-  div.className = "post-card";
-  div.innerHTML = `
-    ${post.image ? `<img src="${post.image}" alt="Post image" class="post-thumb" />` : ""}
-    <h2>${post.title}</h2>
-    <p>${post.content?.substring(0, 120) || post.excerpt || ""}...</p>
-    <div class="meta">
-      <span>${post.author || "Unknown"}</span>
-      <span>${post.date}</span>
-    </div>
-    ${source === "wordpress" ? `<button onclick="location.href='post.html?id=${post.ID}'">Read More</button>` : ""}
-  `;
-  div.dataset.source = source;
-  postContainer.appendChild(div);
-}
+async function loadPosts() {
+  const container = document.getElementById("posts");
+  container.innerHTML = "<p>Loading posts...</p>";
 
-function renderAll() {
-  postContainer.innerHTML = "";
-  allPosts.forEach(p => renderPost(p, p.source));
-}
+  try {
+    const res = await fetch(API_URL);
+    const posts = await res.json();
 
-function filterPosts(source) {
-  const cards = document.querySelectorAll(".post-card");
-  cards.forEach(card => {
-    if (source === "all" || card.dataset.source === source) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  });
-}
+    container.innerHTML = "";
 
-function loadPosts() {
-  // WordPress posts
-  fetch("https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/posts/")
-    .then(res => res.json())
-    .then(data => {
-      const wpPosts = data.posts.map(p => ({
-        ID: p.ID,
-        title: p.title,
-        excerpt: p.excerpt,
-        date: new Date(p.date).toLocaleDateString(),
-        author: p.author?.name || "TamilGeo",
-        image: p.featured_image || "",
-        source: "wordpress"
-      }));
-      allPosts = [...allPosts, ...wpPosts];
-      renderAll();
+    posts.forEach(post => {
+      const title = post.title.rendered;
+      const excerpt = post.excerpt.rendered.replace(/<[^>]*>?/gm, "").substring(0, 150) + "...";
+      const link = post.link;
+
+      // Get image
+      const featuredMedia = post._embedded['wp:featuredmedia'];
+      const imageUrl = featuredMedia && featuredMedia[0] && featuredMedia[0].source_url 
+        ? featuredMedia[0].source_url 
+        : "https://via.placeholder.com/600x300?text=No+Image";
+
+      const card = document.createElement("div");
+      card.className = "post-card";
+      card.innerHTML = `
+        <img src="${imageUrl}" alt="Post Image" loading="lazy" />
+        <h2>${title}</h2>
+        <p>${excerpt}</p>
+      `;
+      card.onclick = () => window.open(link, "_blank");
+
+      container.appendChild(card);
     });
 
-  // Custom user-submitted posts (stored in browser for now)
-  const userPosts = JSON.parse(localStorage.getItem("customPosts") || "[]");
-  const formatted = userPosts.map(p => ({
-    title: p.title,
-    content: p.content,
-    date: p.date,
-    author: p.author,
-    image: p.image || "",
-    source: "user"
-  }));
-  allPosts = [...formatted];
+  } catch (error) {
+    console.error("Failed to fetch posts", error);
+    container.innerHTML = "<p>Failed to load posts. Try again later.</p>";
+  }
 }
-
-document.getElementById("search").addEventListener("input", (e) => {
-  const value = e.target.value.toLowerCase();
-  const cards = document.querySelectorAll(".post-card");
-  cards.forEach(card => {
-    const title = card.querySelector("h2").textContent.toLowerCase();
-    card.style.display = title.includes(value) ? "block" : "none";
-  });
-});
 
 loadPosts();
