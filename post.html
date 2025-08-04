@@ -1,80 +1,56 @@
-<!-- index.html --><!DOCTYPE html><html lang="ta">
+<!-- post.html -->
+<!DOCTYPE html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo</title>
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f8f9fa;
-      color: #222;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      background: #002f6c;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .container {
-      flex: 1;
-      padding: 1rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    .post-card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 1rem;
-      margin-bottom: 1.5rem;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .post-card:hover {
-      transform: scale(1.02);
-    }
-    .post-card img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      margin-bottom: 0.8rem;
-    }
-    .post-card h2 {
-      font-size: 1.3rem;
-      margin: 0 0 0.5rem;
-    }
-    .post-card p {
-      font-size: 0.95rem;
-      color: #444;
-    }
-    .post-category {
-      display: inline-block;
-      margin-top: 0.5rem;
-      font-size: 0.8rem;
-      color: #0066cc;
-    }
-    footer {
-      background: #002f6c;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-    }
-  </style>
+  <title>TamilGeo - Post</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     TamilGeo
-  </header>  <div class="container" id="posts">
-    <!-- Blog posts will load here -->
-  </div>  <footer>
+  </header>
+
+  <div class="container" id="post-container">
+    <!-- Post content will load here -->
+  </div>
+
+  <footer>
     Copyright ©️ TamilGeo
-  </footer>  <script src="script.js"></script></body>
+  </footer>
+
+  <script>
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return date.toLocaleDateString('en-GB', options);
+    }
+
+    function loadPost() {
+      const post = JSON.parse(localStorage.getItem("postData"));
+      const container = document.getElementById("post-container");
+
+      if (!post) {
+        container.innerHTML = '<p>Post not found. Please go back.</p>';
+        return;
+      }
+
+      let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+
+      container.innerHTML = `
+        <div class="post-full">
+          ${imageUrl ? `<img src="${imageUrl}" alt="Featured" class="post-full-image" loading="lazy" />` : ""}
+          <h1>${post.title.rendered}</h1>
+          <div class="post-meta">
+            ${post._embedded.author[0].name} | ${formatDate(post.date)}
+          </div>
+          <div class="post-body">${post.content.rendered}</div>
+        </div>
+      `;
+    }
+
+    loadPost();
+  </script>
+</body>
 </html>
