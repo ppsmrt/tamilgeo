@@ -28,3 +28,5 @@ fetch("https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/p
       postContainer.appendChild(div);
     });
   });
+
+renderCustomPosts();
