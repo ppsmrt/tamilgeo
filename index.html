@@ -5,6 +5,7 @@
   <title>TamilGeo Blog</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="icon" href="https://img.icons8.com/fluency/48/blog.png" type="image/png">
   <style>
     body {
       margin: 0;
@@ -14,19 +15,22 @@
     .app-header {
       background: #002f6c;
       color: white;
-      padding: 1rem;
-      text-align: center;
+      padding: 0.6rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .logo {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 1.5rem;
     }
     #search {
-      margin-top: 0.5rem;
-      padding: 0.5rem;
+      margin-top: 0.4rem;
+      padding: 0.4rem 1rem;
       width: 90%;
-      border-radius: 10px;
+      max-width: 480px;
+      border-radius: 8px;
       border: none;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
@@ -44,6 +48,16 @@
     .post-card:hover {
       transform: scale(1.01);
     }
+    .post-card img {
+      width: 100%;
+      height: auto;
+      max-height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+      margin-bottom: 0.5rem;
+      background-color: #eee;
+    }
   </style>
 </head>
 <body>
@@ -54,6 +68,7 @@
   </header>  <!-- Main Content Area -->  <main id="posts" class="post-list">
     <!-- Example Card -->
     <div class="post-card">
+      <img src="https://via.placeholder.com/600x300?text=Loading+Preview" loading="lazy" alt="Post Preview" />
       <h2>🌟 Sample Blog Post</h2>
       <p>This is a preview of the blog content that will show up in your new UI.</p>
     </div>
