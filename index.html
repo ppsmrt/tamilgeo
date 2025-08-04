@@ -1,86 +1,80 @@
-<!-- index.html --><!DOCTYPE html><html lang="ta">
+<!DOCTYPE html><html lang="ta">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TamilGeo Blog</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="icon" href="https://img.icons8.com/fluency/48/blog.png" type="image/png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to bottom right, #f9f9f9, #e0e0ff);
-    }
-    .app-header {
-      background: #002f6c;
-      color: white;
-      padding: 0.6rem 1rem;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #222;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 100vh;
     }
-    .logo {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    #search {
-      margin-top: 0.4rem;
-      padding: 0.4rem 1rem;
-      width: 90%;
-      max-width: 480px;
-      border-radius: 8px;
-      border: none;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-    .post-list {
+    header {
+      background: #002f6c;
+      color: white;
+      text-align: center;
       padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .container {
+      flex: 1;
+      padding: 1rem;
+      max-width: 800px;
+      margin: auto;
     }
     .post-card {
-      background: white;
-      border-radius: 16px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 1rem;
-      margin-bottom: 1.2rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+      cursor: pointer;
       transition: transform 0.2s ease;
     }
     .post-card:hover {
-      transform: scale(1.01);
+      transform: scale(1.02);
     }
     .post-card img {
       width: 100%;
       height: auto;
-      max-height: 180px;
-      object-fit: cover;
       border-radius: 10px;
-      display: block;
-      margin-bottom: 0.5rem;
-      background-color: #eee;
+      margin-bottom: 0.8rem;
+    }
+    .post-card h2 {
+      font-size: 1.3rem;
+      margin: 0 0 0.5rem;
+    }
+    .post-card p {
+      font-size: 0.95rem;
+      color: #444;
     }
     .post-category {
+      display: inline-block;
       margin-top: 0.5rem;
       font-size: 0.8rem;
+      color: #0066cc;
+    }
+    footer {
+      background: #f1f1f1;
+      text-align: center;
+      padding: 0.8rem;
+      font-size: 0.9rem;
       color: #555;
-      background: #f0f0f5;
-      padding: 0.3rem 0.6rem;
-      border-radius: 6px;
-      display: inline-block;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="app-header">
-    <h1 class="logo">📘 TamilGeo</h1>
-    <input id="search" type="text" placeholder="🔍 Search posts..." />
-  </header>  <!-- Main Content Area -->  <main id="posts" class="post-list">
-    <!-- Example Card -->
-    <div class="post-card">
-      <img src="https://via.placeholder.com/600x300?text=Loading+Preview" loading="lazy" alt="Post Preview" />
-      <h2>🌟 Sample Blog Post</h2>
-      <p>This is a preview of the blog content that will show up in your new UI.</p>
-      <span class="post-category">Category</span>
-    </div>
-  </main>  <!-- Script -->  <script src="script.js"></script></body>
+  <header>
+    TamilGeo
+  </header>  <div class="container" id="posts">
+    <!-- Blog posts will load here -->
+  </div>  <footer>
+    &copy; TamilGeo
+  </footer>  <script src="script.js"></script></body>
 </html>
