@@ -7,9 +7,50 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header><h2>Account Page</h2></header>
+  <header><h2>Account</h2></header>
   <main>
-    <p>Login / Register system coming soon.</p>
+    <div id="auth-section"></div>
   </main>
+  <script>
+    const authEl = document.getElementById('auth-section');
+
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+
+    function renderLogin() {
+      authEl.innerHTML = `
+        <h3>Login</h3>
+        <input id="email" placeholder="Email" /><br/>
+        <input id="name" placeholder="Name" /><br/>
+        <button onclick="login()">Login / Register</button>
+      `;
+    }
+
+    function renderProfile(user) {
+      const isAdmin = user.email === "ppsmrt@outlook.com";
+      authEl.innerHTML = `
+        <h3>Welcome, ${user.name}</h3>
+        <p>Email: ${user.email}</p>
+        <button onclick="logout()">Logout</button>
+        ${isAdmin ? '<p><strong>Admin Access Granted</strong></p>' : ''}
+        <button onclick="location.href='submit.html'">Submit a Post</button>
+      `;
+    }
+
+    function login() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value.toLowerCase();
+      if (!name || !email.includes("@")) return alert("Enter valid name and email");
+      const user = { name, email };
+      localStorage.setItem("user", JSON.stringify(user));
+      renderProfile(user);
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      renderLogin();
+    }
+
+    currentUser ? renderProfile(currentUser) : renderLogin();
+  </script>
 </body>
 </html>
