@@ -7,17 +7,25 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app">
-    <header>
-      <h1>TamilGeo Blog</h1>
-    </header>
-    <main id="posts"></main>
-    <footer>
-      <button onclick="location.href='index.html'">Home</button>
-      <button onclick="alert('Chat coming soon')">Chat</button>
-      <button onclick="location.href='account.html'">Account</button>
-    </footer>
-  </div>
+  <header class="app-header">
+    <h1>TamilGeo</h1>
+    <input id="search" type="text" placeholder="Search posts..." />
+  </header>
+
+  <nav class="category-bar">
+    <button onclick="filterPosts('all')">All</button>
+    <button onclick="filterPosts('wordpress')">WordPress</button>
+    <button onclick="filterPosts('user')">User Posts</button>
+  </nav>
+
+  <main id="posts" class="post-list"></main>
+
+  <footer class="bottom-nav">
+    <button onclick="location.href='index.html'">🏠</button>
+    <button onclick="location.href='chat.html'">💬</button>
+    <button onclick="location.href='account.html'">👤</button>
+  </footer>
+
   <script src="script.js"></script>
 </body>
 </html>
