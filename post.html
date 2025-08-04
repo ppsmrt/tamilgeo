@@ -3,54 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Post Viewer</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fefefe;
+      color: #111;
+    }
+    .container {
+      padding: 1rem;
+      max-width: 720px;
+      margin: auto;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .content {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    .back-btn {
+      background: #002f6c;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="app-header">
-    <button onclick="history.back()">← Back</button>
+  <div class="container">
+    <button onclick="history.back()" class="back-btn">← Back</button>
+    <h1 id="post-title"></h1>
+    <img id="post-image" />
+    <div id="post-content" class="content"></div>
   </div>
-  <main id="post-content" style="padding: 1rem;">Loading...</main>
 
   <script>
-    const postId = new URLSearchParams(location.search).get("id");
-    fetch(`https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/posts/${postId}`)
-      .then(res => res.json())
-      .then(post => {
-        document.getElementById("post-content").innerHTML = `
-          <h2>${post.title}</h2>
-          ${post.featured_image ? `<img src="${post.featured_image}" style="width:100%; border-radius:8px;">` : ""}
-          <p><em>By ${post.author.name} on ${new Date(post.date).toLocaleString()}</em></p>
-          <div>${post.content}</div>
-        `;
-      });
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="ta">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app-header">
-    <button onclick="history.back()">← Back</button>
-  </div>
-  <main id="post-content" style="padding: 1rem;">Loading...</main>
+    const post = JSON.parse(localStorage.getItem('postData'));
+    if (!post) {
+      document.body.innerHTML = '<p>Post not found.</p>';
+    } else {
+      document.getElementById('post-title').innerText = post.title.rendered;
+      document.getElementById('post-content').innerHTML = post.content.rendered;
 
-  <script>
-    const postId = new URLSearchParams(location.search).get("id");
-    fetch(`https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/posts/${postId}`)
-      .then(res => res.json())
-      .then(post => {
-        document.getElementById("post-content").innerHTML = `
-          <h2>${post.title}</h2>
-          <p><em>By ${post.author.name} on ${new Date(post.date).toLocaleString()}</em></p>
-          <div>${post.content}</div>
-        `;
-      });
+      const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+      if (imageUrl) {
+        document.getElementById('post-image').src = imageUrl;
+      } else {
+        document.getElementById('post-image').style.display = 'none';
+      }
+    }
   </script>
 </body>
 </html>
