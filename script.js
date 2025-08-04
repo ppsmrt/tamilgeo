@@ -13,8 +13,8 @@ async function loadPosts() {
     posts.forEach(post => {
       const title = post.title.rendered;
       const excerpt = post.excerpt.rendered.replace(/<[^>]+>/g, "").slice(0, 150) + "...";
-      const link = post.link;
 
+      // ✅ Get featured image
       let imageUrl = "https://via.placeholder.com/600x300?text=No+Image";
       if (
         post._embedded &&
@@ -25,8 +25,10 @@ async function loadPosts() {
         imageUrl = post._embedded['wp:featuredmedia'][0].source_url;
       }
 
+      // ✅ Get categories
       const categoryNames = post._embedded['wp:term']?.[0]?.map(cat => cat.name).join(", ") || "Uncategorized";
 
+      // ✅ Create card
       const card = document.createElement("div");
       card.className = "post-card";
       card.innerHTML = `
@@ -36,7 +38,12 @@ async function loadPosts() {
         <span class="post-category">${categoryNames}</span>
       `;
 
-      card.addEventListener("click", () => window.open(link, "_blank"));
+      // ✅ Click opens local post viewer
+      card.addEventListener("click", () => {
+        localStorage.setItem("postData", JSON.stringify(post));
+        window.location.href = "post.html";
+      });
+
       container.appendChild(card);
     });
 
