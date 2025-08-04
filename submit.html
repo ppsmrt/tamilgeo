@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit Post</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header><h2>Submit a Post</h2></header>
+  <main>
+    <div id="submit-area"></div>
+  </main>
+  <script>
+    const user = JSON.parse(localStorage.getItem("user"));
+    const container = document.getElementById("submit-area");
+
+    if (!user) {
+      container.innerHTML = `<p>You must <a href="account.html">log in</a> to submit a post.</p>`;
+    } else {
+      container.innerHTML = `
+        <p>Posting as: ${user.name} (${user.email})</p>
+        <input id="title" placeholder="Post Title" /><br/>
+        <textarea id="content" rows="5" placeholder="Your content..."></textarea><br/>
+        <button onclick="submitPost()">Submit Post</button>
+      `;
+    }
+
+    function submitPost() {
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+      if (!title || !content) return alert("Fill all fields");
+
+      const post = {
+        id: Date.now(),
+        title,
+        content,
+        author: user.name,
+        email: user.email,
+        date: new Date().toLocaleString()
+      };
+
+      const existing = JSON.parse(localStorage.getItem("customPosts") || "[]");
+      existing.unshift(post);
+      localStorage.setItem("customPosts", JSON.stringify(existing));
+      alert("Post submitted successfully!");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
