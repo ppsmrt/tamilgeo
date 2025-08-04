@@ -5,6 +5,7 @@ function renderPost(post, source) {
   const div = document.createElement("div");
   div.className = "post-card";
   div.innerHTML = `
+    ${post.image ? `<img src="${post.image}" alt="Post image" class="post-thumb" />` : ""}
     <h2>${post.title}</h2>
     <p>${post.content?.substring(0, 120) || post.excerpt || ""}...</p>
     <div class="meta">
@@ -34,6 +35,7 @@ function filterPosts(source) {
 }
 
 function loadPosts() {
+  // WordPress posts
   fetch("https://public-api.wordpress.com/rest/v1.1/sites/tamilgeo.wordpress.com/posts/")
     .then(res => res.json())
     .then(data => {
@@ -43,18 +45,21 @@ function loadPosts() {
         excerpt: p.excerpt,
         date: new Date(p.date).toLocaleDateString(),
         author: p.author?.name || "TamilGeo",
+        image: p.featured_image || "",
         source: "wordpress"
       }));
       allPosts = [...allPosts, ...wpPosts];
       renderAll();
     });
 
+  // Custom user-submitted posts (stored in browser for now)
   const userPosts = JSON.parse(localStorage.getItem("customPosts") || "[]");
   const formatted = userPosts.map(p => ({
     title: p.title,
     content: p.content,
     date: p.date,
     author: p.author,
+    image: p.image || "",
     source: "user"
   }));
   allPosts = [...formatted];
