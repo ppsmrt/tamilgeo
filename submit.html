@@ -1,74 +1,43 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Submit Post - TamilGeo</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="navbar">
-    <h1 class="logo">TamilGeo</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="account.html">Account</a></li>
-        <li><a href="submit.html" class="active">Submit Post</a></li>
-      </ul>
-    </nav>
-  </header>  <main class="container">
-    <h2>Submit a New Blog Post</h2>
-    <form id="submitPostForm">
-      <label for="title">Title</label>
-      <input type="text" id="title" name="title" required /><label for="excerpt">Excerpt</label>
-  <textarea id="excerpt" name="excerpt" rows="3" required></textarea>
+  <header class="site-header">TamilGeo</header>
 
-  <label for="content">Content</label>
-  <textarea id="content" name="content" rows="8" required></textarea>
+  <main class="container">
+    <div class="form-card">
+      <h2>Submit a Blog Post</h2>
+      <form id="postForm">
+        <label for="title">Title</label>
+        <input type="text" id="title" required placeholder="Enter post title" />
 
-  <label for="category">Category</label>
-  <input type="text" id="category" name="category" required />
+        <label for="content">Content</label>
+        <textarea id="content" rows="6" required placeholder="Write your post..."></textarea>
 
-  <label for="imageUrl">Featured Image URL</label>
-  <input type="url" id="imageUrl" name="imageUrl" required />
+        <label for="excerpt">Excerpt</label>
+        <textarea id="excerpt" rows="3" required placeholder="Short description..."></textarea>
 
-  <button type="submit">Submit Post</button>
-</form>
+        <label for="category">Category</label>
+        <input type="text" id="category" required placeholder="e.g., Tech, Tamil" />
 
-<div id="submitMsg" class="message"></div>
+        <label for="image">Featured Image URL</label>
+        <input type="url" id="image" placeholder="https://example.com/image.jpg" />
 
-  </main>  <footer>
-    Copyright ©️TamilGeo
-  </footer>  <script src="firebase-init.js"></script>  <script>
-    const form = document.getElementById("submitPostForm");
-    const msg = document.getElementById("submitMsg");
+        <button type="submit">Submit Post</button>
+      </form>
+    </div>
+  </main>
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const user = firebase.auth().currentUser;
-      if (!user) {
-        msg.textContent = "Please login to submit a post.";
-        return;
-      }
+  <footer class="site-footer">
+    Copyright ©️ TamilGeo
+  </footer>
 
-      const post = {
-        title: form.title.value,
-        excerpt: form.excerpt.value,
-        content: form.content.value,
-        category: form.category.value,
-        imageUrl: form.imageUrl.value,
-        author: user.displayName || user.email,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        approved: false,
-      };
-
-      try {
-        await firebase.firestore().collection("posts").add(post);
-        msg.textContent = "Post submitted for review.";
-        form.reset();
-      } catch (err) {
-        msg.textContent = "Error submitting post.";
-        console.error(err);
-      }
-    });
-  </script></body>
+  <script src="firebase-init.js"></script>
+  <script src="submit.js"></script>
+</body>
 </html>
