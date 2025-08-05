@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TamilGeo - Post</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- ✅ Header -->
+  <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-gray-800">TamilGeo</h1>
+    <nav class="space-x-4">
+      <a href="index.html" class="text-blue-600 hover:underline">Home</a>
+      <a href="about.html" class="text-blue-600 hover:underline">About</a>
+    </nav>
+  </header>
+
+  <!-- 🔽 Post Container -->
+  <main class="max-w-3xl mx-auto p-4" id="post-container"></main>
+
+  <!-- ⬆️ Back to Top -->
+  <div class="fixed bottom-4 right-4">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+      class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">↑ Top</button>
+  </div>
+
+  <!-- 🧠 Script -->
+  <script src="js/post.js"></script>
+</body>
+</html>
