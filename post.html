@@ -4,6 +4,58 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Post - TamilGeo</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .post-wrapper {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      margin: 2rem auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      max-width: 800px;
+    }
+    .post-interactions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+      color: #444;
+    }
+    .comments-section, .share-section, .recommended-posts {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem auto;
+      max-width: 800px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .comments-section textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .recommended-post-card {
+      background: #f7f9fc;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: background 0.3s;
+    }
+    .recommended-post-card:hover {
+      background: #eef2f7;
+    }
+    #like-button {
+      background: #e91e63;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <nav class="topnav">
@@ -11,7 +63,7 @@
     <div class="nav-links">
       <a href="index.html">Home</a>
     </div>
-  </nav>  <div class="container" id="post-content">
+  </nav>  <div class="post-wrapper" id="post-content">
     <!-- Full post content will appear here -->
     <div class="post-interactions">
       <span id="view-count">👁️ 0 views</span>
