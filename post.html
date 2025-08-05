@@ -22,6 +22,27 @@
     <!-- Post details will be loaded here -->
   </div>
 
+<div class="container" id="postContent">
+  <!-- Post content loads here -->
+  <div id="likeContainer"></div>
+  <div id="viewContainer"></div>
+</div>
+
+<!-- Add JS scripts at the end -->
+<script src="post.js"></script>
+<script src="likes.js"></script>
+<script src="views.js"></script>
+<script>
+  const post = JSON.parse(localStorage.getItem("postData"));
+  const postId = post?.id;
+
+  if (postId) {
+    incrementViewCount(postId);
+    showViewCount(postId, "viewContainer");
+    setupLikeButton(postId, "likeContainer");
+  }
+</script>
+
   <footer>
     Copyright ©️ TamilGeo
   </footer>
