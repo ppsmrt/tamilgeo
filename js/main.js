@@ -1,23 +1,12 @@
 const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
 const container = document.getElementById("posts-container");
 
-let authorMap = {}; // authorId: name
-
-// First, fetch all authors
-fetch(`${blogURL}/users`)
-  .then(res => res.json())
-  .then(authors => {
-    authors.forEach(author => {
-      authorMap[author.id] = author.name;
-    });
-
-    // Then fetch posts
-    return fetch(`${blogURL}/posts`);
-  })
+fetch(`${blogURL}/posts`)
   .then(res => res.json())
   .then(posts => {
     posts.forEach(post => {
-      const authorName = authorMap[post.author] || "Unknown";
+      const authorName = "TamilGeo"; // Use fixed name since /users is not allowed
+
       const image = post.jetpack_featured_media_url
         ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
         : "";
@@ -37,7 +26,8 @@ fetch(`${blogURL}/users`)
       `;
       container.innerHTML += postHTML;
     });
-  });
+  })
+  .catch(err => console.error('Error fetching posts:', err));
 
 function stripHTML(html) {
   let div = document.createElement("div");
