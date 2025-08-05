@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", () => {
+  loadPosts();
+});
+
 function formatDate(dateString) {
   const date = new Date(dateString);
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -13,13 +17,17 @@ async function loadPosts() {
   const response = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed");
   const posts = await response.json();
   const container = document.getElementById("posts");
+  const loader = document.getElementById("loader");
+
+  container.innerHTML = ""; // Clear loader
 
   posts.forEach(post => {
     const card = document.createElement("div");
     card.className = "post-card";
 
-    const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || "";
-    const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "";
+    let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+    let category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "";
+    let author = post._embedded?.author?.[0]?.name || "TamilGeo";
 
     card.onclick = () => {
       localStorage.setItem("postData", JSON.stringify(post));
@@ -28,19 +36,16 @@ async function loadPosts() {
 
     card.innerHTML = `
       <div class="post-image-wrapper">
-        ${imageUrl ? `<img src="${imageUrl}" alt="Featured Image">` : ""}
+        ${imageUrl ? `<img src="${imageUrl}" alt="Featured" />` : ""}
       </div>
       <div class="post-content">
         <h2>${post.title.rendered}</h2>
         <div class="post-excerpt">${getExcerpt(post.excerpt.rendered)}</div>
-        <div class="post-meta">
-          ${post._embedded.author[0].name} | ${formatDate(post.date)}
-        </div>
+        <div class="post-category">${category}</div>
+        <div class="post-meta">${author} | ${formatDate(post.date)}</div>
       </div>
     `;
 
     container.appendChild(card);
   });
 }
-
-loadPosts();
