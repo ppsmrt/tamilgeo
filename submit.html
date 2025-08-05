@@ -1,51 +1,74 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Submit Post</title>
+  <title>Submit Post - TamilGeo</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header><h2>Submit a Post</h2></header>
-  <main>
-    <div id="submit-area"></div>
-  </main>
-  <script>
-    const user = JSON.parse(localStorage.getItem("user"));
-    const container = document.getElementById("submit-area");
+  <header class="navbar">
+    <h1 class="logo">TamilGeo</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="account.html">Account</a></li>
+        <li><a href="submit.html" class="active">Submit Post</a></li>
+      </ul>
+    </nav>
+  </header>  <main class="container">
+    <h2>Submit a New Blog Post</h2>
+    <form id="submitPostForm">
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" required /><label for="excerpt">Excerpt</label>
+  <textarea id="excerpt" name="excerpt" rows="3" required></textarea>
 
-    if (!user) {
-      container.innerHTML = `<p>You must <a href="account.html">log in</a> to submit a post.</p>`;
-    } else {
-      container.innerHTML = `
-        <p>Posting as: ${user.name} (${user.email})</p>
-        <input id="title" placeholder="Post Title" /><br/>
-        <textarea id="content" rows="5" placeholder="Your content..."></textarea><br/>
-        <button onclick="submitPost()">Submit Post</button>
-      `;
-    }
+  <label for="content">Content</label>
+  <textarea id="content" name="content" rows="8" required></textarea>
 
-    function submitPost() {
-      const title = document.getElementById("title").value;
-      const content = document.getElementById("content").value;
-      if (!title || !content) return alert("Fill all fields");
+  <label for="category">Category</label>
+  <input type="text" id="category" name="category" required />
+
+  <label for="imageUrl">Featured Image URL</label>
+  <input type="url" id="imageUrl" name="imageUrl" required />
+
+  <button type="submit">Submit Post</button>
+</form>
+
+<div id="submitMsg" class="message"></div>
+
+  </main>  <footer>
+    Copyright ©️TamilGeo
+  </footer>  <script src="firebase-init.js"></script>  <script>
+    const form = document.getElementById("submitPostForm");
+    const msg = document.getElementById("submitMsg");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const user = firebase.auth().currentUser;
+      if (!user) {
+        msg.textContent = "Please login to submit a post.";
+        return;
+      }
 
       const post = {
-        id: Date.now(),
-        title,
-        content,
-        author: user.name,
-        email: user.email,
-        date: new Date().toLocaleString()
+        title: form.title.value,
+        excerpt: form.excerpt.value,
+        content: form.content.value,
+        category: form.category.value,
+        imageUrl: form.imageUrl.value,
+        author: user.displayName || user.email,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        approved: false,
       };
 
-      const existing = JSON.parse(localStorage.getItem("customPosts") || "[]");
-      existing.unshift(post);
-      localStorage.setItem("customPosts", JSON.stringify(existing));
-      alert("Post submitted successfully!");
-      window.location.href = "index.html";
-    }
-  </script>
-</body>
+      try {
+        await firebase.firestore().collection("posts").add(post);
+        msg.textContent = "Post submitted for review.";
+        form.reset();
+      } catch (err) {
+        msg.textContent = "Error submitting post.";
+        console.error(err);
+      }
+    });
+  </script></body>
 </html>
