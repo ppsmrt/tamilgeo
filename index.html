@@ -5,37 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TamilGeo</title>
   <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  
-  <!-- Your Firebase Config -->
-  <script src="firebase-init.js"></script>
+  <style>
+    /* Loader styles */
+    #loader {
+      width: 100%;
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #002f6c;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
 <body>
+
   <header>
     TamilGeo
   </header>
 
-<nav class="topnav">
-  <div class="logo">TamilGeo</div>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="submit.html">Submit</a>
-    <a href="profile.html">Profile</a>
-  </div>
-</nav>
-
   <div class="container" id="posts">
-    <!-- Blog posts load here -->
+    <div id="loader"><span class="loader"></span></div>
   </div>
 
   <footer>
     Copyright ©️ TamilGeo
   </footer>
 
-  <!-- Main Script -->
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="firebase-init.js"></script>
+
+  <!-- JS to load posts -->
   <script src="main.js"></script>
 </body>
 </html>
