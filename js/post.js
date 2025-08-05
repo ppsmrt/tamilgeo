@@ -9,14 +9,20 @@ fetch(postURL)
       ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-60 object-cover rounded-md mb-4">`
       : "";
 
+    // Fix embedded videos to be responsive
+    const contentWithResponsiveVideos = post.content.rendered.replace(
+      /<iframe.*?<\/iframe>/g,
+      match => `<div class="video-container">${match}</div>`
+    );
+
     container.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow">
         <h2 class="text-2xl font-bold mb-2">${post.title.rendered}</h2>
         <div class="text-sm text-gray-500 mb-4">
-          👤 Author: ${post.author} | 🗓️ ${new Date(post.date).toLocaleDateString()}
+          👤 Author: TamilGeo | 🗓️ ${new Date(post.date).toLocaleDateString()}
         </div>
         ${image}
-        <div class="prose max-w-none mb-6">${post.content.rendered}</div>
+        <div class="post-content prose max-w-none mb-6">${contentWithResponsiveVideos}</div>
 
         <!-- Like & Share -->
         <div class="mt-4 flex flex-wrap gap-2">
