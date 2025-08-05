@@ -1,36 +1,19 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!-- index.html --><!DOCTYPE html><html lang="ta">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TamilGeo - All In One Infotainment Blog</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <header class="top-nav">
-    <div class="nav-container">
+  <header class="main-header">
+    <nav class="navbar">
       <div class="logo">TamilGeo</div>
-      <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="profile.html">Profile</a>
-      </nav>
-    </div>
-  </header>
-
-  <div class="loader" id="loader"></div>
-
-  <main class="container" id="posts">
-    <!-- Blog posts will load here -->
-  </main>
-
-  <footer>
-    Copyright © TamilGeo
-<br>
-All Rights Reserved 
-  </footer>
-
-  <script src="main.js"></script>
-</body>
+    </nav>
+  </header>  <div class="container" id="posts">
+    <div id="loader" class="loader"></div>
+  </div>  <footer>
+    Copyright ©️ TamilGeo
+  </footer>  <!-- Scripts -->  <script src="js/firebase-init.js"></script>  <script src="js/main.js"></script>  <script src="js/pwa.js"></script>  <script src="js/transitions.js"></script></body>
 </html>
