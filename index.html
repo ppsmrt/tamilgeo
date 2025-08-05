@@ -5,51 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TamilGeo</title>
   <link rel="stylesheet" href="style.css" />
-  <style>
-    /* Loader styles */
-    #loader {
-      width: 100%;
-      text-align: center;
-      margin-top: 2rem;
-    }
-    .loader {
-      border: 6px solid #f3f3f3;
-      border-top: 6px solid #002f6c;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-
-<header class="top-nav">
-  <div class="nav-container">
-    <div class="logo">TamilGeo</div>
-    <nav class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="profile.html">Profile</a>
-    </nav>
-  </div>
-</header>
 </head>
 <body>
-  <header>TamilGeo</header>
-  <div id="loader" class="loader">Loading...</div>
-  <div class="container" id="posts"></div>
-  <footer>Copyright ©️ TamilGeo</footer>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-  <script src="firebase-init.js"></script>
+  <header class="top-nav">
+    <div class="nav-container">
+      <div class="logo">TamilGeo</div>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="profile.html">Profile</a>
+      </nav>
+    </div>
+  </header>
 
-  <!-- JS to load posts -->
+  <div class="loader" id="loader"></div>
+
+  <main class="container" id="posts">
+    <!-- Blog posts will load here -->
+  </main>
+
+  <footer>
+    Copyright ©️ TamilGeo
+  </footer>
+
   <script src="main.js"></script>
 </body>
 </html>
