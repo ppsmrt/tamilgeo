@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, push, get, onValue } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
   databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
   projectId: "tamilgeoapp",
