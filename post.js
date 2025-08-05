@@ -1,51 +1,66 @@
-// post.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const postData = JSON.parse(localStorage.getItem("postData"));
-  if (!postData) return;
+  const postContainer = document.getElementById("post-content");
 
-  const postContainer = document.getElementById("postContainer");
-  const title = document.createElement("h1");
-  title.textContent = postData.title.rendered;
-
-  const imageWrapper = document.createElement("div");
-  imageWrapper.className = "post-featured";
-
-  const featuredImg = postData._embedded?.['wp:featuredmedia']?.[0]?.source_url;
-  if (featuredImg) {
-    const img = document.createElement("img");
-    img.src = featuredImg;
-    img.alt = "Featured Image";
-    img.style.maxWidth = "100%";
-    img.style.borderRadius = "8px";
-    imageWrapper.appendChild(img);
+  if (!postData) {
+    postContainer.innerHTML = "<p>Unable to load the post.</p>";
+    return;
   }
 
-  const meta = document.createElement("div");
-  meta.className = "post-meta";
-  const author = postData._embedded?.author?.[0]?.name || "TamilGeo";
-  const date = new Date(postData.date).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric'
-  });
-  meta.textContent = `${author} | ${date}`;
+  // Display post content
+  const postHtml = `
+    <div class="post-card">
+      <div class="post-image-wrapper">
+        ${postData._embedded?.['wp:featuredmedia']?.[0]?.source_url 
+          ? `<img src="${postData._embedded['wp:featuredmedia'][0].source_url}" alt="Featured" />`
+          : ""}
+      </div>
+      <div class="post-content">
+        <h1>${postData.title.rendered}</h1>
+        <div class="post-meta">
+          ${postData._embedded.author[0].name} |
+          ${new Date(postData.date).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          })}
+        </div>
+        <div class="post-body">${postData.content.rendered}</div>
+      </div>
+    </div>
+  `;
 
-  const content = document.createElement("div");
-  content.className = "post-content";
-  content.innerHTML = postData.content.rendered;
+  postContainer.insertAdjacentHTML("afterbegin", postHtml);
 
-  postContainer.appendChild(title);
-  postContainer.appendChild(imageWrapper);
-  postContainer.appendChild(meta);
-  postContainer.appendChild(content);
-
-  // ✅ Integrate Likes & Views
-  const postId = postData.id;
-  setupLikes(postId, postContainer);
-  displayViews(postId, postContainer);
-  recordView(postId);
-
-  // ✅ Load comments section
-  loadComments(postId);
+  // Load Recommended Posts
+  loadRecommended(postData.id);
 });
+
+// Load recommended posts
+async function loadRecommended(currentPostId) {
+  try {
+    const res = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed&per_page=3");
+    const posts = await res.json();
+    const recContainer = document.getElementById("recommended");
+
+    posts
+      .filter(post => post.id !== currentPostId)
+      .forEach(post => {
+        const card = document.createElement("div");
+        card.className = "post-card mini";
+        card.innerHTML = `
+          <div class="post-content">
+            <h3>${post.title.rendered}</h3>
+            <div class="post-meta">${post._embedded.author[0].name}</div>
+          </div>
+        `;
+        card.onclick = () => {
+          localStorage.setItem("postData", JSON.stringify(post));
+          window.location.href = "post.html";
+        };
+        recContainer.appendChild(card);
+      });
+  } catch (error) {
+    console.error("Error loading recommended posts:", error);
+  }
+}
