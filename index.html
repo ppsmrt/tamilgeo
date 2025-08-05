@@ -1,19 +1,32 @@
-<!-- index.html --><!DOCTYPE html><html lang="ta">
+<!DOCTYPE html>
+<html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TamilGeo</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+  <!-- Your Firebase Config -->
+  <script src="firebase-init.js"></script>
 </head>
 <body>
   <header>
     TamilGeo
-  </header>  <div class="container">
-    <input type="text" id="search" placeholder="Search posts..." class="search-input">
-    <div id="posts">
-      <p>Loading posts...</p>
-    </div>
-  </div>  <footer>
+  </header>
+
+  <div class="container" id="posts">
+    <!-- Blog posts load here -->
+  </div>
+
+  <footer>
     Copyright ©️ TamilGeo
-  </footer>  <script src="main.js"></script></body>
+  </footer>
+
+  <!-- Main Script -->
+  <script src="main.js"></script>
+</body>
 </html>
