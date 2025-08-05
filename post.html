@@ -1,136 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Post - TamilGeo</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    .video-container {
-      position: relative;
-      padding-bottom: 56.25%;
-      height: 0;
-      overflow: hidden;
-    }
-    .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TamilGeo - Post</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-900">
 
-  <div id="post-container" class="max-w-3xl mx-auto mt-6 px-4"></div>
+  <!-- âœ… Header -->
+  <header class="flex justify-between items-center bg-white shadow px-4 py-3 sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-gray-800">TamilGeo</h1>
+    <nav class="space-x-4">
+      <a href="index.html" class="text-blue-600 hover:underline">Home</a>
+      <a href="about.html" class="text-blue-600 hover:underline">About</a>
+    </nav>
+  </header>
 
-  <!-- Firebase + Post Script -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, onValue, set, push } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  <!-- ðŸ”½ Post Content -->
+  <main class="max-w-3xl mx-auto p-4" id="post-container">
+    <!-- Loaded via JS -->
+  </main>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da",
-      measurementId: "G-2D45G35PM2"
-    };
+  <!-- â¬†ï¸ Back to Top -->
+  <div class="fixed bottom-4 right-4">
+    <button onclick="window.scrollTo({top:0,behavior:'smooth'})"
+      class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">â†‘ Top</button>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    const postId = new URLSearchParams(window.location.search).get("id");
-    const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`;
-    const container = document.getElementById("post-container");
-
-    fetch(postURL)
-      .then(res => res.json())
-      .then(post => {
-        const image = post.jetpack_featured_media_url
-          ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-60 object-cover rounded-md mb-4">`
-          : "";
-
-        const contentWithResponsiveVideos = post.content.rendered.replace(
-          /<iframe.*?<\/iframe>/g,
-          match => `<div class="video-container">${match}</div>`
-        );
-
-        container.innerHTML = `
-          <div class="bg-white p-6 rounded-lg shadow">
-            <h2 class="text-2xl font-bold mb-2">${post.title.rendered}</h2>
-            <div class="text-sm text-gray-500 mb-4">
-              👤 Author: TamilGeo | 🗓️ ${new Date(post.date).toLocaleDateString()}
-            </div>
-            ${image}
-            <div class="post-content prose max-w-none mb-6">${contentWithResponsiveVideos}</div>
-
-            <!-- Like & Share -->
-            <div class="mt-4 flex flex-wrap gap-2 items-center">
-              <button onclick="likePost()" class="bg-pink-500 text-white px-3 py-1 rounded hover:bg-pink-600">♥ Like (<span id="like-count">0</span>)</button>
-              <button onclick="sharePost()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">🔗 Share</button>
-            </div>
-
-            <!-- Comment Section -->
-            <div class="mt-6">
-              <h3 class="font-semibold text-lg mb-2">💬 Comments</h3>
-              <textarea placeholder="Write a comment..." class="w-full p-2 border rounded mb-2" id="comment-box"></textarea>
-              <button onclick="addComment()" class="bg-green-600 text-white px-3 py-1 rounded">Post Comment</button>
-              <div id="comments" class="mt-4 space-y-2 text-sm text-gray-700"></div>
-            </div>
-          </div>
-        `;
-
-        loadLikes();
-        loadComments();
-      });
-
-    function likePost() {
-      const likeRef = ref(db, `likes/post_${postId}`);
-      onValue(likeRef, snapshot => {
-        let count = snapshot.val() || 0;
-        set(likeRef, count + 1);
-      }, { onlyOnce: true });
-    }
-
-    function loadLikes() {
-      const likeRef = ref(db, `likes/post_${postId}`);
-      onValue(likeRef, snapshot => {
-        const count = snapshot.val() || 0;
-        document.getElementById("like-count").textContent = count;
-      });
-    }
-
-    function addComment() {
-      const commentBox = document.getElementById("comment-box");
-      const text = commentBox.value.trim();
-      if (!text) return;
-
-      const commentRef = ref(db, `comments/post_${postId}`);
-      push(commentRef, text);
-      commentBox.value = "";
-    }
-
-    function loadComments() {
-      const commentRef = ref(db, `comments/post_${postId}`);
-      const commentsDiv = document.getElementById("comments");
-      onValue(commentRef, snapshot => {
-        const comments = snapshot.val() || {};
-        commentsDiv.innerHTML = Object.values(comments).map(comment =>
-          `<div class="bg-gray-100 p-2 rounded">${comment}</div>`
-        ).join("");
-      });
-    }
-
-    function sharePost() {
-      const url = window.location.href;
-      navigator.clipboard.writeText(url);
-      alert("🔗 Post link copied to clipboard!");
-    }
-  </script>
+  <!-- ðŸ”Œ Scripts -->
+  <script src="js/post.js"></script>
 </body>
 </html>
