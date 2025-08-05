@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", () => {
-  loadPosts();
-});
-
 function formatDate(dateString) {
   const date = new Date(dateString);
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -14,38 +10,48 @@ function getExcerpt(html, wordLimit = 60) {
 }
 
 async function loadPosts() {
-  const response = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed");
-  const posts = await response.json();
   const container = document.getElementById("posts");
   const loader = document.getElementById("loader");
 
-  container.innerHTML = ""; // Clear loader
+  try {
+    const response = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed");
+    const posts = await response.json();
 
-  posts.forEach(post => {
-    const card = document.createElement("div");
-    card.className = "post-card";
+    // Remove or hide loader
+    if (loader) loader.remove();
 
-    let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
-    let category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "";
-    let author = post._embedded?.author?.[0]?.name || "TamilGeo";
+    posts.forEach(post => {
+      const card = document.createElement("div");
+      card.className = "post-card";
 
-    card.onclick = () => {
-      localStorage.setItem("postData", JSON.stringify(post));
-      window.location.href = "post.html";
-    };
+      const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
+      const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || '';
+      const author = post._embedded?.author?.[0]?.name || 'TamilGeo';
 
-    card.innerHTML = `
-      <div class="post-image-wrapper">
-        ${imageUrl ? `<img src="${imageUrl}" alt="Featured" />` : ""}
-      </div>
-      <div class="post-content">
-        <h2>${post.title.rendered}</h2>
-        <div class="post-excerpt">${getExcerpt(post.excerpt.rendered)}</div>
-        <div class="post-category">${category}</div>
-        <div class="post-meta">${author} | ${formatDate(post.date)}</div>
-      </div>
-    `;
+      card.onclick = () => {
+        localStorage.setItem("postData", JSON.stringify(post));
+        window.location.href = "post.html";
+      };
 
-    container.appendChild(card);
-  });
+      card.innerHTML = `
+        <div class="post-image-wrapper">
+          ${imageUrl ? `<img src="${imageUrl}" alt="Featured" />` : ""}
+        </div>
+        <div class="post-content">
+          <h2>${post.title.rendered}</h2>
+          <div class="post-excerpt">${getExcerpt(post.excerpt.rendered)}</div>
+          <div class="post-category">${category}</div>
+          <div class="post-meta">${author} | ${formatDate(post.date)}</div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (error) {
+    console.error("Error loading posts:", error);
+    if (loader) loader.innerHTML = "Failed to load posts.";
+  }
 }
+
+document.addEventListener("DOMContentLoaded", loadPosts);
