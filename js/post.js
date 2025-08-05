@@ -1,7 +1,26 @@
+// Firebase setup
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, push, get, onValue } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "tamilgeoapp.firebaseapp.com",
+  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+  projectId: "tamilgeoapp",
+  storageBucket: "tamilgeoapp.appspot.com",
+  messagingSenderId: "1092623024431",
+  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// Get Post ID from URL
 const postId = new URLSearchParams(window.location.search).get("id");
 const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`;
 const container = document.getElementById("post-container");
 
+// Fetch and render post
 fetch(postURL)
   .then(res => res.json())
   .then(post => {
@@ -9,7 +28,7 @@ fetch(postURL)
       ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-60 object-cover rounded-md mb-4">`
       : "";
 
-    // Fix embedded videos to be responsive
+    // Wrap videos in responsive container
     const contentWithResponsiveVideos = post.content.rendered.replace(
       /<iframe.*?<\/iframe>/g,
       match => `<div class="video-container">${match}</div>`
@@ -25,8 +44,9 @@ fetch(postURL)
         <div class="post-content prose max-w-none mb-6">${contentWithResponsiveVideos}</div>
 
         <!-- Like & Share -->
-        <div class="mt-4 flex flex-wrap gap-2">
+        <div class="mt-4 flex items-center gap-3">
           <button onclick="likePost()" class="bg-pink-500 text-white px-3 py-1 rounded hover:bg-pink-600">♥ Like</button>
+          <span id="like-count" class="text-sm text-gray-600">♥ 0 Likes</span>
           <button onclick="sharePost()" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">🔗 Share</button>
         </div>
 
@@ -40,32 +60,60 @@ fetch(postURL)
       </div>
     `;
 
+    // Load Firebase data
+    updateLikeCount();
     loadComments();
   });
 
+// Like functionality
 function likePost() {
-  alert("♥ You liked this post (saved locally).");
+  const likeRef = ref(db, `likes/post_${postId}`);
+  get(likeRef).then(snapshot => {
+    const currentLikes = snapshot.exists() ? snapshot.val() : 0;
+    set(likeRef, currentLikes + 1);
+    updateLikeCount();
+    alert("♥ You liked this post!");
+  });
 }
 
+function updateLikeCount() {
+  const likeRef = ref(db, `likes/post_${postId}`);
+  onValue(likeRef, snapshot => {
+    const likeCount = snapshot.exists() ? snapshot.val() : 0;
+    document.getElementById("like-count").innerText = `♥ ${likeCount} Likes`;
+  });
+}
+
+// Share
 function sharePost() {
   const url = window.location.href;
   navigator.clipboard.writeText(url);
   alert("🔗 Post link copied to clipboard!");
 }
 
+// Comment functionality
 function addComment() {
   const commentBox = document.getElementById("comment-box");
-  const comments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
-  if (commentBox.value.trim()) {
-    comments.push(commentBox.value.trim());
-    localStorage.setItem(`comments_${postId}`, JSON.stringify(comments));
+  const commentText = commentBox.value.trim();
+  if (!commentText) return;
+
+  const commentRef = ref(db, `comments/post_${postId}`);
+  push(commentRef, commentText).then(() => {
     commentBox.value = "";
     loadComments();
-  }
+  });
 }
 
 function loadComments() {
-  const comments = JSON.parse(localStorage.getItem(`comments_${postId}`)) || [];
-  const commentsDiv = document.getElementById("comments");
-  commentsDiv.innerHTML = comments.map(c => `<div class="bg-gray-100 p-2 rounded">${c}</div>`).join("");
+  const commentRef = ref(db, `comments/post_${postId}`);
+  onValue(commentRef, snapshot => {
+    const commentsDiv = document.getElementById("comments");
+    commentsDiv.innerHTML = "";
+    if (snapshot.exists()) {
+      const comments = snapshot.val();
+      Object.values(comments).forEach(comment => {
+        commentsDiv.innerHTML += `<div class="bg-gray-100 p-2 rounded">${comment}</div>`;
+      });
+    }
+  });
 }
