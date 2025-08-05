@@ -43,6 +43,13 @@
   }
 </script>
 
+<script src="comments.js"></script>
+<script>
+  if (postId) {
+    loadComments(postId, "commentList");
+  }
+</script>
+
 <hr>
 <h3>Comments</h3>
 <div id="commentList"></div>
