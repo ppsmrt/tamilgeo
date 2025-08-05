@@ -1,87 +1,53 @@
-<!-- account.html --><!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="ta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Account - TamilGeo</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-  <script src="firebase-init.js"></script>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header class="navbar">TamilGeo</header>
-  <div class="container">
-    <h2>My Account</h2>
-    <div id="user-info"></div>
-    <button onclick="logout()">Logout</button>
-  </div>
-  <footer>Copyright ©️ TamilGeo</footer>
-  <script>
-    const auth = firebase.auth();
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById('user-info').innerHTML = `
-          <p>Logged in as: ${user.email}</p>
-        `;
-      } else {
-        window.location.href = 'login.html';
-      }
-    });
-    function logout() {
-      auth.signOut().then(() => window.location.href = 'index.html');
-    }
-  </script>
-</body>
-</html><!-- submit.html --><!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Post - TamilGeo</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+  <header class="site-header">TamilGeo</header>
+
+  <main class="container">
+    <div class="form-card">
+      <h2>My Account</h2>
+
+      <div id="accountInfo" style="display: none;">
+        <p><strong>Name:</strong> <span id="userName">-</span></p>
+        <p><strong>Email:</strong> <span id="userEmail">-</span></p>
+        <button onclick="logoutUser()">Logout</button>
+      </div>
+
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input type="email" id="email" required placeholder="Enter your email" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" required placeholder="Enter your password" />
+
+        <button type="submit">Login</button>
+        <p style="margin-top:10px;">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+      </form>
+
+      <form id="registerForm" style="display: none;">
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" required placeholder="Enter email" />
+
+        <label for="registerPassword">Password</label>
+        <input type="password" id="registerPassword" required placeholder="Create password" />
+
+        <button type="submit">Register</button>
+        <p style="margin-top:10px;">Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    Copyright ©️ TamilGeo
+  </footer>
+
   <script src="firebase-init.js"></script>
-</head>
-<body>
-  <header class="navbar">TamilGeo</header>
-  <div class="container">
-    <h2>Submit a Blog Post</h2>
-    <form id="postForm">
-      <input type="text" id="title" placeholder="Post Title" required><br>
-      <textarea id="content" placeholder="Your content..." required></textarea><br>
-      <input type="text" id="image" placeholder="Image URL"><br>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
-  <footer>Copyright ©️ TamilGeo</footer>
-  <script>
-    const auth = firebase.auth();
-    const db = firebase.firestore();auth.onAuthStateChanged(user => {
-  if (!user) window.location.href = 'login.html';
-});
-
-document.getElementById('postForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return alert('Not logged in');
-  const post = {
-    title: document.getElementById('title').value,
-    content: document.getElementById('content').value,
-    image: document.getElementById('image').value,
-    author: user.email,
-    createdAt: new Date(),
-    approved: false
-  };
-  try {
-    await db.collection('userPosts').add(post);
-    alert('Post submitted for review!');
-    document.getElementById('postForm').reset();
-  } catch (error) {
-    alert('Error submitting post');
-  }
-});
-
-  </script>
+  <script src="account.js"></script>
 </body>
 </html>
