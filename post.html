@@ -1,69 +1,35 @@
-<!DOCTYPE html>
-<html lang="ta">
+<!-- post.html --><!DOCTYPE html><html lang="ta">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Post - TamilGeo</title>
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-  <!-- Your Firebase Config -->
-  <script src="firebase-init.js"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    TamilGeo
-  </header>
-
-  <div class="container" id="postContent">
-    <!-- Post details will be loaded here -->
-  </div>
-
-<div class="container" id="postContent">
-  <!-- Post content loads here -->
-  <div id="likeContainer"></div>
-  <div id="viewContainer"></div>
-</div>
-
-<!-- Add JS scripts at the end -->
-<script src="post.js"></script>
-<script src="likes.js"></script>
-<script src="views.js"></script>
-<script>
-  const post = JSON.parse(localStorage.getItem("postData"));
-  const postId = post?.id;
-
-  if (postId) {
-    incrementViewCount(postId);
-    showViewCount(postId, "viewContainer");
-    setupLikeButton(postId, "likeContainer");
-  }
-</script>
-
-<script src="comments.js"></script>
-<script>
-  if (postId) {
-    loadComments(postId, "commentList");
-  }
-</script>
-
-<hr>
-<h3>Comments</h3>
-<div id="commentList"></div>
-
-<div style="margin-top: 1rem;">
-  <input type="text" id="commentName" placeholder="Your name" style="width: 100%; padding: 0.5rem; margin-bottom: 0.5rem;" />
-  <textarea id="commentText" placeholder="Write a comment..." rows="4" style="width: 100%; padding: 0.5rem;"></textarea>
-  <button onclick="submitComment(postId)" style="margin-top: 0.5rem; background: #002f6c; color: white; padding: 0.5rem 1rem; border: none; border-radius: 6px;">Post Comment</button>
-</div>
-
-  <footer>
+  <nav class="topnav">
+    <div class="logo">TamilGeo</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+    </div>
+  </nav>  <div class="container" id="post-content">
+    <!-- Full post content will appear here -->
+    <div class="post-interactions">
+      <span id="view-count">👁️ 0 views</span>
+      <button id="like-button">❤️ Like</button>
+      <span id="like-count">0 likes</span>
+    </div>
+  </div>  <section class="comments-section">
+    <h3>Comments</h3>
+    <div id="comments"></div>
+    <textarea id="comment-input" placeholder="Write a comment..."></textarea>
+    <button onclick="postComment()">Post Comment</button>
+  </section>  <section class="share-section">
+    <h3>Share this post</h3>
+    <button onclick="sharePost()">Share</button>
+  </section>  <section class="recommended-posts">
+    <h3>Recommended Posts</h3>
+    <div id="recommended"></div>
+  </section>  <footer>
     Copyright ©️ TamilGeo
-  </footer>
-
-  <script src="post.js"></script>
-</body>
+  </footer>  <script src="firebase-config.js"></script>  <script src="post.js"></script></body>
 </html>
