@@ -1,10 +1,23 @@
-const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts";
+const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
 const container = document.getElementById("posts-container");
 
-fetch(blogURL)
+let authorMap = {}; // authorId: name
+
+// First, fetch all authors
+fetch(`${blogURL}/users`)
+  .then(res => res.json())
+  .then(authors => {
+    authors.forEach(author => {
+      authorMap[author.id] = author.name;
+    });
+
+    // Then fetch posts
+    return fetch(`${blogURL}/posts`);
+  })
   .then(res => res.json())
   .then(posts => {
     posts.forEach(post => {
+      const authorName = authorMap[post.author] || "Unknown";
       const image = post.jetpack_featured_media_url
         ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
         : "";
@@ -16,7 +29,7 @@ fetch(blogURL)
             <h2 class="text-lg font-bold mb-2">${post.title.rendered}</h2>
             <p class="text-sm text-gray-600 mb-2">${stripHTML(post.excerpt.rendered).slice(0, 100)}...</p>
             <div class="flex justify-between text-xs text-gray-500 mt-4">
-              <span>👤 ${post.author}</span>
+              <span>👤 ${authorName}</span>
               <span>🗓️ ${new Date(post.date).toLocaleDateString()}</span>
             </div>
           </div>
