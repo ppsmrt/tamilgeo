@@ -1,43 +1,25 @@
 <!DOCTYPE html>
 <html lang="ta">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Submit Post - TamilGeo</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">TamilGeo</header>
+  <header>TamilGeo</header>
 
-  <main class="container">
-    <div class="form-card">
-      <h2>Submit a Blog Post</h2>
-      <form id="postForm">
-        <label for="title">Title</label>
-        <input type="text" id="title" required placeholder="Enter post title" />
+  <div class="container">
+    <h2>Submit a New Blog Post</h2>
+    <form id="submitForm">
+      <input type="text" id="title" placeholder="Title" required><br><br>
+      <textarea id="content" placeholder="Content" rows="6" required></textarea><br><br>
+      <button type="submit">Submit</button>
+    </form>
+    <div id="submitMsg"></div>
+  </div>
 
-        <label for="content">Content</label>
-        <textarea id="content" rows="6" required placeholder="Write your post..."></textarea>
+  <footer>Copyright ©️ TamilGeo</footer>
 
-        <label for="excerpt">Excerpt</label>
-        <textarea id="excerpt" rows="3" required placeholder="Short description..."></textarea>
-
-        <label for="category">Category</label>
-        <input type="text" id="category" required placeholder="e.g., Tech, Tamil" />
-
-        <label for="image">Featured Image URL</label>
-        <input type="url" id="image" placeholder="https://example.com/image.jpg" />
-
-        <button type="submit">Submit Post</button>
-      </form>
-    </div>
-  </main>
-
-  <footer class="site-footer">
-    Copyright ©️ TamilGeo
-  </footer>
-
-  <script src="firebase-init.js"></script>
   <script src="submit.js"></script>
 </body>
 </html>
