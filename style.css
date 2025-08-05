@@ -1,0 +1,21 @@
+/* Make embedded videos responsive and fit inside post box */
+.post-content iframe {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+  margin: 10px 0;
+  max-width: 100%;
+}
+
+.post-content video {
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+  margin: 10px 0;
+  max-width: 100%;
+}
