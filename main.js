@@ -10,23 +10,21 @@ function getExcerpt(html, wordLimit = 60) {
 }
 
 async function loadPosts() {
-  const container = document.getElementById("posts");
   const loader = document.getElementById("loader");
+  loader.style.display = "block";
 
   try {
     const response = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?_embed");
     const posts = await response.json();
-
-    // Remove or hide loader
-    if (loader) loader.remove();
+    const container = document.getElementById("posts");
 
     posts.forEach(post => {
       const card = document.createElement("div");
       card.className = "post-card";
 
-      const imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '';
-      const category = post._embedded?.['wp:term']?.[0]?.[0]?.name || '';
-      const author = post._embedded?.author?.[0]?.name || 'TamilGeo';
+      let imageUrl = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+      let category = post._embedded?.['wp:term']?.[0]?.[0]?.name || "";
+      let author = post._embedded?.author?.[0]?.name || "TamilGeo";
 
       card.onclick = () => {
         localStorage.setItem("postData", JSON.stringify(post));
@@ -40,17 +38,19 @@ async function loadPosts() {
         <div class="post-content">
           <h2>${post.title.rendered}</h2>
           <div class="post-excerpt">${getExcerpt(post.excerpt.rendered)}</div>
-          <div class="post-category">${category}</div>
-          <div class="post-meta">${author} | ${formatDate(post.date)}</div>
+          <div class="post-meta">
+            ${author} | ${formatDate(post.date)}
+          </div>
         </div>
       `;
 
       container.appendChild(card);
     });
 
-  } catch (error) {
-    console.error("Error loading posts:", error);
-    if (loader) loader.innerHTML = "Failed to load posts.";
+  } catch (err) {
+    console.error("Error loading posts:", err);
+  } finally {
+    loader.style.display = "none";
   }
 }
 
