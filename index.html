@@ -1,19 +1,34 @@
-<!-- index.html --><!DOCTYPE html><html lang="ta">
+<!DOCTYPE html>
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TamilGeo</title>
-  <link rel="manifest" href="/manifest.json">
+  <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="main-header">
-    <nav class="navbar">
-      <div class="logo">TamilGeo</div>
+  <header class="navbar sticky">
+    <div class="brand">TamilGeo</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="submit.html">Submit</a>
+      <a href="account.html">Account</a>
     </nav>
-  </header>  <div class="container" id="posts">
-    <div id="loader" class="loader"></div>
-  </div>  <footer>
-    Copyright ©️ TamilGeo
-  </footer>  <!-- Scripts -->  <script src="js/firebase-init.js"></script>  <script src="js/main.js"></script>  <script src="js/pwa.js"></script>  <script src="js/transitions.js"></script></body>
+  </header>
+
+  <div id="loader" class="loader"></div>
+  <main class="container" id="posts"></main>
+
+  <footer>
+    Copyright © TamilGeo
+  </footer>
+
+  <script src="firebase-init.js"></script>
+  <script src="main.js"></script>
+  <script src="likes.js"></script>
+  <script src="views.js"></script>
+  <script src="comment.js"></script>
+  <script src="script.js"></script>
+</body>
 </html>
