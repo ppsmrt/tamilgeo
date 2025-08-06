@@ -25,8 +25,9 @@
 ✅ Responsive video embeds<br>
 ✅ "Load More Posts" with pagination<br>
 ✅ Clean Tailwind UI<br>
-✅ Copy-to-clipboard **Share** button
-✅ SEO-friendly code
+✅ Copy-to-clipboard **Share** button<br>
+✅ SEO-friendly code<br>
+✅ Sync commenting & Likes (with Firebase Auth)
 
 ---
 
