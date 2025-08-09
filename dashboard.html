@@ -1,29 +1,13 @@
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Account - TamilGeo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <style>
     .fade-in { animation: fadeIn 0.5s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes wave {
-      0% { transform: rotate(0deg); }
-      10% { transform: rotate(14deg); }
-      20% { transform: rotate(-8deg); }
-      30% { transform: rotate(14deg); }
-      40% { transform: rotate(-4deg); }
-      50% { transform: rotate(10deg); }
-      60% { transform: rotate(0deg); }
-      100% { transform: rotate(0deg); }
-    }
-    .wave-hand {
-      display: inline-block;
-      transform-origin: 70% 70%;
-      animation: wave 2s ease-in-out infinite;
-    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
@@ -31,114 +15,88 @@
   <!-- ✅ Shared Header -->
   <div id="shared-header"></div>
 
-  <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
-    
-    <!-- ✅ Welcome Section -->
-    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
-      <div class="flex items-center space-x-3">
-        <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
-        <h1 class="text-xl font-bold">
-          Hi, <span id="userNameDisplay" class="capitalize"></span>
-        </h1>
-      </div>
-      <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
-    </div>
+  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in space-y-10 w-full">
 
-    <!-- ✅ Profile Card -->
-    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
-      <div class="flex items-center space-x-4">
-        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
-        <div>
-          <div class="flex items-center space-x-2">
-            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
-          </div>
-          <p id="username" class="text-gray-600 text-sm">@username</p>
-          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
+    <!-- 📊 Stats Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
+      <div class="grid grid-cols-2 gap-6 w-full">
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Users</p>
+          <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Posts</p>
+          <h3 id="totalPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Pending Posts</p>
+          <h3 id="pendingPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Managers & Editors</p>
+          <h3 id="managersEditors" class="text-3xl font-bold mt-2">0</h3>
         </div>
       </div>
+    </section>
 
-      <!-- ✅ Profile info rows -->
-      <div class="mt-4 space-y-2 text-sm text-gray-500">
-        <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-solid fa-file-lines w-5 text-purple-500"></i> <span id="postCount">Posts: 0</span></p>
-      </div>
-    </div>
-
-    <!-- 📊 Dashboard Stat Cards -->
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Followers</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Likes</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Comments</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
-      </div>
-    </div>
-
-    <!-- ⚡ Quick Actions -->
-    <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>
-        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>
-        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>
-        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>
-        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
+    <!-- 🔔 Send Notification Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Send Notification</h2>
+      <div class="bg-white shadow rounded-lg p-6 space-y-4">
+        <input type="text" id="notifTitle" placeholder="Notification Title" class="w-full border rounded p-2">
+        <textarea id="notifMessage" placeholder="Notification Message" class="w-full border rounded p-2 h-24"></textarea>
+        <select id="notifLimit" class="w-full border rounded p-2">
+          <option value="oncePerDay">Show Once Per Day</option>
+          <option value="onceTotal">Show Once Only</option>
+          <option value="unlimited">Unlimited</option>
+        </select>
+        <button id="sendNotifBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send Notification</button>
       </div>
     </section>
 
-    <!-- 📄 Important Links -->
-    <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>
-        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
-        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>
-        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>
+    <!-- 👥 Manage Users Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
+      <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <table class="w-full min-w-[400px] text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="p-3 text-sm font-semibold text-gray-600">Name</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Role</th>
+            </tr>
+          </thead>
+          <tbody id="userTable" class="divide-y divide-gray-200"></tbody>
+        </table>
       </div>
     </section>
 
-    <!-- 📌 Edit Account Form -->
-    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
-        <input type="text" id="name" class="w-full p-2 border rounded" required>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
-        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded"></textarea>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded">
-      </div>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
+    <!-- 📝 Pending Posts Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Pending Posts</h2>
+      <div id="pendingPostsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
   </main>
 
+  <!-- Modal for Viewing Full Post -->
+  <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 overflow-y-auto max-h-[90vh]">
+      <h3 id="modalTitle" class="text-xl font-bold mb-2"></h3>
+      <p id="modalContent" class="text-gray-700 whitespace-pre-wrap mb-4"></p>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="approvePost()" class="px-4 py-2 bg-green-500 text-white rounded">Approve</button>
+        <button onclick="rejectPost()" class="px-4 py-2 bg-red-500 text-white rounded">Reject</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Firebase + Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+    import { getDatabase, ref, get, update, remove, set, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
@@ -151,72 +109,205 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getDatabase(app);
-    const storage = getStorage(app);
+    const auth = getAuth(app);
+    let currentPostId = null;
 
-    const profilePic = document.getElementById("profilePic");
-    const nameInput = document.getElementById("name");
-    const bioField = document.getElementById("bioField");
-    const usernameField = document.getElementById("usernameField");
-    const emailField = document.getElementById("emailField");
-    const profilePicUpload = document.getElementById("profilePicUpload");
-    const userNameDisplay = document.getElementById("userNameDisplay");
+    async function loadStats() {
+      const usersSnap = await get(ref(db, "users"));
+      const postsSnap = await get(ref(db, "posts"));
+      const pendingSnap = await get(ref(db, "pendingPosts"));
 
-    let uploadedPicUrl = "";
+      if (usersSnap.exists()) {
+        let userCount = 0;
+        let managersEditorsCount = 0;
+        usersSnap.forEach(user => {
+          const role = user.val().role || "user";
+          if (role !== "admin") userCount++;
+          if (role === "manager" || role === "editor") managersEditorsCount++;
+        });
+        document.getElementById("totalUsers").textContent = userCount;
+        document.getElementById("managersEditors").textContent = managersEditorsCount;
+      }
 
-    profilePicUpload.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const storageRef = sRef(storage, "profilePictures/" + auth.currentUser.uid + ".jpg");
-      await uploadBytes(storageRef, file);
-      uploadedPicUrl = await getDownloadURL(storageRef);
-      profilePic.src = uploadedPicUrl; // Instant preview
-    });
+      if (postsSnap.exists()) {
+        let totalPosts = 0;
+        postsSnap.forEach(() => totalPosts++);
+        document.getElementById("totalPosts").textContent = totalPosts;
+      } else {
+        document.getElementById("totalPosts").textContent = 0;
+      }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("Please log in to view your account.");
-        window.location.href = "/login.html";
+      if (pendingSnap.exists()) {
+        let pendingPosts = 0;
+        pendingSnap.forEach(() => pendingPosts++);
+        document.getElementById("pendingPosts").textContent = pendingPosts;
+      } else {
+        document.getElementById("pendingPosts").textContent = 0;
+      }
+    }
+
+    async function loadUsers() {
+      const snap = await get(ref(db, "users"));
+      if (snap.exists()) {
+        const tbody = document.getElementById("userTable");
+        tbody.innerHTML = "";
+        const addedUsers = new Set();
+        snap.forEach(user => {
+          const data = user.val();
+          if (data.role === "admin") return;
+          if (addedUsers.has(user.key)) return;
+          addedUsers.add(user.key);
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="p-3">${data.name || "No Name"}</td>
+            <td class="p-3">
+              <select data-id="${user.key}" class="roleSelect border rounded p-1">
+                <option value="user" ${data.role==="user"?"selected":""}>User</option>
+                <option value="editor" ${data.role==="editor"?"selected":""}>Editor</option>
+                <option value="manager" ${data.role==="manager"?"selected":""}>Manager</option>
+              </select>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+        document.querySelectorAll(".roleSelect").forEach(sel => {
+          sel.addEventListener("change", async (e) => {
+            const uid = e.target.dataset.id;
+            const newRole = e.target.value;
+            await update(ref(db, "users/" + uid), { role: newRole });
+            alert("Role updated successfully");
+          });
+        });
+      }
+    }
+
+    async function loadPendingPosts() {
+      const snap = await get(ref(db, "pendingPosts"));
+      const container = document.getElementById("pendingPostsList");
+      container.innerHTML = "";
+      if (snap.exists()) {
+        snap.forEach(post => {
+          const data = post.val();
+          const card = document.createElement("div");
+          card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
+          card.innerHTML = `
+            <h4 class="font-bold text-lg">${data.title || "Untitled"}</h4>
+            <p class="text-gray-600 text-sm truncate">${data.content || ""}</p>
+            <p class="text-xs text-gray-500 mt-1">By: ${data.author || "Unknown"}</p>
+          `;
+          card.addEventListener("click", () => {
+            currentPostId = post.key;
+            document.getElementById("modalTitle").textContent = data.title || "Untitled";
+            document.getElementById("modalContent").textContent = data.content || "";
+            document.getElementById("postModal").classList.remove("hidden");
+            document.getElementById("postModal").classList.add("flex");
+          });
+          container.appendChild(card);
+        });
+      } else {
+        container.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;
+      }
+    }
+
+    window.closeModal = function() {
+      document.getElementById("postModal").classList.add("hidden");
+      document.getElementById("postModal").classList.remove("flex");
+    };
+
+    window.approvePost = async function() {
+      if (currentPostId) {
+        try {
+          const postRef = ref(db, "pendingPosts/" + currentPostId);
+          const postSnap = await get(postRef);
+          if (postSnap.exists()) {
+            const postData = postSnap.val();
+            postData.status = "approved";
+            await set(ref(db, "posts/" + currentPostId), postData);
+            await remove(postRef);
+            alert("Post approved successfully");
+            closeModal();
+            loadStats();
+            loadPendingPosts();
+          } else {
+            alert("Post not found!");
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Error approving post.");
+        }
+      }
+    };
+
+    window.rejectPost = async function() {
+      if (currentPostId) {
+        try {
+          await remove(ref(db, "pendingPosts/" + currentPostId));
+          alert("Post rejected and removed");
+          closeModal();
+          loadStats();
+          loadPendingPosts();
+        } catch (error) {
+          console.error(error);
+          alert("Error rejecting post.");
+        }
+      }
+    };
+
+    document.getElementById("sendNotifBtn").addEventListener("click", async () => {
+      const title = document.getElementById("notifTitle").value.trim();
+      const message = document.getElementById("notifMessage").value.trim();
+      const limit = document.getElementById("notifLimit").value;
+      if (!title || !message) {
+        alert("Please enter both title and message.");
         return;
       }
-      const snap = await get(ref(db, "users/" + user.uid));
-      if (snap.exists()) {
-        const data = snap.val();
-        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-        nameInput.value = data.name || "";
-        bioField.value = data.bio || "";
-        usernameField.value = data.username || "";
-        emailField.value = user.email || "";
-        userNameDisplay.textContent = data.name || "User";
-        document.getElementById("displayName").textContent = data.name || "No Name";
-        document.getElementById("username").textContent = "@" + (data.username || "");
-        document.getElementById("bio").textContent = data.bio || "";
-
-        // ✅ Show account creation & last login
-        const createdDate = new Date(user.metadata.creationTime);
-        const lastLoginDate = new Date(user.metadata.lastSignInTime);
-        document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
-        document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
-      }
+      const newNotif = {
+        title,
+        message,
+        limit,
+        timestamp: Date.now(),
+        active: true
+      };
+      await push(ref(db, "notifications"), newNotif);
+      alert("Notification sent successfully!");
+      document.getElementById("notifTitle").value = "";
+      document.getElementById("notifMessage").value = "";
     });
 
-    document.getElementById("accountForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-      await update(ref(db, "users/" + user.uid), { 
-        name: nameInput.value, 
-        bio: bioField.value, 
-        profilePicture: uploadedPicUrl || profilePic.src
-      });
-      await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
-      location.reload();
+    loadStats();
+    loadUsers();
+    loadPendingPosts();
+
+    // 🔄 Auto-refresh stats, users, and pending posts every 30 seconds
+    setInterval(() => {
+      loadStats();
+      loadUsers();
+      loadPendingPosts();
+    }, 30000);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = ref(db, "users/" + user.uid);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          if (userData.role !== "admin") {
+            window.location.href = "account.html";
+          }
+        } else {
+          window.location.href = "account.html";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
     });
   </script>
 
   <!-- ✅ Universal Header Loader -->
   <script type="module" src="header.js"></script>
+
+  <!-- ✅ Footer -->
   <footer id="footer" class="mt-auto"></footer>
   <script type="module" src="js/footer.js"></script>
 </body>
