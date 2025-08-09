@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Admin - TamilGeo</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <style>
+    .fade-in {
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- Main Content -->
+  <main class="flex-grow flex items-center justify-center px-4 pt-6 sm:pt-12">
+    <div class="max-w-xl w-full bg-white shadow-md rounded-xl p-6 sm:p-10 fade-in text-center">
+
+      <!-- Profile Picture -->
+      <img src="https://tamilgeo.wordpress.com/wp-content/uploads/2025/07/wp-1752658444240.png" alt="Admin Profile"
+           class="w-28 h-28 rounded-full mx-auto border-4 border-green-500 shadow-md">
+
+      <!-- Name & Role -->
+      <h2 class="text-2xl sm:text-3xl font-bold mt-4 text-green-700">
+        Admin
+      </h2>
+      <p class="text-gray-600">Developer & Maintainer — Inteksoft Solutions</p>
+
+      <!-- Divider -->
+      <div class="my-6 border-t border-gray-300"></div>
+
+      <!-- Contact Info -->
+      <div class="space-y-3 text-gray-700">
+        <p><i class="fas fa-envelope text-green-600 mr-2"></i> tamilgeo.off@gmail.com</p>
+        <p><i class="fas fa-phone text-green-600 mr-2"></i> Will Include In Future</p>
+        <p><i class="fas fa-map-marker-alt text-green-600 mr-2"></i> Chennai, Tamil Nadu</p>
+      </div>
+
+      <!-- Social Links -->
+      <div class="mt-6 flex justify-center space-x-5">
+        <a href="https://www.facebook.com/tamilgeo.offl" target="_blank" class="text-blue-600 hover:scale-110 transition"><i class="fab fa-facebook fa-2x"></i></a>
+        <a href="https://www.twitter.com/tamilgeo_offl" target="_blank" class="text-sky-500 hover:scale-110 transition"><i class="fab fa-twitter fa-2x"></i></a>
+        <a href="https://instagram.com" target="_blank" class="text-pink-500 hover:scale-110 transition"><i class="fab fa-instagram fa-2x"></i></a>
+        <a href="https://www.youtube.com/@tamilgeo" target="_blank" class="text-blue-700 hover:scale-110 transition"><i class="fab fa-youtube fa-2x"></i></a>
+
+        <a href="/" target="_blank" class="text-gray-800 hover:scale-110 transition"><i class="fab fa-whatsapp fa-2x"></i></a>
+      </div>
+
+      <!-- Extra Info Sections -->
+      <div class="mt-10 text-left space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold text-green-700">⏳ Response Time</h3>
+          <p class="text-gray-600">We usually reply within 24–48 hours. If we’re slow, it’s probably because we’re busy cooking up new content, or trapped in a chai break debate. 😅</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-green-700">📍 Where Are We Based?</h3>
+          <p class="text-gray-600">Chennai, India<br>(Blogging across time zones, but always connected.)</p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-semibold text-green-700">💬 Why Reach Out?</h3>
+          <ul class="list-disc ml-5 text-gray-600 space-y-1">
+            <li>Feedback or corrections? Yes, please.</li>
+            <li>Collaboration or guest posts? Let’s talk.</li>
+            <li>Just want to say hi? You’ll make our day.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ✅ Footer Placeholder -->
+  <div id="footer" class="mt-auto"></div>
+
+  <!-- ✅ Inject Header & Footer -->
+  <script type="module" src="header.js"></script>
+  <script type="module" src="js/footer.js"></script>
+</body>
+</html>
