@@ -166,9 +166,19 @@
                 <div class="p-4 flex flex-col flex-grow">
                   <h2 class="text-lg font-bold mb-2">${post.title}</h2>
                   <p class="text-sm text-gray-600 mb-2 flex-grow">${excerptDisplay}</p>
-                  <div class="flex justify-between text-xs text-gray-500 mt-auto">
-                    <span>👤 ${authorName}</span>
-                    <span>🗓️ ${postedAgo}</span>
+                  <div class="flex justify-between items-center text-xs text-gray-500 mt-auto gap-4 flex-wrap">
+                    <span class="flex items-center gap-1">
+                      <i class="fa fa-user"></i> ${authorName}
+                    </span>
+                    <span class="flex items-center gap-1">
+                      <i class="fa fa-calendar"></i> ${postedAgo}
+                    </span>
+                    <span class="flex items-center gap-1 text-pink-600">
+                      <i class="fa fa-heart"></i> ${post.likes ?? 0}
+                    </span>
+                    <span class="flex items-center gap-1 text-blue-600">
+                      <i class="fa fa-comment"></i> ${post.commentsCount ?? 0}
+                    </span>
                   </div>
                 </div>
               </a>
