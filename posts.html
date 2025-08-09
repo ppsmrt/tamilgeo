@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Approved Posts - TamilGeo</title>
+
+  <!-- ✅ Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- ✅ Post Grid -->
+  <main class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow max-w-7xl mx-auto" id="posts-container">
+    <!-- Posts will be loaded here -->
+  </main>
+
+  <!-- ✅ Firebase & Auth Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, onValue, get, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    const postsRef = ref(db, 'posts');
+    const container = document.getElementById('posts-container');
+
+    let isAdmin = false;
+
+    // Functions to handle edit and delete (add your logic here)
+    window.editPost = (postId, title, content) => {
+      alert(`Edit post: ${postId}\nTitle: ${title}\nContent: ${content}`);
+      // Add your edit logic here (e.g., open a modal with form)
+    };
+
+    window.deletePost = async (postId) => {
+      if (confirm("Are you sure you want to delete this post?")) {
+        try {
+          await remove(ref(db, 'posts/' + postId));
+          alert("Post deleted!");
+        } catch (error) {
+          alert("Error deleting post: " + error.message);
+        }
+      }
+    };
+
+    function loadPosts() {
+      onValue(postsRef, (snapshot) => {
+        let postsArray = [];
+
+        snapshot.forEach(childSnapshot => {
+          const post = childSnapshot.val();
+          post.id = childSnapshot.key; // get post id key
+          postsArray.push(post);
+        });
+
+        // Filter approved posts and sort by newest
+        postsArray = postsArray.filter(post => post.approved === true);
+        postsArray.sort((a, b) => b.date - a.date);
+
+        container.innerHTML = postsArray.map(post => `
+          <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
+            ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover"/>` : ""}
+            <div class="p-4 flex flex-col flex-grow">
+              <h2 class="text-xl font-bold mb-2">
+                <a href="post-view.html?id=${post.id}" class="hover:text-blue-600 transition">${post.title}</a>
+              </h2>
+              <p class="text-gray-700 text-sm mb-4 flex-grow">
+                ${post.excerpt ? post.excerpt : (post.content ? post.content.substring(0, 120) + "..." : "")}
+              </p>
+              <p class="text-xs text-gray-500 mt-auto">
+                By ${post.author || "Unknown"} • ${new Date(post.date).toLocaleDateString()}
+              </p>
+              ${isAdmin ? `
+                <div class="mt-3 flex gap-2">
+                  <button 
+                    onclick="editPost('${post.id}', decodeURIComponent('${encodeURIComponent(post.title)}'), decodeURIComponent('${encodeURIComponent(post.content || '')}'))" 
+                    class="bg-yellow-500 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
+                    <i class="fa fa-edit"></i> Edit
+                  </button>
+                  <button 
+                    onclick="deletePost('${post.id}')" 
+                    class="bg-red-500 text-white px-3 py-1 rounded text-sm flex items-center gap-1">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+        `).join('');
+      });
+    }
+
+    // Wait for auth state and check admin status
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userSnap = await get(ref(db, "users/" + user.uid));
+          if (userSnap.exists()) {
+            // *** Fixed here: check role instead of isAdmin ***
+            isAdmin = userSnap.val().role === 'admin';
+            console.log("User is admin:", isAdmin);
+          } else {
+            console.log("No user data found for admin check");
+            isAdmin = false;
+          }
+        } catch (e) {
+          console.error("Error fetching user data", e);
+          isAdmin = false;
+        }
+      } else {
+        console.log("No user logged in");
+        isAdmin = false;
+      }
+      loadPosts();
+    });
+  </script>
+
+  <!-- ✅ Universal Header Loader -->
+  <script type="module" src="header.js"></script>
+
+  <!-- ✅ Footer Loader -->
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+
+</body>
+</html>
