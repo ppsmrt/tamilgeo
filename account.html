@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Account - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <style>
     .fade-in { animation: fadeIn 0.5s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -33,8 +33,8 @@
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
-   <!-- ✅ Welcome Section (full width match) -->
-   <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
+    <!-- ✅ Welcome Section -->
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
       <div class="flex items-center space-x-3">
         <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
         <h1 class="text-xl font-bold">
@@ -47,18 +47,17 @@
     <!-- ✅ Profile Card -->
     <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
       <div class="flex items-center space-x-4">
-        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
+        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border" />
         <div>
           <div class="flex items-center space-x-2">
             <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
-            <span id="roleBadge" class="px-2 py-1 text-xs rounded-full text-white">Role</span>
           </div>
-          <p id="username" class="text-gray-600 text-sm">Loading...</p>
+          <p id="username" class="text-gray-600 text-sm">@username</p>
           <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
         </div>
       </div>
 
-      <!-- ✅ Restored profile info rows -->
+      <!-- ✅ Profile info rows -->
       <div class="mt-4 space-y-2 text-sm text-gray-500">
         <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
         <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
@@ -66,62 +65,62 @@
       </div>
     </div>
 
-<!-- 📊 Dashboard Stat Cards -->  
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Followers</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Likes</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>  
-  </div>  
-  <div class="bg-white p-6 rounded-lg shadow text-center">  
-    <h3 class="text-sm font-medium text-gray-500">Comments</h3>  
-    <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>  
-  </div>  
-</div>
+    <!-- 📊 Dashboard Stat Cards -->
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
+        <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-sm font-medium text-gray-500">Followers</h3>
+        <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-sm font-medium text-gray-500">Likes</h3>
+        <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
+      </div>
+      <div class="bg-white p-6 rounded-lg shadow text-center">
+        <h3 class="text-sm font-medium text-gray-500">Comments</h3>
+        <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
+      </div>
+    </div>
 
-<!-- ⚡ Quick Actions -->      
-<section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">    
-    <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>    
-    <div class="grid sm:grid-cols-2 gap-4 text-left">    
-      <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>    
-      <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>    
-      <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>    
-      <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>    
-      <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
-    </div>    
-</section>  
+    <!-- ⚡ Quick Actions -->
+    <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">
+      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
+      <div class="grid grid-cols-2 gap-4 text-left">
+        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit a Post</a>
+        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> View Bookmarks</a>
+        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact Admin</a>
+        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate Me</a>
+        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
+      </div>
+    </section>
 
-<!-- 📄 Important Links -->  
-<section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">    
-  <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>    
-  <div class="grid grid-cols-2 gap-4 text-left">    
-    <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>    
-    <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>    
-    <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>    
-    <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>    
-  </div>
-</section>
+    <!-- 📄 Important Links -->
+    <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>
+      <div class="grid grid-cols-2 gap-4 text-left">
+        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About Website</a>
+        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
+        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>
+        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>
+      </div>
+    </section>
 
     <!-- 📌 Edit Account Form -->
     <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
-        <input type="text" id="name" class="w-full p-2 border rounded" required>
+        <input type="text" id="name" class="w-full p-2 border rounded" required />
       </div>
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
+        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly />
       </div>
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
-        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
+        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly />
       </div>
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
@@ -129,7 +128,7 @@
       </div>
       <div>
         <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded">
+        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded" accept="image/*" />
       </div>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
@@ -169,9 +168,14 @@
     profilePicUpload.addEventListener("change", async (e) => {
       const file = e.target.files[0];
       if (!file) return;
+      if (!file.type.startsWith("image/")) {
+        alert("Please upload a valid image file.");
+        return;
+      }
       const storageRef = sRef(storage, "profilePictures/" + auth.currentUser.uid + ".jpg");
       await uploadBytes(storageRef, file);
       uploadedPicUrl = await getDownloadURL(storageRef);
+      profilePic.src = uploadedPicUrl; // Instant preview
     });
 
     onAuthStateChanged(auth, async (user) => {
@@ -190,8 +194,11 @@
         emailField.value = user.email || "";
         userNameDisplay.textContent = data.name || "User";
         document.getElementById("displayName").textContent = data.name || "No Name";
-        document.getElementById("username").textContent = data.username || "";
+        document.getElementById("username").textContent = "@" + (data.username || "");
         document.getElementById("bio").textContent = data.bio || "";
+
+        // Update uploadedPicUrl to existing so we don't lose it if no new pic is uploaded
+        uploadedPicUrl = data.profilePicture || "";
 
         // ✅ Show account creation & last login
         const createdDate = new Date(user.metadata.creationTime);
@@ -205,13 +212,21 @@
       e.preventDefault();
       const user = auth.currentUser;
       if (!user) return;
+
+      const newProfilePicture = uploadedPicUrl || profilePic.src;
+
+      // Update user data in database
       await update(ref(db, "users/" + user.uid), { 
-        name: nameInput.value, 
-        bio: bioField.value, 
-        profilePicture: uploadedPicUrl || profilePic.src
+        name: nameInput.value.trim(), 
+        bio: bioField.value.trim(), 
+        profilePicture: newProfilePicture
       });
-      await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
-      window.location.reload(true);
+
+      // Update auth profile
+      await updateProfile(user, { displayName: nameInput.value.trim(), photoURL: newProfilePicture });
+
+      // Reload the page to reflect changes (you can also update the DOM manually if preferred)
+      location.reload();
     });
   </script>
 
