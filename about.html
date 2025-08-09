@@ -2,27 +2,88 @@
 <html lang="ta">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>About - TamilGeo</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome Icons -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
-  <!-- Header -->
-  <header class="bg-white shadow-md p-4 flex justify-between items-center sticky top-0 z-10">
-    <h1 class="text-xl font-bold text-green-600">TamilGeo</h1>
-    <nav class="space-x-4 text-sm text-gray-700">
-      <a href="index.html" class="hover:underline">Home</a>
-      <a href="about.html" class="hover:underline font-semibold text-green-600">About</a>
-    </nav>
-  </header>
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
 
-  <!-- About Content -->
-  <main class="max-w-3xl mx-auto mt-8 px-4">
-    <div id="about-container" class="bg-white rounded-lg shadow p-6"></div>
+  <!-- ✅ About Content -->
+  <main class="max-w-4xl w-full mx-auto px-4 sm:px-6 py-10 flex-grow">
+    <div class="bg-white shadow-md rounded-xl p-6 sm:p-10">
+
+      <h1 class="text-3xl font-bold mb-6 text-center text-green-700">
+        🌍 About TamilGeo
+      </h1>
+
+      <p class="mb-4 leading-relaxed text-lg text-gray-700">
+        <strong>Welcome to TamilGeo</strong> — your one destination for the latest in <strong>Tamil Nadu</strong> and <strong>Tech News</strong>!
+      </p>
+
+      <p class="mb-4 leading-relaxed text-lg text-gray-700">
+        Since 2017, we have been on a mission to bring you the most exciting, engaging, and informative content that blends the vibrant culture of Tamil Nadu with the rapidly evolving world of technology. Whether you’re here for a deep dive into Tamil culture or the latest tech trends, we’ve got you covered.
+      </p>
+
+      <h2 class="text-2xl font-semibold text-green-700 mt-6 mb-3">📖 Our Story</h2>
+      <p class="mb-4 leading-relaxed text-lg text-gray-700">
+        What began as a small blog in 2017 has now grown into a trusted source for infotainment content that celebrates the rich heritage of Tamil Nadu while embracing cutting-edge advancements in technology. Our team is passionate about curating content that educates, entertains, and empowers — whether it’s Tamil Nadu’s history, culture, or the latest in gadgets.
+      </p>
+      <p class="mb-4 leading-relaxed text-lg text-gray-700">
+        Over the years, we have built a loyal community of readers who share our love for stories that bridge tradition with innovation. We pride ourselves on delivering fresh, authentic, and well-researched posts that bring the best of both worlds together.
+      </p>
+
+      <h2 class="text-2xl font-semibold text-green-700 mt-6 mb-3">💡 What We Offer</h2>
+      <h3 class="text-xl font-semibold text-green-600 mt-4 mb-2">1. Tamil Nadu Infotainment</h3>
+      <ul class="list-disc list-inside mb-4 text-gray-700 leading-relaxed">
+        <li><strong>Culture & Heritage:</strong> Discover Tamil Nadu’s rich history, unique practices, and lesser-known facts.</li>
+        <li><strong>Local News & Events:</strong> Stay updated on important happenings across the state.</li>
+        <li><strong>Entertainment:</strong> Updates on Tamil cinema, music, literature, and celebrity news.</li>
+      </ul>
+
+      <h3 class="text-xl font-semibold text-green-600 mt-4 mb-2">2. Tech News & Insights</h3>
+      <ul class="list-disc list-inside mb-4 text-gray-700 leading-relaxed">
+        <li><strong>Gadget Reviews:</strong> Honest, in-depth reviews of smartphones, laptops, apps, and accessories.</li>
+        <li><strong>Tech Trends:</strong> Easy-to-understand insights into AI, blockchain, and emerging innovations.</li>
+        <li><strong>How-To Guides:</strong> Step-by-step tutorials to help you make the most of your tech.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold text-green-700 mt-6 mb-3">🌟 Why Choose Us?</h2>
+      <ul class="list-disc list-inside mb-4 text-gray-700 leading-relaxed">
+        <li><strong>Reliable & Accurate:</strong> Well-researched, factual, and engaging content.</li>
+        <li><strong>Passionate Team:</strong> Writers and editors who love both culture and technology.</li>
+        <li><strong>Engaging Content:</strong> Easy-to-read, fun, yet professional articles.</li>
+        <li><strong>Community-Driven:</strong> We value conversations, feedback, and collaboration.</li>
+      </ul>
+
+      <h2 class="text-2xl font-semibold text-green-700 mt-6 mb-3">🚀 Join Our Journey</h2>
+      <p class="mb-4 leading-relaxed text-lg text-gray-700">
+        Whether you’re here for Tamil Nadu news, tech updates, or both — we invite you to join our growing family of readers. Dive into our posts, share your thoughts, and keep coming back for fresh content.
+      </p>
+
+      <p class="leading-relaxed text-lg text-gray-700">
+        Thank you for being a part of <strong>TamilGeo</strong>! 🧭 <a href="contact.html" class="text-green-600 underline hover:text-green-700">Contact us</a> anytime for collaboration or questions.
+      </p>
+    </div>
   </main>
 
-  <script src="about.js"></script>
+  <!-- ✅ Footer -->
+  <footer id="footer" class="mt-auto"></footer>
+
+  <!-- ✅ Scripts -->
+  <script type="module" src="header.js"></script>
+  <script type="module" src="js/footer.js"></script>
 </body>
 </html>
