@@ -5,271 +5,217 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Social - TamilGeo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    /* Smooth transitions */
+    .transition-all {
+      transition: all 0.3s ease;
+    }
+    /* Scrollbar for comment box */
+    .comment-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .comment-box::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1; /* Tailwind slate-300 */
+      border-radius: 10px;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
 
   <!-- Header -->
-  <header class="bg-white shadow flex items-center justify-between px-6 py-3 sticky top-0 z-20">
-    <h1 class="text-xl font-bold text-indigo-700">TamilGeo Social</h1>
-    <div class="flex items-center space-x-4">
-      <button
-        id="notificationsBtn"
-        class="relative text-gray-600 hover:text-indigo-600"
-        aria-label="Notifications"
-      >
-        <i class="fa-solid fa-bell fa-lg"></i>
-        <span
-          id="notifCount"
-          class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs px-1.5"
-          style="display:none"
-        ></span>
-      </button>
-      <button
-        id="chatToggleBtn"
-        class="text-gray-600 hover:text-indigo-600"
-        aria-label="Toggle Chat"
-      >
-        <i class="fa-solid fa-comments fa-lg"></i>
-      </button>
-      <img
-        src="https://via.placeholder.com/32"
-        alt="User Avatar"
-        class="rounded-full"
-      />
-    </div>
+  <header class="bg-white shadow p-4 flex justify-between items-center sticky top-0 z-50">
+    <h1 class="text-xl font-bold text-gray-800">Social</h1>
+    <button class="text-gray-700 hover:text-rose-600 transition" aria-label="Refresh Feed">
+      <i class="fa-solid fa-arrows-rotate text-xl"></i>
+    </button>
   </header>
 
-  <main class="flex-grow container mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- Left Sidebar: User Info & Follow -->
-    <aside class="hidden md:block bg-white rounded-lg shadow p-4">
-      <div class="flex items-center space-x-4 mb-6">
-        <img
-          src="https://via.placeholder.com/64"
-          alt="User Avatar"
-          class="rounded-full"
-        />
-        <div>
-          <h2 class="font-semibold text-lg">Palani</h2>
-          <p class="text-gray-500 text-sm">@palani</p>
-          <button
-            class="mt-2 px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm flex items-center gap-1"
-          >
-            <i class="fa-solid fa-user-plus"></i> Follow
-          </button>
-        </div>
-      </div>
-      <div>
-        <h3 class="font-semibold mb-2">Suggestions to Follow</h3>
-        <ul class="space-y-3">
-          <li class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <img
-                src="https://via.placeholder.com/40"
-                alt="User 1"
-                class="rounded-full"
-              />
-              <div>
-                <p class="font-semibold text-sm">Anbu</p>
-                <p class="text-gray-500 text-xs">@anbu123</p>
-              </div>
-            </div>
-            <button class="text-indigo-600 hover:underline text-sm">Follow</button>
-          </li>
-          <li class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <img
-                src="https://via.placeholder.com/40"
-                alt="User 2"
-                class="rounded-full"
-              />
-              <div>
-                <p class="font-semibold text-sm">Kavya</p>
-                <p class="text-gray-500 text-xs">@kavya_official</p>
-              </div>
-            </div>
-            <button class="text-indigo-600 hover:underline text-sm">Follow</button>
-          </li>
-          <!-- Add more suggestions here -->
-        </ul>
-      </div>
-    </aside>
+  <main class="max-w-3xl mx-auto p-4 space-y-6 flex-grow">
 
-    <!-- Center: Feed and Post Creation -->
-    <section class="md:col-span-2 space-y-6">
-      <!-- Create Post -->
-      <div
-        class="bg-white rounded-lg shadow p-4 flex flex-col space-y-3"
-        aria-label="Create new post"
-      >
-        <textarea
-          id="postInput"
-          rows="3"
-          placeholder="Share your thoughts..."
-          class="border rounded p-3 resize-none focus:outline-indigo-500"
-        ></textarea>
-        <div class="flex justify-between items-center">
-          <input
-            type="file"
-            id="postImageUpload"
-            accept="image/*"
-            class="text-xs text-gray-600"
-          />
-          <button
-            id="postSubmitBtn"
-            class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
-          >
-            Post
-          </button>
-        </div>
-      </div>
-
-      <!-- Feed Posts -->
-      <div id="feed" class="space-y-6">
-        <!-- Example Post -->
-        <article
-          class="bg-white rounded-lg shadow p-4"
-          aria-label="Post by Anbu"
-        >
-          <header class="flex items-center space-x-4 mb-3">
-            <img
-              src="https://via.placeholder.com/48"
-              alt="Anbu Avatar"
-              class="rounded-full"
-            />
-            <div>
-              <h4 class="font-semibold">Anbu</h4>
-              <p class="text-gray-500 text-xs">@anbu123 · 2h ago</p>
-            </div>
-          </header>
-          <p class="mb-3">
-            Enjoying the sunny day at Marina Beach! #TamilNadu #BeachVibes
-          </p>
-          <img
-            src="https://via.placeholder.com/600x300"
-            alt="Beach photo"
-            class="rounded-lg mb-3"
-          />
-          <footer class="flex justify-between text-gray-600 text-sm">
-            <button class="flex items-center gap-2 hover:text-red-500 transition">
-              <i class="fa-regular fa-heart"></i> Like (23)
-            </button>
-            <button class="flex items-center gap-2 hover:text-blue-600 transition">
-              <i class="fa-regular fa-comment"></i> Comment (5)
-            </button>
-            <button class="flex items-center gap-2 hover:text-green-600 transition">
-              <i class="fa-solid fa-share"></i> Share (2)
-            </button>
-          </footer>
-          <!-- Simple Comments -->
-          <div class="mt-3 border-t pt-2">
-            <div class="space-y-2 text-sm max-h-32 overflow-y-auto">
-              <div>
-                <span class="font-semibold">Kavya:</span> Looks amazing!
-              </div>
-              <div>
-                <span class="font-semibold">Palani:</span> Wish I was there!
-              </div>
-            </div>
-            <form class="mt-2 flex gap-2">
-              <input
-                type="text"
-                placeholder="Add a comment..."
-                class="flex-grow border rounded px-3 py-1 text-sm focus:outline-indigo-500"
-              />
-              <button
-                type="submit"
-                class="text-indigo-600 font-semibold hover:underline"
-              >
-                Post
-              </button>
-            </form>
-          </div>
-        </article>
-        <!-- Add more posts dynamically here -->
+    <!-- Status Update Box -->
+    <section class="bg-white rounded-lg shadow p-4">
+      <textarea id="statusInput" rows="3" placeholder="What's on your mind?" 
+        class="w-full p-3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-400 resize-none transition"></textarea>
+      <div class="flex justify-end mt-3">
+        <button id="postStatusBtn" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded shadow transition">
+          Post
+        </button>
       </div>
     </section>
 
-    <!-- Right Sidebar: Chat (toggle hidden by default) -->
-    <aside
-      id="chatSidebar"
-      class="fixed right-0 top-0 h-full w-80 bg-white shadow-lg p-4 hidden flex-col"
-      aria-label="Chat Sidebar"
-    >
-      <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-comments"></i> Chat
-        <button
-          id="closeChatBtn"
-          class="ml-auto text-gray-600 hover:text-red-600"
-          aria-label="Close Chat"
-        >
-          <i class="fa-solid fa-xmark fa-lg"></i>
-        </button>
-      </h2>
-      <div class="flex-grow overflow-y-auto border rounded p-2 mb-4">
-        <!-- Chat messages -->
-        <p class="text-gray-500 text-center mt-8">No messages yet</p>
-      </div>
-      <form id="chatForm" class="flex gap-2">
-        <input
-          type="text"
-          id="chatInput"
-          placeholder="Type a message"
-          class="flex-grow border rounded px-3 py-2 focus:outline-indigo-500"
-          autocomplete="off"
-        />
-        <button
-          type="submit"
-          class="bg-indigo-600 text-white px-4 rounded hover:bg-indigo-700"
-        >
-          Send
-        </button>
-      </form>
-    </aside>
+    <!-- Social Feed Posts Container -->
+    <section id="feed" class="space-y-6">
+      <!-- Posts will be appended here dynamically -->
+    </section>
   </main>
 
   <script>
-    // Toggle Chat Sidebar
-    const chatToggleBtn = document.getElementById("chatToggleBtn");
-    const chatSidebar = document.getElementById("chatSidebar");
-    const closeChatBtn = document.getElementById("closeChatBtn");
+    // Sample posts data for demo
+    const posts = [
+      {
+        id: 'p1',
+        user: {
+          name: 'Anbu',
+          username: 'anbu_tamil',
+          avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
+        },
+        content: 'Hello TamilGeo! This is my first post here 😊 #excited',
+        likes: 15,
+        comments: [
+          { id: 'c1', user: 'Sundar', text: 'Welcome, Anbu!' },
+          { id: 'c2', user: 'Revathi', text: 'Great to see you here!' }
+        ],
+        shares: 3,
+        time: '2 hours ago',
+      },
+      {
+        id: 'p2',
+        user: {
+          name: 'Meena',
+          username: 'meena_insta',
+          avatar: 'https://randomuser.me/api/portraits/women/45.jpg',
+        },
+        content: 'Loving the new updates on TamilGeo social feed!',
+        likes: 25,
+        comments: [],
+        shares: 7,
+        time: '1 hour ago',
+      }
+    ];
 
-    chatToggleBtn.addEventListener("click", () => {
-      chatSidebar.classList.toggle("hidden");
-    });
+    // Helper: Create an element with classes and attributes
+    function createEl(tag, options = {}) {
+      const el = document.createElement(tag);
+      if (options.classes) el.className = options.classes;
+      if (options.attrs) {
+        for (const [k, v] of Object.entries(options.attrs)) {
+          el.setAttribute(k, v);
+        }
+      }
+      if (options.text) el.textContent = options.text;
+      return el;
+    }
 
-    closeChatBtn.addEventListener("click", () => {
-      chatSidebar.classList.add("hidden");
-    });
+    // Render posts
+    function renderPosts() {
+      const feed = document.getElementById('feed');
+      feed.innerHTML = '';
+      posts.forEach(post => {
+        const postEl = createEl('article', { classes: 'bg-white rounded-lg shadow p-4' });
 
-    // Placeholder post submission handler
-    document.getElementById("postSubmitBtn").addEventListener("click", () => {
-      alert("Post submitted! (Functionality to be implemented)");
-    });
+        // Post Header
+        const header = createEl('div', { classes: 'flex items-center gap-3 mb-3' });
+        const avatar = createEl('img', { classes: 'w-12 h-12 rounded-full object-cover', attrs: { src: post.user.avatar, alt: post.user.name } });
+        const userInfo = createEl('div');
+        const name = createEl('p', { classes: 'font-semibold text-gray-900', text: post.user.name });
+        const username = createEl('p', { classes: 'text-sm text-gray-500', text: '@' + post.user.username });
+        const time = createEl('p', { classes: 'text-xs text-gray-400', text: post.time });
+        userInfo.append(name, username, time);
+        header.append(avatar, userInfo);
 
-    // Placeholder comment submission in feed
-    document.querySelectorAll("#feed form").forEach((form) => {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        alert("Comment submitted! (Functionality to be implemented)");
+        // Post Content
+        const content = createEl('p', { classes: 'mb-4 text-gray-800 whitespace-pre-wrap', text: post.content });
+
+        // Post Actions
+        const actions = createEl('div', { classes: 'flex items-center justify-between text-sm select-none' });
+
+        // Like button
+        const likeBtn = createEl('button', { classes: 'flex items-center gap-1 text-rose-600 hover:text-rose-700 transition', attrs: { 'aria-label': 'Like' } });
+        likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> <span>${post.likes}</span>`;
+
+        // Comment button
+        const commentBtn = createEl('button', { classes: 'flex items-center gap-1 text-blue-600 hover:text-blue-700 transition', attrs: { 'aria-label': 'Comment' } });
+        commentBtn.innerHTML = `<i class="fa-regular fa-comment"></i> <span>${post.comments.length}</span>`;
+
+        // Share button
+        const shareBtn = createEl('button', { classes: 'flex items-center gap-1 text-green-600 hover:text-green-700 transition', attrs: { 'aria-label': 'Share' } });
+        shareBtn.innerHTML = `<i class="fa-solid fa-share"></i> <span>${post.shares}</span>`;
+
+        actions.append(likeBtn, commentBtn, shareBtn);
+
+        // Comment Section (hidden by default)
+        const commentSection = createEl('div', { classes: 'mt-3 hidden' });
+
+        // Existing comments
+        const commentsList = createEl('div', { classes: 'space-y-2 max-h-40 overflow-y-auto comment-box px-2' });
+        post.comments.forEach(c => {
+          const cItem = createEl('div', { classes: 'text-sm bg-gray-100 rounded px-3 py-2' });
+          cItem.innerHTML = `<span class="font-semibold">${c.user}:</span> ${c.text}`;
+          commentsList.appendChild(cItem);
+        });
+
+        // Add new comment box
+        const addCommentForm = createEl('form', { classes: 'flex gap-2 mt-2' });
+        const commentInput = createEl('input', { classes: 'flex-grow border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400', attrs: { type: 'text', placeholder: 'Write a comment...', 'aria-label': 'Write a comment' } });
+        const commentSubmit = createEl('button', { classes: 'bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition', attrs: { type: 'submit' }, text: 'Post' });
+        addCommentForm.append(commentInput, commentSubmit);
+
+        addCommentForm.addEventListener('submit', e => {
+          e.preventDefault();
+          const val = commentInput.value.trim();
+          if (!val) return;
+          post.comments.push({ id: 'c' + Date.now(), user: 'You', text: val });
+          commentInput.value = '';
+          renderPosts();
+        });
+
+        commentSection.append(commentsList, addCommentForm);
+
+        // Toggle comment box on comment button click
+        commentBtn.addEventListener('click', () => {
+          commentSection.classList.toggle('hidden');
+        });
+
+        // Like button toggle (just front-end demo)
+        likeBtn.addEventListener('click', () => {
+          if (likeBtn.classList.contains('liked')) {
+            likeBtn.classList.remove('liked');
+            likeBtn.querySelector('span').textContent = --post.likes;
+            likeBtn.innerHTML = `<i class="fa-regular fa-heart"></i> <span>${post.likes}</span>`;
+          } else {
+            likeBtn.classList.add('liked');
+            likeBtn.querySelector('span').textContent = ++post.likes;
+            likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i> <span>${post.likes}</span>`;
+          }
+        });
+
+        // Share button (simple alert demo)
+        shareBtn.addEventListener('click', () => {
+          alert(`Share this post:\n"${post.content}"`);
+          post.shares++;
+          shareBtn.querySelector('span').textContent = post.shares;
+        });
+
+        postEl.append(header, content, actions, commentSection);
+        feed.appendChild(postEl);
       });
+    }
+
+    // Post new status
+    document.getElementById('postStatusBtn').addEventListener('click', () => {
+      const val = document.getElementById('statusInput').value.trim();
+      if (!val) return alert('Please write something to post!');
+      posts.unshift({
+        id: 'p' + Date.now(),
+        user: {
+          name: 'You',
+          username: 'you',
+          avatar: 'https://i.pravatar.cc/150?u=you',
+        },
+        content: val,
+        likes: 0,
+        comments: [],
+        shares: 0,
+        time: 'Just now',
+      });
+      document.getElementById('statusInput').value = '';
+      renderPosts();
     });
 
-    // Placeholder chat form submit
-    document.getElementById("chatForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      alert("Message sent! (Functionality to be implemented)");
-      document.getElementById("chatInput").value = "";
-    });
-
-    // Notifications count example (hidden by default)
-    const notifCount = document.getElementById("notifCount");
-    // Example: if you have new notifications, show count
-    // notifCount.textContent = "3";
-    // notifCount.style.display = "inline-block";
+    // Initial render
+    renderPosts();
   </script>
+
 </body>
 </html>
