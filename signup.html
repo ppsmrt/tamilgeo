@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    .rule-card {
+      @apply bg-white border border-blue-200 p-3 rounded shadow-sm hover:shadow-md transition;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- ✅ Signup Form and Rules -->
+  <main class="max-w-2xl mx-auto mt-8 bg-white p-6 rounded shadow space-y-8 flex-grow">
+
+    <!-- 📜 Rules Section -->
+    <section class="space-y-4">
+      <h2 class="text-xl font-bold text-blue-800 flex items-center gap-2">
+        <span>📋</span> TamilGeo Community Guidelines
+      </h2>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="rule-card">✅ Be respectful – No hate speech or bullying.</div>
+        <div class="rule-card">🧠 Share only useful, meaningful, and original content.</div>
+        <div class="rule-card">🚫 No spam, promotions, or misleading content.</div>
+        <div class="rule-card">📷 Use real names and clear profile pictures.</div>
+        <div class="rule-card">💬 Keep your language clean and polite.</div>
+        <div class="rule-card">📢 Accept admin/moderator feedback positively.</div>
+        <div class="rule-card">🔐 Don’t post private or personal information.</div>
+        <div class="rule-card">🚨 Report inappropriate content to help the community.</div>
+        <div class="rule-card">⚖️ Admins reserve the right to remove accounts violating rules.</div>
+      </div>
+    </section>
+
+    <!-- 👤 Signup Form -->
+    <section>
+      <h2 class="text-xl font-bold mb-4 text-center">👤 Create an Account</h2>
+
+      <form id="signup-form" class="space-y-4">
+        <input type="text" id="name" placeholder="Full Name" required autocomplete="name" class="w-full p-3 border rounded" />
+        <input type="text" id="username" placeholder="Username" required autocomplete="username" class="w-full p-3 border rounded" />
+        <input type="email" id="email" placeholder="Email" required autocomplete="email" class="w-full p-3 border rounded" />
+        <input type="password" id="password" placeholder="Password" required autocomplete="new-password" class="w-full p-3 border rounded" />
+        <button type="submit" id="signup-btn" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+          Sign Up
+        </button>
+      </form>
+
+      <p class="text-xs text-gray-600 mt-2 text-center">By signing up, you agree to follow our community rules.</p>
+
+      <p class="text-center text-sm mt-4">Already have an account? 
+        <a href="login.html" class="text-blue-600 hover:underline">Log in</a>
+      </p>
+
+      <p id="signup-status" class="mt-4 text-center text-green-600 font-medium hidden">✅ Account created successfully! Redirecting...</p>
+    </section>
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer id="footer"></footer>
+
+  <!-- ✅ Firebase Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const signupForm = document.getElementById("signup-form");
+    const signupBtn = document.getElementById("signup-btn");
+    const statusEl = document.getElementById("signup-status");
+
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      signupBtn.disabled = true;
+      signupBtn.innerText = "Signing Up...";
+
+      const name = document.getElementById("name").value.trim();
+      const username = document.getElementById("username").value.trim().toLowerCase();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        // 🚫 Restrict certain words
+        const restrictedWords = ["admin", "owner"];
+        if (restrictedWords.some(word => username.includes(word))) {
+          alert("❌ This username contains restricted words (admin/owner). Please choose another.");
+          signupBtn.disabled = false;
+          signupBtn.innerText = "Sign Up";
+          return;
+        }
+
+        // 🔍 Check if username already exists
+        const usernameRef = query(ref(db, "users"), orderByChild("username"), equalTo(username));
+        const snapshot = await get(usernameRef);
+        if (snapshot.exists()) {
+          alert("❌ Username already taken. Please choose another.");
+          signupBtn.disabled = false;
+          signupBtn.innerText = "Sign Up";
+          return;
+        }
+
+        // ✅ Create user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await updateProfile(user, { displayName: name });
+
+        await set(ref(db, "users/" + user.uid), {
+          name,
+          username,
+          email,
+          role: "reader",
+          createdAt: new Date().toISOString()
+        });
+
+        statusEl.classList.remove("hidden");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1500);
+
+      } catch (error) {
+        alert("Signup failed: " + error.message);
+      } finally {
+        signupBtn.disabled = false;
+        signupBtn.innerText = "Sign Up";
+      }
+    });
+  </script>
+
+  <!-- ✅ Shared Scripts -->
+  <script type="module" src="header.js"></script>
+  <script src="js/footer.js"></script>
+</body>
+</html>
