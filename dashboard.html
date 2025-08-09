@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <main class="max-w-7xl mx-auto p-6 flex-grow fade-in space-y-10 w-full">
+
+    <!-- 📊 Stats Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Website Stats</h2>
+      <div class="grid grid-cols-2 gap-6 w-full">
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Users</p>
+          <h3 id="totalUsers" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Total Posts</p>
+          <h3 id="totalPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Pending Posts</p>
+          <h3 id="pendingPosts" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+        <div class="bg-white shadow rounded-lg p-6 text-center">
+          <p class="text-sm text-gray-500">Managers & Editors</p>
+          <h3 id="managersEditors" class="text-3xl font-bold mt-2">0</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🔔 Send Notification Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Send Notification</h2>
+      <div class="bg-white shadow rounded-lg p-6 space-y-4">
+        <input type="text" id="notifTitle" placeholder="Notification Title" class="w-full border rounded p-2">
+        <textarea id="notifMessage" placeholder="Notification Message" class="w-full border rounded p-2 h-24"></textarea>
+        <select id="notifLimit" class="w-full border rounded p-2">
+          <option value="oncePerDay">Show Once Per Day</option>
+          <option value="onceTotal">Show Once Only</option>
+          <option value="unlimited">Unlimited</option>
+        </select>
+        <button id="sendNotifBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Send Notification</button>
+      </div>
+    </section>
+
+    <!-- 👥 Manage Users Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Manage Users</h2>
+      <div class="bg-white shadow rounded-lg p-4 overflow-x-auto">
+        <table class="w-full min-w-[400px] text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="p-3 text-sm font-semibold text-gray-600">Name</th>
+              <th class="p-3 text-sm font-semibold text-gray-600">Role</th>
+            </tr>
+          </thead>
+          <tbody id="userTable" class="divide-y divide-gray-200"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 📝 Pending Posts Section -->
+    <section class="w-full">
+      <h2 class="text-2xl font-bold mb-4">Pending Posts</h2>
+      <div id="pendingPostsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+  </main>
+
+  <!-- Modal for Viewing Full Post -->
+  <div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full p-6 overflow-y-auto max-h-[90vh]">
+      <h3 id="modalTitle" class="text-xl font-bold mb-2"></h3>
+      <p id="modalContent" class="text-gray-700 whitespace-pre-wrap mb-4"></p>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button onclick="approvePost()" class="px-4 py-2 bg-green-500 text-white rounded">Approve</button>
+        <button onclick="rejectPost()" class="px-4 py-2 bg-red-500 text-white rounded">Reject</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Firebase + Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, get, update, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    let currentPostId = null;
+
+    async function loadStats() {
+      const usersSnap = await get(ref(db, "users"));
+      const postsSnap = await get(ref(db, "posts"));
+
+      if (usersSnap.exists()) {
+        let userCount = 0;
+        let managersEditorsCount = 0;
+        usersSnap.forEach(user => {
+          const role = user.val().role || "user";
+          if (role !== "admin") userCount++;
+          if (role === "manager" || role === "editor") managersEditorsCount++;
+        });
+        document.getElementById("totalUsers").textContent = userCount;
+        document.getElementById("managersEditors").textContent = managersEditorsCount;
+      }
+
+      if (postsSnap.exists()) {
+        let totalPosts = 0;
+        let pendingPosts = 0;
+        postsSnap.forEach(post => {
+          totalPosts++;
+          if (post.val().status && post.val().status.toLowerCase() === "pending") {
+            pendingPosts++;
+          }
+        });
+        document.getElementById("totalPosts").textContent = totalPosts;
+        document.getElementById("pendingPosts").textContent = pendingPosts;
+      }
+    }
+
+    async function loadUsers() {
+      const snap = await get(ref(db, "users"));
+      if (snap.exists()) {
+        const tbody = document.getElementById("userTable");
+        tbody.innerHTML = "";
+        const addedUsers = new Set();
+        snap.forEach(user => {
+          const data = user.val();
+          if (data.role === "admin") return;
+          if (addedUsers.has(user.key)) return;
+          addedUsers.add(user.key);
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="p-3">${data.name || "No Name"}</td>
+            <td class="p-3">
+              <select data-id="${user.key}" class="roleSelect border rounded p-1">
+                <option value="user" ${data.role==="user"?"selected":""}>User</option>
+                <option value="editor" ${data.role==="editor"?"selected":""}>Editor</option>
+                <option value="manager" ${data.role==="manager"?"selected":""}>Manager</option>
+              </select>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+        document.querySelectorAll(".roleSelect").forEach(sel => {
+          sel.addEventListener("change", async (e) => {
+            const uid = e.target.dataset.id;
+            const newRole = e.target.value;
+            await update(ref(db, "users/" + uid), { role: newRole });
+            alert("Role updated successfully");
+          });
+        });
+      }
+    }
+
+    async function loadPendingPosts() {
+      const snap = await get(ref(db, "posts"));
+      const container = document.getElementById("pendingPostsList");
+      container.innerHTML = "";
+      if (snap.exists()) {
+        let foundPending = false;
+        snap.forEach(post => {
+          const data = post.val();
+          if ((data.status || "").toLowerCase() === "pending") {
+            foundPending = true;
+            const card = document.createElement("div");
+            card.className = "bg-white shadow rounded-lg p-4 hover:shadow-lg transition cursor-pointer";
+            card.innerHTML = `
+              <h4 class="font-bold text-lg">${data.title || "Untitled"}</h4>
+              <p class="text-gray-600 text-sm truncate">${data.content || ""}</p>
+              <p class="text-xs text-gray-500 mt-1">By: ${data.authorName || "Unknown"}</p>
+            `;
+            card.addEventListener("click", () => {
+              currentPostId = post.key;
+              document.getElementById("modalTitle").textContent = data.title || "Untitled";
+              document.getElementById("modalContent").textContent = data.content || "";
+              document.getElementById("postModal").classList.remove("hidden");
+              document.getElementById("postModal").classList.add("flex");
+            });
+            container.appendChild(card);
+          }
+        });
+        if (!foundPending) {
+          container.innerHTML = `<p class="text-gray-500">No pending posts found.</p>`;
+        }
+      } else {
+        container.innerHTML = `<p class="text-gray-500">No posts available.</p>`;
+      }
+    }
+
+    window.closeModal = function() {
+      document.getElementById("postModal").classList.add("hidden");
+      document.getElementById("postModal").classList.remove("flex");
+    };
+
+    window.approvePost = async function() {
+      if (currentPostId) {
+        await update(ref(db, "posts/" + currentPostId), { status: "approved" });
+        closeModal();
+        loadStats();
+        loadPendingPosts();
+        alert("Post approved successfully");
+      }
+    };
+
+    window.rejectPost = async function() {
+      if (currentPostId) {
+        await remove(ref(db, "posts/" + currentPostId));
+        closeModal();
+        loadStats();
+        loadPendingPosts();
+        alert("Post rejected and removed");
+      }
+    };
+
+    document.getElementById("sendNotifBtn").addEventListener("click", async () => {
+      const title = document.getElementById("notifTitle").value.trim();
+      const message = document.getElementById("notifMessage").value.trim();
+      const limit = document.getElementById("notifLimit").value;
+      if (!title || !message) {
+        alert("Please enter both title and message.");
+        return;
+      }
+      const newNotif = {
+        title,
+        message,
+        limit,
+        timestamp: Date.now(),
+        active: true
+      };
+      await push(ref(db, "notifications"), newNotif);
+      alert("Notification sent successfully!");
+      document.getElementById("notifTitle").value = "";
+      document.getElementById("notifMessage").value = "";
+    });
+
+    loadStats();
+    loadUsers();
+    loadPendingPosts();
+
+    // 🔄 Auto-refresh stats, users, and pending posts every 30 seconds
+    setInterval(() => {
+      loadStats();
+      loadUsers();
+      loadPendingPosts();
+    }, 30000);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userRef = ref(db, "users/" + user.uid);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+          const userData = snapshot.val();
+          if (userData.role !== "admin") {
+            window.location.href = "account.html";
+          }
+        } else {
+          window.location.href = "account.html";
+        }
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+  <!-- ✅ Universal Header Loader -->
+  <script type="module" src="header.js"></script>
+
+  <!-- ✅ Footer -->
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+</body>
+</html>
