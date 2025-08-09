@@ -67,8 +67,8 @@
           if (snapshot.exists()) {
             const post = snapshot.val();
 
-            // Only show if approved
-            if (post.approved !== true) {
+            // Only show if approved (checking status === 'approved')
+            if (post.status !== "approved") {
               postContainer.innerHTML = '<p class="text-red-600 text-center">This post is not approved or does not exist.</p>';
               return;
             }
@@ -80,7 +80,7 @@
               day: 'numeric'
             });
 
-            // Sanitize content or assume safe (if you want advanced sanitization, consider libraries)
+            // Convert newlines to <br> for simple formatting
             const safeContent = post.content ? post.content.replace(/\n/g, '<br>') : '';
 
             postContainer.innerHTML = `
