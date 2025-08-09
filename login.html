@@ -129,9 +129,18 @@
 
           if (!snapshot.exists()) throw new Error("No users found.");
           const users = snapshot.val();
-          const matchedUser = Object.values(users).find(user => user.username === identifier);
 
-          if (!matchedUser) throw new Error("No user found with this username.");
+          // Fixed username lookup: case-insensitive, safe property access
+          const matchedUserEntry = Object.entries(users).find(([key, user]) => {
+            return user.username && user.username.toLowerCase() === identifier.toLowerCase();
+          });
+
+          if (!matchedUserEntry) throw new Error("No user found with this username.");
+
+          const [userKey, matchedUser] = matchedUserEntry;
+
+          if (!matchedUser.email) throw new Error("User record is missing an email.");
+
           emailToLogin = matchedUser.email;
         }
 
