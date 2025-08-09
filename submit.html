@@ -1,149 +1,177 @@
-<!DOCTYPE html>
-<html lang="ta">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Submit Post - TamilGeo</title>
+<!DOCTYPE html>  
+<html lang="ta">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Submit Post - TamilGeo</title>  
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+  
+  <!-- ✅ Quill.js CSS (for rich text editor) -->
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+</head>  
+<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">  
 
-  <!-- ✅ Shared Header -->
-  <div id="shared-header"></div>
+  <!-- ✅ Shared Header -->  
+  <div id="shared-header"></div>  
 
-  <main class="max-w-3xl mx-auto p-6 flex-grow">
-    <h1 class="text-3xl font-bold mb-6">✍ Submit a Post</h1>
+  <main class="max-w-3xl mx-auto p-6 flex-grow">  
+    <h1 class="text-3xl font-bold mb-6">✍ Submit a Post</h1>  
 
-    <!-- 📜 General Rules -->
-    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
-      <h2 class="text-lg font-semibold mb-2">📌 Rules to be Followed</h2>
-      <ul class="list-disc pl-6 space-y-1 text-gray-700 text-sm">
-        <li>Posts must be original and relevant to the community.</li>
-        <li>No offensive, abusive, or misleading content.</li>
-        <li>Posts can be edited or deleted during review by the admin.</li>
-        <li>Ensure the content is factually accurate before submitting.</li>
-        <li>Respect copyright laws when using text or images.</li>
-      </ul>
-    </div>
+    <!-- 📜 General Rules -->  
+    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">  
+      <h2 class="text-lg font-semibold mb-2">📌 Rules to be Followed</h2>  
+      <ul class="list-disc pl-6 space-y-1 text-gray-700 text-sm">  
+        <li>Posts must be original and relevant to the community.</li>  
+        <li>No offensive, abusive, or misleading content.</li>  
+        <li>Posts can be edited or deleted during review by the admin.</li>  
+        <li>Ensure the content is factually accurate before submitting.</li>  
+        <li>Respect copyright laws when using text or images.</li>  
+      </ul>  
+    </div>  
 
-    <form id="postForm" class="bg-white p-6 rounded shadow">
-      <input type="text" id="title" placeholder="Post Title" class="w-full p-2 border rounded mb-4" required>
+    <form id="postForm" class="bg-white p-6 rounded shadow">  
+      <input type="text" id="title" placeholder="Post Title" class="w-full p-2 border rounded mb-4" required>  
 
-      <!-- ✅ Category -->
-      <select id="category" class="w-full p-2 border rounded mb-4" required>
-        <option value="">Select Category</option>
-        <option value="News">News</option>
-        <option value="Education">Education</option>
-        <option value="Technology">Technology</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Other">Other</option>
-      </select>
+      <!-- ✅ Category -->  
+      <select id="category" class="w-full p-2 border rounded mb-4" required>  
+        <option value="">Select Category</option>  
+        <option value="News">News</option>  
+        <option value="Education">Education</option>  
+        <option value="Technology">Technology</option>  
+        <option value="Entertainment">Entertainment</option>  
+        <option value="Other">Other</option>  
+      </select>  
 
-      <!-- ✅ Tags -->
-      <input type="text" id="tags" placeholder="Tags (comma separated)" class="w-full p-2 border rounded mb-4">
+      <!-- ✅ Tags -->  
+      <input type="text" id="tags" placeholder="Tags (comma separated)" class="w-full p-2 border rounded mb-4">  
 
-      <!-- ✅ Short Description -->
-      <textarea id="excerpt" placeholder="Short Description / Excerpt" class="w-full p-2 border rounded mb-4" rows="3" required></textarea>
+      <!-- ✅ Short Description -->  
+      <textarea id="excerpt" placeholder="Short Description / Excerpt" class="w-full p-2 border rounded mb-4" rows="3" required></textarea>  
 
-      <!-- ✅ Author (Read-only) -->
-      <input type="text" id="author" class="w-full p-2 border rounded mb-4 bg-gray-100" readonly>
+      <!-- ✅ Author (Read-only) -->  
+      <input type="text" id="author" class="w-full p-2 border rounded mb-4 bg-gray-100" readonly>  
 
-      <textarea id="content" placeholder="Post Content" class="w-full p-2 border rounded mb-4" rows="6" required></textarea>
-      <input type="url" id="image" placeholder="Image URL (optional)" class="w-full p-2 border rounded mb-4">
+      <!-- ✅ Content Editor (Quill.js) -->
+      <div id="editor-container" class="w-full mb-4 border rounded">
+        <!-- Quill Editor will be initialized here -->
+      </div>  
 
-      <!-- ✅ Accept Rules Checkbox -->
-      <label class="flex items-center mb-4 text-sm text-gray-700">
-        <input type="checkbox" id="acceptRules" class="mr-2" required>
-        I have read and agree to the above rules.
-      </label>
+      <input type="url" id="image" placeholder="Image URL (optional)" class="w-full p-2 border rounded mb-4">  
 
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>
-    </form>
-  </main>
+      <!-- ✅ Accept Rules Checkbox -->  
+      <label class="flex items-center mb-4 text-sm text-gray-700">  
+        <input type="checkbox" id="acceptRules" class="mr-2" required>  
+        I have read and agree to the above rules.  
+      </label>  
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Submit</button>  
+    </form>  
+  </main>  
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
+  <script type="module">  
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";  
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";  
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";  
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+    const firebaseConfig = {  
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",  
+      authDomain: "tamilgeoapp.firebaseapp.com",  
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",  
+      projectId: "tamilgeoapp",  
+      storageBucket: "tamilgeoapp.appspot.com",  
+      messagingSenderId: "1092623024431",  
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"  
+    };  
 
-    const postForm = document.getElementById("postForm");
-    const authorInput = document.getElementById("author");
+    const app = initializeApp(firebaseConfig);  
+    const auth = getAuth(app);  
+    const db = getDatabase(app);  
 
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        alert("Please log in to submit a post.");
-        window.location.href = "/login.html";
-        return;
+    const postForm = document.getElementById("postForm");  
+    const authorInput = document.getElementById("author");  
+
+    // Initialize Quill editor
+    var quill = new Quill('#editor-container', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'align': [] }],
+          ['link'],
+          ['blockquote'],
+          ['code-block']
+        ]
       }
-
-      // ✅ Set author name or email in readonly field
-      authorInput.value = user.displayName || user.email;
-
-      postForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const title = document.getElementById("title").value.trim();
-        const category = document.getElementById("category").value.trim();
-        const tags = document.getElementById("tags").value.trim();
-        const excerpt = document.getElementById("excerpt").value.trim();
-        const content = document.getElementById("content").value.trim();
-        const image = document.getElementById("image").value.trim();
-        const acceptRules = document.getElementById("acceptRules").checked;
-
-        if (!title || !category || !excerpt || !content) {
-          alert("Please fill in all required fields.");
-          return;
-        }
-
-        if (!acceptRules) {
-          alert("You must agree to the rules before submitting.");
-          return;
-        }
-
-        const postId = push(ref(db, "pendingPosts")).key;
-        const postData = {
-          title,
-          category,
-          tags: tags ? tags.split(",").map(t => t.trim()) : [],
-          excerpt,
-          content,
-          image: image || null,
-          author: user.displayName || user.email,
-          date: Date.now(),
-          status: "pending"
-        };
-
-        set(ref(db, "pendingPosts/" + postId), postData).then(() => {
-          alert("✅ Post submitted for approval!");
-          postForm.reset();
-          authorInput.value = user.displayName || user.email; // Reset author after clearing form
-        }).catch(err => {
-          console.error(err);
-          alert("❌ Error submitting post.");
-        });
-      });
     });
-  </script>
 
-  <!-- ✅ Universal Header Loader -->
-  <script type="module" src="header.js"></script>
+    onAuthStateChanged(auth, (user) => {  
+      if (!user) {  
+        alert("Please log in to submit a post.");  
+        window.location.href = "/login.html";  
+        return;  
+      }  
 
-  <!-- ✅ Footer -->
-  <footer id="footer" class="mt-auto"></footer>
-  <script type="module" src="js/footer.js"></script>
-</body>
+      // ✅ Set author name or email in readonly field  
+      authorInput.value = user.displayName || user.email;  
+
+      postForm.addEventListener("submit", (e) => {  
+        e.preventDefault();  
+
+        const title = document.getElementById("title").value.trim();  
+        const category = document.getElementById("category").value.trim();  
+        const tags = document.getElementById("tags").value.trim();  
+        const excerpt = document.getElementById("excerpt").value.trim();  
+        const content = quill.root.innerHTML.trim();  
+        const image = document.getElementById("image").value.trim();  
+        const acceptRules = document.getElementById("acceptRules").checked;  
+
+        if (!title || !category || !excerpt || !content) {  
+          alert("Please fill in all required fields.");  
+          return;  
+        }  
+
+        if (!acceptRules) {  
+          alert("You must agree to the rules before submitting.");  
+          return;  
+        }  
+
+        const postId = push(ref(db, "pendingPosts")).key;  
+        const postData = {  
+          title,  
+          category,  
+          tags: tags ? tags.split(",").map(t => t.trim()) : [],  
+          excerpt,  
+          content,  
+          image: image || null,  
+          author: user.displayName || user.email,  
+          date: Date.now(),  
+          status: "pending"  
+        };  
+
+        set(ref(db, "pendingPosts/" + postId), postData).then(() => {  
+          alert("✅ Post submitted for approval!");  
+          postForm.reset();  
+          authorInput.value = user.displayName || user.email; // Reset author after clearing form  
+        }).catch(err => {  
+          console.error(err);  
+          alert("❌ Error submitting post.");  
+        });  
+      });  
+    });  
+  </script>  
+
+  <!-- ✅ Universal Header Loader -->  
+  <script type="module" src="header.js"></script>  
+
+  <!-- ✅ Footer -->  
+  <footer id="footer" class="mt-auto"></footer>  
+  <script type="module" src="js/footer.js"></script>  
+
+  <!-- ✅ Quill.js Script -->  
+  <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>  
+
+</body>  
 </html>
