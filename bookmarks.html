@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bookmarked Posts - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- ✅ Shared Header -->
+  <div id="shared-header"></div>
+
+  <!-- ✅ Title -->
+  <div class="p-4 text-center">
+    <h2 class="text-xl font-semibold">📌 Bookmarked Posts</h2>
+  </div>
+
+  <!-- ✅ Post Grid -->
+  <main class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow" id="posts-container">
+    <!-- Bookmarked posts will load here -->
+  </main>
+
+  <!-- ✅ Footer -->
+  <footer id="footer" class="mt-auto"></footer>
+
+  <script>
+    const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
+    const container = document.getElementById("posts-container");
+
+    const bookmarkedIds = JSON.parse(localStorage.getItem("bookmarkedPosts") || "[]");
+
+    if (bookmarkedIds.length === 0) {
+      container.innerHTML = `<p class="col-span-full text-center text-gray-500">No bookmarks yet.</p>`;
+    } else {
+      // Fetch all bookmarked posts by ID
+      Promise.all(bookmarkedIds.map(id =>
+        fetch(`${blogURL}/posts/${id}`).then(res => res.json())
+      )).then(displayPosts)
+        .catch(err => console.error("Error loading bookmarks:", err));
+    }
+
+    function displayPosts(posts) {
+      container.innerHTML = "";
+      posts.forEach(post => {
+        const authorName = "TamilGeo";
+        const image = post.jetpack_featured_media_url
+          ? `<img src="${post.jetpack_featured_media_url}" class="w-full h-40 object-cover rounded-t-md">`
+          : "";
+
+        const postHTML = `
+          <a href="post.html?id=${post.id}" class="block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1 card">
+            ${image}
+            <div class="p-4">
+              <h2 class="text-lg font-bold mb-2">${post.title.rendered}</h2>
+              <p class="text-sm text-gray-600 mb-2">${stripHTML(post.excerpt.rendered).slice(0, 100)}...</p>
+              <div class="flex justify-between text-xs text-gray-500 mt-4">
+                <span>👤 ${authorName}</span>
+                <span>🗓️ ${new Date(post.date).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </a>
+        `;
+        container.innerHTML += postHTML;
+      });
+    }
+
+    function stripHTML(html) {
+      const div = document.createElement("div");
+      div.innerHTML = html;
+      return div.textContent || div.innerText || "";
+    }
+  </script>
+
+  <!-- ✅ Scripts -->
+  <script type="module" src="header.js"></script>
+  <script type="module" src="js/footer.js"></script>
+</body>
+</html>
