@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - TamilGeo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .shake { animation: shake 0.3s; }
+    .bounce { animation: bounce 0.4s; }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes bounce {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- Shared Header from header.js -->
+  <div id="shared-header"></div>
+
+  <!-- Login Form -->
+  <main class="w-full max-w-2xl mx-auto mt-8 md:mt-12 bg-white p-8 rounded shadow animate-in" id="login-card">
+    <h2 class="text-2xl font-bold mb-6 text-center">🔐 Log In</h2>
+
+    <form id="login-form" class="space-y-5">
+      <input type="text" id="identifier" placeholder="Email or Username" required class="w-full p-3 border rounded" />
+      
+      <div class="relative">
+        <input type="password" id="password" placeholder="Password" required class="w-full p-3 border rounded pr-10" />
+        <button type="button" id="togglePassword" class="absolute right-2 top-2.5 text-gray-600 hover:text-black">
+          👁️
+        </button>
+      </div>
+
+      <button type="submit" id="loginBtn" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 flex justify-center items-center gap-2">
+        <span id="loginBtnText">Log In</span>
+        <svg id="loginSpinner" class="w-4 h-4 hidden animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path d="M4 12a8 8 0 018-8" stroke="white" stroke-width="4" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </form>
+
+    <p class="text-center text-sm mt-5">
+      Don't have an account? 
+      <a href="signup.html" class="text-blue-600 hover:underline">Sign up</a>
+    </p>
+
+    <p class="text-center text-sm mt-2">
+      Need help? 
+      <a href="contact.html" class="text-yellow-600 hover:underline">Contact Admin</a>
+    </p>
+
+    <p id="error-msg" class="text-red-600 text-sm text-center mt-4"></p>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer" class="mt-8"></div>
+
+  <!-- Firebase Login Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const form = document.getElementById("login-form");
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginBtnText = document.getElementById("loginBtnText");
+    const loginSpinner = document.getElementById("loginSpinner");
+    const errorMsg = document.getElementById("error-msg");
+    const loginCard = document.getElementById("login-card");
+
+    togglePassword.addEventListener("click", () => {
+      const isVisible = passwordInput.type === "text";
+      passwordInput.type = isVisible ? "password" : "text";
+      togglePassword.textContent = isVisible ? "👁️" : "🙈";
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const identifier = document.getElementById("identifier").value.trim();
+      const password = passwordInput.value.trim();
+
+      errorMsg.textContent = "";
+      loginCard.classList.remove("shake", "bounce");
+
+      if (!identifier || !password) {
+        errorMsg.textContent = "❌ Please enter both email/username and password.";
+        loginCard.classList.add("shake");
+        return;
+      }
+
+      loginBtn.disabled = true;
+      loginBtnText.textContent = "Logging in...";
+      loginSpinner.classList.remove("hidden");
+
+      let emailToLogin = identifier;
+
+      try {
+        if (!identifier.includes("@")) {
+          const usersRef = ref(db, "users");
+          const snapshot = await get(usersRef);
+
+          if (!snapshot.exists()) throw new Error("No users found.");
+          const users = snapshot.val();
+          const matchedUser = Object.values(users).find(user => user.username === identifier);
+
+          if (!matchedUser) throw new Error("No user found with this username.");
+          emailToLogin = matchedUser.email;
+        }
+
+        const userCredential = await signInWithEmailAndPassword(auth, emailToLogin, password);
+        const userId = userCredential.user.uid;
+
+        // Fetch role from database
+        const roleSnap = await get(child(ref(db), `users/${userId}/role`));
+        const role = roleSnap.exists() ? roleSnap.val().toLowerCase() : "user";
+
+        loginCard.classList.add("bounce");
+
+        setTimeout(() => {
+          if (role === "admin" || role === "manager") {
+            window.location.href = "dashboard.html";
+          } else {
+            window.location.href = "account.html";
+          }
+        }, 400);
+
+      } catch (error) {
+        const code = error.code || "";
+        if (code === "auth/user-not-found") {
+          errorMsg.textContent = "❌ User not found.";
+        } else if (code === "auth/wrong-password") {
+          errorMsg.textContent = "❌ Incorrect password.";
+        } else if (code === "auth/invalid-email") {
+          errorMsg.textContent = "❌ Invalid email format.";
+        } else {
+          errorMsg.textContent = "❌ " + (error.message || "Something went wrong.");
+        }
+
+        loginCard.classList.add("shake");
+        loginBtn.disabled = false;
+        loginBtnText.textContent = "Log In";
+        loginSpinner.classList.add("hidden");
+      }
+    });
+  </script>
+
+  <!-- Universal Footer Loader -->
+  <script type="module" src="header.js"></script>
+  <script type="module" src="/js/footer.js"></script>
+</body>
+</html>
