@@ -24,6 +24,13 @@
       transform-origin: 70% 70%;
       animation: wave 2s ease-in-out infinite;
     }
+
+    /* Smaller sign out and delete buttons */
+    #signOutBtn, #deleteAccountBtn {
+      padding: 0.5rem 1.5rem;
+      font-size: 0.875rem; /* text-sm */
+      height: 2.75rem;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
@@ -43,6 +50,16 @@
       </div>
       <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
     </div>
+
+    <!-- 🔔 Notifications Section (Inserted here) -->
+    <section id="notificationsSection" class="mb-6 bg-white shadow rounded-lg p-6">
+      <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-bell"></i> Notifications
+      </h2>
+      <div id="notificationsList" class="space-y-4">
+        <!-- Notifications will appear here -->
+      </div>
+    </section>
 
     <!-- ✅ Profile Card -->
     <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
@@ -94,7 +111,6 @@
         <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
         <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact</a>
         <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate </a>
-
       </div>
     </section>
 
@@ -106,7 +122,6 @@
         <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>
         <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
         <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>
-       
       </div>
     </section>
 
@@ -134,11 +149,22 @@
       </div>
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
+
+    <!-- Sign Out and Delete Account Buttons (Reduced size) -->
+    <div class="grid grid-cols-2 gap-4 mt-10 mb-10 max-w-md mx-auto">
+      <button id="signOutBtn" class="bg-gradient-to-r from-green-400 to-green-700 text-white font-semibold rounded-lg shadow hover:from-green-500 hover:to-green-800 transition w-full flex items-center justify-center gap-2">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+      <button id="deleteAccountBtn" class="bg-gradient-to-r from-red-400 to-red-700 text-white font-semibold rounded-lg shadow hover:from-red-500 hover:to-red-800 transition w-full flex items-center justify-center gap-2">
+        <i class="fa-solid fa-trash"></i> Delete Account
+      </button>
+    </div>
+
   </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
     import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
@@ -176,6 +202,65 @@
       profilePic.src = uploadedPicUrl; // Instant preview
     });
 
+    async function loadNotifications(userId) {
+      const notifList = document.getElementById("notificationsList");
+      notifList.innerHTML = "Loading notifications...";
+      
+      try {
+        const notifsSnap = await get(ref(db, "notifications"));
+        if (!notifsSnap.exists()) {
+          notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
+          return;
+        }
+
+        const notifications = notifsSnap.val();
+        notifList.innerHTML = "";
+
+        let anyVisible = false;
+        for (const [notifId, notif] of Object.entries(notifications)) {
+          if (!notif.active) continue;
+
+          const dismissedBy = notif.dismissedBy || {};
+          if (dismissedBy[userId]) continue;
+
+          anyVisible = true;
+          const card = document.createElement("div");
+          card.className = "rounded-md p-3 mb-3 text-xs text-white flex items-center gap-2 font-semibold";
+          card.style.background = "linear-gradient(90deg, #34d399, #059669)";
+
+          const iconClass = notif.type === "alert" ? "fa-solid fa-bell" : "fa-solid fa-info-circle";
+
+          card.innerHTML = `
+            <i class="${iconClass}"></i>
+            <div class="whitespace-pre-wrap">${notif.message}</div>
+            <button aria-label="Dismiss notification" class="ml-auto text-white hover:text-gray-200 font-bold text-xl leading-none">&times;</button>
+          `;
+
+          card.querySelector("button").addEventListener("click", async () => {
+            try {
+              await update(ref(db, \`notifications/\${notifId}/dismissedBy/\${userId}\`), true);
+              card.remove();
+              if (notifList.children.length === 0) {
+                notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
+              }
+            } catch (error) {
+              alert("Error dismissing notification.");
+              console.error(error);
+            }
+          });
+
+          notifList.appendChild(card);
+        }
+
+        if (!anyVisible) {
+          notifList.innerHTML = "<p class='text-gray-500'>No notifications to show.</p>";
+        }
+      } catch (error) {
+        notifList.innerHTML = "<p class='text-red-500'>Failed to load notifications.</p>";
+        console.error(error);
+      }
+    }
+
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         alert("Please log in to view your account.");
@@ -195,11 +280,14 @@
         document.getElementById("username").textContent = "@" + (data.username || "");
         document.getElementById("bio").textContent = data.bio || "";
 
-        // ✅ Show account creation & last login
+        // Show account creation & last login
         const createdDate = new Date(user.metadata.creationTime);
         const lastLoginDate = new Date(user.metadata.lastSignInTime);
         document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
         document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
+
+        // Load notifications
+        await loadNotifications(user.uid);
       }
     });
 
@@ -215,11 +303,10 @@
       await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
       location.reload();
     });
-  </script>
 
-  <!-- ✅ Universal Header Loader -->
-  <script type="module" src="header.js"></script>
-  <footer id="footer" class="mt-auto"></footer>
-  <script type="module" src="js/footer.js"></script>
-</body>
-</html>
+    // Sign Out and Delete Account buttons handlers
+    document.getElementById("signOutBtn").addEventListener("click", async () => {
+      try {
+        await signOut(auth);
+        alert("Signed out successfully.");
+        window.location.href
