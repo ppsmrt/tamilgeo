@@ -29,35 +29,40 @@ const placeholder = document.getElementById("shared-header");
 const currentPath = window.location.pathname;
 const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
 
+async function getUserRole(uid) {
+  try {
+    const userRef = ref(db, `users/${uid}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      return snapshot.val().role || "user";
+    }
+  } catch (err) {
+    console.error("Error fetching user role:", err);
+  }
+  return "user";
+}
+
 onAuthStateChanged(auth, async (user) => {
   let navContent = "";
 
   if (user) {
-    try {
-      const snap = await get(ref(db, "users/" + user.uid));
-      const role = snap.exists() ? snap.val().role : "user";
-      const accountLink =
-        role === "admin" || role === "manager"
-          ? "dashboard.html"
-          : "account.html";
+    const role = await getUserRole(user.uid);
+    const accountPage = (role === "admin" || role === "manager") ? "dashboard.html" : "account.html";
 
-      navContent = `
-        <nav class="flex gap-2 text-sm font-medium">
-          ${!isHomePage ? `
-            <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
-              Home
-            </a>` : ""}
-          <a href="${accountLink}" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
-            Account
-          </a>
-          <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
-            Sign out
-          </button>
-        </nav>
-      `;
-    } catch (err) {
-      console.error("Error fetching user role:", err);
-    }
+    navContent = `
+      <nav class="flex gap-2 text-sm font-medium">
+        ${!isHomePage ? `
+          <a href="index.html" class="px-4 py-1 rounded-full bg-green-600 text-white hover:bg-green-700 transition">
+            Home
+          </a>` : ""}
+        <a href="${accountPage}" class="px-4 py-1 rounded-full border border-green-600 text-green-600 bg-white hover:bg-green-50 transition">
+          Account
+        </a>
+        <button id="logout-btn" class="px-4 py-1 rounded-full bg-red-600 text-white hover:bg-red-700 transition">
+          Sign out
+        </button>
+      </nav>
+    `;
   } else {
     navContent = `
       <nav class="flex gap-2 text-sm font-medium">
