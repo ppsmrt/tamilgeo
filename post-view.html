@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Post Details - TamilGeo</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+</head>
+<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
+
+  <!-- Shared Header -->
+  <div id="shared-header"></div>
+
+  <main class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow mt-8 mb-16">
+    <div id="post-container" class="prose max-w-full">
+      <!-- Post content will load here -->
+      <p class="text-center text-gray-500">Loading post...</p>
+    </div>
+    <div class="mt-6">
+      <button onclick="history.back()" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 transition">
+        <i class="fa fa-arrow-left"></i> Back to Posts
+      </button>
+    </div>
+  </main>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+      authDomain: "tamilgeoapp.firebaseapp.com",
+      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+      projectId: "tamilgeoapp",
+      storageBucket: "tamilgeoapp.appspot.com",
+      messagingSenderId: "1092623024431",
+      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const postContainer = document.getElementById('post-container');
+
+    // Get post ID from URL query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+
+    if (!postId) {
+      postContainer.innerHTML = '<p class="text-red-600 text-center">Invalid post ID.</p>';
+    } else {
+      // Fetch post data from Firebase
+      get(ref(db, 'posts/' + postId))
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            const post = snapshot.val();
+
+            // Only show if approved
+            if (post.approved !== true) {
+              postContainer.innerHTML = '<p class="text-red-600 text-center">This post is not approved or does not exist.</p>';
+              return;
+            }
+
+            // Format date nicely
+            const dateString = new Date(post.date).toLocaleDateString(undefined, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+
+            // Sanitize content or assume safe (if you want advanced sanitization, consider libraries)
+            const safeContent = post.content ? post.content.replace(/\n/g, '<br>') : '';
+
+            postContainer.innerHTML = `
+              <h1 class="text-3xl font-bold mb-4">${post.title}</h1>
+              ${post.image ? `<img src="${post.image}" alt="${post.title}" class="w-full max-h-96 object-cover rounded mb-6"/>` : ''}
+              <div class="text-lg text-gray-800 mb-6">${safeContent}</div>
+              <p class="text-sm text-gray-500">By <strong>${post.author || 'Unknown'}</strong> • ${dateString}</p>
+            `;
+          } else {
+            postContainer.innerHTML = '<p class="text-red-600 text-center">Post not found.</p>';
+          }
+        })
+        .catch(error => {
+          postContainer.innerHTML = `<p class="text-red-600 text-center">Error loading post: ${error.message}</p>`;
+        });
+    }
+  </script>
+
+  <!-- Universal Header Loader -->
+  <script type="module" src="header.js"></script>
+
+  <!-- Footer Loader -->
+  <footer id="footer" class="mt-auto"></footer>
+  <script type="module" src="js/footer.js"></script>
+
+</body>
+</html>
