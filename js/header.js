@@ -1,4 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+// js/header.js
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
@@ -10,7 +11,7 @@ import {
   get
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
+// ✅ Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -21,7 +22,8 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-const app = initializeApp(firebaseConfig);
+// ✅ Initialize Firebase only once
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
@@ -29,6 +31,7 @@ const placeholder = document.getElementById("shared-header");
 const currentPath = window.location.pathname;
 const isHomePage = currentPath.endsWith("index.html") || currentPath === "/" || currentPath === "/test/";
 
+// ✅ Fetch user role from Realtime DB
 async function getUserRole(uid) {
   try {
     const userRef = ref(db, `users/${uid}`);
@@ -42,6 +45,7 @@ async function getUserRole(uid) {
   return "user";
 }
 
+// ✅ Build header dynamically
 onAuthStateChanged(auth, async (user) => {
   let navContent = "";
 
@@ -94,14 +98,10 @@ onAuthStateChanged(auth, async (user) => {
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         signOut(auth)
-          .then(() => {
-            window.location.href = "index.html";
-          })
+          .then(() => window.location.href = "index.html")
           .catch(err => console.error("Sign out error:", err));
       });
     }
-  } else {
-    console.warn("⚠️ shared-header element not found in DOM");
   }
 }, err => {
   console.error("🔥 Firebase auth error:", err);
