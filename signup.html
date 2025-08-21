@@ -1,156 +1,172 @@
-<!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign Up - TamilGeo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo - Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-MC6E5vbeSFRYxuVXWaJjXKQn5SC2eYyEUZ+cfYY4gXavwhC2EeUlDRt7rkKHlf6IikIfZngjRvmhYlZ4m+Oc7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    .rule-card {
-      @apply bg-white border border-blue-200 p-3 rounded shadow-sm hover:shadow-md transition;
+    .bottom-nav {
+      backdrop-filter: blur(15px);
+      background: linear-gradient(90deg, #32a852, #28b66f);
+      border-radius: 1.5rem 1.5rem 0 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
     }
+    .dial {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
+      margin: auto;
+      position: relative;
+    }
+    .dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #f0fff4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
+    }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    .card { border-radius: 1.25rem; }
+    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
+.install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease-in-out;
+}
+.install-btn:hover {
+  transform: scale(1.1);
+}
+.hidden {
+  display: none;
+}
   </style>
+<!-- ✅ Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ✅ FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100 text-gray-900 flex flex-col min-h-screen">
 
-  <!-- ✅ Shared Header -->
-  <div id="shared-header"></div>
+</head>
+  <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- ✅ Signup Form and Rules -->
-  <main class="max-w-2xl mx-auto mt-8 bg-white p-6 rounded shadow space-y-8 flex-grow">
+     <!-- ✅ Header -->
+  <script type="module" src="assets/js/header.js"></script>
 
-    <!-- 📜 Rules Section -->
-    <section class="space-y-4">
-      <h2 class="text-xl font-bold text-blue-800 flex items-center gap-2">
-        <span>📋</span> TamilGeo Community Guidelines
-      </h2>
+  <!-- ✅ Signup Form -->
+<form id="signupForm" 
+      class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6">
+  
+  <!-- Title -->
+  <div class="text-center">
+    <i class="fa-solid fa-user-plus text-green-500 text-6xl mb-3"></i>
+    <h2 class="text-3xl font-bold text-gray-800">Create Account</h2>
+    <p class="text-gray-500">Sign up to get started</p>
+  </div>
 
-      <div class="grid gap-3 sm:grid-cols-2">
-        <div class="rule-card">✅ Be respectful – No hate speech or bullying.</div>
-        <div class="rule-card">🧠 Share only useful, meaningful, and original content.</div>
-        <div class="rule-card">🚫 No spam, promotions, or misleading content.</div>
-        <div class="rule-card">📷 Use real names and clear profile pictures.</div>
-        <div class="rule-card">💬 Keep your language clean and polite.</div>
-        <div class="rule-card">📢 Accept admin/moderator feedback positively.</div>
-        <div class="rule-card">🔐 Don’t post private or personal information.</div>
-        <div class="rule-card">🚨 Report inappropriate content to help the community.</div>
-        <div class="rule-card">⚖️ Admins reserve the right to remove accounts violating rules.</div>
-      </div>
-    </section>
+  <!-- Full Name -->
+  <div>
+    <label for="fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
+    <input id="fullname" name="fullname" type="text" required placeholder="Enter your name" 
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-    <!-- 👤 Signup Form -->
-    <section>
-      <h2 class="text-xl font-bold mb-4 text-center">👤 Create an Account</h2>
+  <!-- Email -->
+  <div>
+    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+    <input id="email" name="email" type="email" required placeholder="Enter your email" 
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-      <form id="signup-form" class="space-y-4">
-        <input type="text" id="name" placeholder="Full Name" required autocomplete="name" class="w-full p-3 border rounded" />
-        <input type="text" id="username" placeholder="Username" required autocomplete="username" class="w-full p-3 border rounded" />
-        <input type="email" id="email" placeholder="Email" required autocomplete="email" class="w-full p-3 border rounded" />
-        <input type="password" id="password" placeholder="Password" required autocomplete="new-password" class="w-full p-3 border rounded" />
-        <button type="submit" id="signup-btn" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
-          Sign Up
-        </button>
-      </form>
+  <!-- Username -->
+  <div>
+    <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+    <input id="username" name="username" type="text" required placeholder="Choose a username" 
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-      <p class="text-xs text-gray-600 mt-2 text-center">By signing up, you agree to follow our community rules.</p>
+  <!-- Password -->
+  <div>
+    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+    <input id="password" name="password" type="password" required placeholder="Create a password" 
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-      <p class="text-center text-sm mt-4">Already have an account? 
-        <a href="login.html" class="text-blue-600 hover:underline">Log in</a>
-      </p>
+  <!-- Location -->
+  <div>
+    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+    <input id="location" name="location" type="text" placeholder="Enter your location"
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-      <p id="signup-status" class="mt-4 text-center text-green-600 font-medium hidden">✅ Account created successfully! Redirecting...</p>
-    </section>
-  </main>
+  <!-- Bio -->
+  <div>
+    <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
+    <textarea id="bio" name="bio" placeholder="Write a short bio"
+              class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none"></textarea>
+  </div>
 
-  <!-- ✅ Footer -->
-  <footer id="footer"></footer>
+  <!-- Profile Picture -->
+  <div>
+    <label for="profilePicture" class="block text-sm font-medium text-gray-700">Profile Picture</label>
+    <input id="profilePicture" name="profilePicture" type="file" accept="image/*"
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
+  </div>
 
-  <!-- ✅ Firebase Logic -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  <!-- Message -->
+  <p id="message" class="text-center text-red-500 mt-2"></p>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
+  <!-- Signup Button -->
+  <button type="submit"
+          class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-500/30 transition">
+    Sign Up Now
+  </button>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+  <!-- Already have account -->
+  <p class="text-sm text-gray-500 text-center">
+    Already have an account? <a href="login.html" class="text-green-600 hover:underline">Login</a>
+  </p>
+</form>
 
-    const signupForm = document.getElementById("signup-form");
-    const signupBtn = document.getElementById("signup-btn");
-    const statusEl = document.getElementById("signup-status");
+  <!-- ✅ Firebase signup.js -->
+  <script type="module" src="assets/js/signup.js"></script>
 
-    signupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
+<!-- ✅ Bottom Navigation -->
 
-      signupBtn.disabled = true;
-      signupBtn.innerText = "Signing Up...";
+<script type="module">
+  import { initFooter } from './assets/js/footer.js';
+  initFooter();
+</script>       
 
-      const name = document.getElementById("name").value.trim();
-      const username = document.getElementById("username").value.trim().toLowerCase();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      try {
-        // 🚫 Restrict certain words
-        const restrictedWords = ["admin", "owner"];
-        if (restrictedWords.some(word => username.includes(word))) {
-          alert("❌ This username contains restricted words (admin/owner). Please choose another.");
-          signupBtn.disabled = false;
-          signupBtn.innerText = "Sign Up";
-          return;
-        }
-
-        // 🔍 Check if username already exists
-        const usernameRef = query(ref(db, "users"), orderByChild("username"), equalTo(username));
-        const snapshot = await get(usernameRef);
-        if (snapshot.exists()) {
-          alert("❌ Username already taken. Please choose another.");
-          signupBtn.disabled = false;
-          signupBtn.innerText = "Sign Up";
-          return;
-        }
-
-        // ✅ Create user
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        await updateProfile(user, { displayName: name });
-
-        await set(ref(db, "users/" + user.uid), {
-          name,
-          username,
-          email,
-          role: "reader",
-          createdAt: new Date().toISOString()
-        });
-
-        statusEl.classList.remove("hidden");
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1500);
-
-      } catch (error) {
-        alert("Signup failed: " + error.message);
-      } finally {
-        signupBtn.disabled = false;
-        signupBtn.innerText = "Sign Up";
-      }
-    });
-  </script>
-
-  <!-- ✅ Shared Scripts -->
-  <script type="module" src="header.js"></script>
-  <script src="js/footer.js"></script>
 </body>
 </html>
