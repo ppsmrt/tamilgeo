@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Not Found</title>
+  <style>
+    /* Reset and basic styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #00ff88, #009966);
+      overflow: hidden;
+    }
+
+    /* Container */
+    .container {
+      text-align: center;
+      color: #fff;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Floating or bouncing 404 */
+    h1 {
+      font-size: 10rem;
+      font-weight: bold;
+      position: relative;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+    }
+
+    /* Animated subtitle */
+    p {
+      font-size: 1.5rem;
+      margin-top: 20px;
+      opacity: 0;
+      animation: fadeIn 2s forwards 0.5s;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #00ff88;
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #00ff88;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #00ff88;
+      color: #fff;
+      transform: scale(1.1);
+    }
+
+    /* Animated background circles */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      animation: move 20s linear infinite;
+    }
+
+    @keyframes move {
+      0% { transform: translateY(100vh) translateX(0) rotate(0deg); }
+      100% { transform: translateY(-100vh) translateX(100vw) rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>404</h1>
+    <p>Oops! Page not found.</p>
+    <a href="/index.html" class="btn">Go Home</a>
+  </div>
+
+  <!-- Animated background circles -->
+  <script>
+    const colors = ['rgba(255,255,255,0.05)', 'rgba(255,255,255,0.08)', 'rgba(255,255,255,0.03)'];
+
+    for(let i = 0; i < 15; i++) {
+      const circle = document.createElement('div');
+      circle.classList.add('circle');
+      const size = Math.random() * 100 + 50; 
+      circle.style.width = `${size}px`;
+      circle.style.height = `${size}px`;
+      circle.style.left = `${Math.random() * 100}vw`;
+      circle.style.top = `${Math.random() * 100}vh`;
+      circle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      circle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+      circle.style.animationDelay = `${Math.random() * 5}s`;
+      document.body.appendChild(circle);
+    }
+  </script>
+
+</body>
+</html>
