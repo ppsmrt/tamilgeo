@@ -1,38 +1,85 @@
-<!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo - Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    integrity="sha512-pc6Jf6Ow2pNu5TQXjLg++t7bsrYv0tXrUrp7HxZsjpuElOYUJr7YkJh4Jx/ROImCzhPoJPg3n68P8UGqQY5PAw=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
+  <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    .fade-in {
-      animation: fadeIn 0.5s ease-in-out;
+    .bottom-nav {
+      backdrop-filter: blur(15px);
+      background: linear-gradient(90deg, #32a852, #28b66f);
+      border-radius: 1.5rem 1.5rem 0 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
     }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .dial {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
+      margin: auto;
+      position: relative;
     }
+    .dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #f0fff4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
+    }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    .card { border-radius: 1.25rem; }
+    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
+.install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease-in-out;
+}
+.install-btn:hover {
+  transform: scale(1.1);
+}
+.hidden {
+  display: none;
+}
   </style>
+<!-- ✅ Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ✅ FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+  <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- Header -->
-  <header class="bg-white shadow p-4 flex items-center space-x-3 sticky top-0 z-50">
-    <i class="fas fa-tachometer-alt text-blue-600 text-2xl"></i>
-    <h1 class="text-xl font-semibold">Dashboard</h1>
-  </header>
+     <!-- ✅ Header -->
+  <script type="module" src="assets/js/header.js"></script>
 
   <main class="max-w-7xl mx-auto p-6 flex-grow space-y-10 fade-in w-full">
 
@@ -162,6 +209,12 @@
       </div>
     </div>
   </div>
+
+<script type="module">
+  import { initFooter } from './assets/js/footer.js';
+  initFooter();
+</script>       
+
 
   <!-- Firebase + Script -->
   <script type="module">
