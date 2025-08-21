@@ -137,8 +137,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
     }
   </script>
 
-  <!-- ✅ Scripts -->
-  <script type="module" src="header.js"></script>
-  <script type="module" src="js/footer.js"></script>
-</body>
+
+<script type="module">
+  import { initFooter } from './assets/js/footer.js';
+  initFooter();
+</script>       
+
+  </body>
 </html>
