@@ -85,106 +85,83 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
     
     
   <!-- ✅ Notifications List -->
- <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  // ✅ Your Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-    authDomain: "tamilgeoapp.firebaseapp.com",
-    databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-    projectId: "tamilgeoapp",
-    storageBucket: "tamilgeoapp.appspot.com",
-    messagingSenderId: "1092623024431",
-    appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-  };
+<ul id="notifications-list" class="space-y-3"></ul>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-  const listEl = document.getElementById("notificationsList");
-  const emptyState = document.getElementById("emptyState");
+const firebaseConfig = { /* your config */ };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-  // ✅ Category Icons + Colors
-  const categories = {
-    General: { icon: "fa-clipboard", color: "bg-gray-400" },
-    Entertainment: { icon: "fa-film", color: "bg-purple-500" },
-    Political: { icon: "fa-landmark", color: "bg-red-500" },
-    Nature: { icon: "fa-leaf", color: "bg-green-500" },
-    Technology: { icon: "fa-microchip", color: "bg-blue-500" },
-    Health: { icon: "fa-heart-pulse", color: "bg-pink-500" },
-    Shopping: { icon: "fa-cart-shopping", color: "bg-yellow-500" }
-  };
+const notifList = document.getElementById("notifications-list");
 
-  // ✅ Load Notifications
-  function loadNotifications() {
-    const notiRef = ref(db, "notifications");
+// category → icon
+const categoryIcons = {
+  general: "fa fa-bell text-blue-500",
+  political: "fa fa-university text-yellow-600",
+  nature: "fa fa-leaf text-green-600",
+  technology: "fa fa-laptop-code text-gray-700",
+  health: "fa fa-heart text-red-500",
+  entertainment: "fa fa-film text-purple-600",
+  shopping: "fa fa-shopping-cart text-pink-500"
+};
 
-    onValue(notiRef, (snapshot) => {
-      if (!snapshot.exists()) {
-        listEl.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-      const data = snapshot.val();
-      const items = Object.entries(data).reverse();
-
-      listEl.innerHTML = items.map(([id, noti]) => {
-        const cat = categories[noti.category] || categories.General;
-
-        return `
-          <div class="flex items-center space-x-3 p-3 rounded-xl bg-white shadow hover:bg-gray-50 cursor-pointer"
-               onclick="handleClick('${id}', '${noti.link || ""}')">
-            <div class="p-3 rounded-full ${cat.color} text-white">
-              <i class="fa-solid ${cat.icon}"></i>
-            </div>
-            <div class="flex-1">
-              <p class="text-gray-800 font-medium truncate">${noti.title}</p>
-              <span class="text-xs text-gray-500">${noti.category}</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-    });
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    alert("Please login to see notifications.");
+    window.location.href = "login.html";
+    return;
   }
 
-  // ✅ Handle Notification Click
-  window.handleClick = function(id, link) {
-    const notiRef = ref(db, "notifications/" + id);
+  onValue(ref(db, "notifications"), async snapshot => {
+    notifList.innerHTML = "";
+    const allNotifs = snapshot.val() || {};
 
-    if (link && link !== "") {
-      window.open(link, "_blank");
-    } else {
-      // fetch full notification details
-      onValue(notiRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const noti = snapshot.val();
-          document.getElementById("popupTitle").innerText = noti.title;
-          document.getElementById("popupDesc").innerText = noti.description || "";
-          const imgEl = document.getElementById("popupImg");
-          if (noti.image) {
-            imgEl.src = noti.image;
-            imgEl.classList.remove("hidden");
-          } else {
-            imgEl.classList.add("hidden");
-          }
-          document.getElementById("popupModal").classList.remove("hidden");
+    // get dismissed notifications for this user
+    const dismissedSnap = await get(ref(db, `userNotifications/${user.uid}`));
+    const dismissed = dismissedSnap.val() || {};
+
+    Object.values(allNotifs)
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .forEach(notif => {
+        if (!dismissed[notif.id]) {
+          const li = document.createElement("li");
+          li.className = "p-4 border rounded-lg shadow flex items-start space-x-3 bg-white";
+
+          li.innerHTML = `
+            <i class="${categoryIcons[notif.category] || categoryIcons.general} text-2xl"></i>
+            <div class="flex-1">
+              <h3 class="font-bold text-lg">${notif.title}</h3>
+              <p class="text-gray-600">${notif.description}</p>
+              <p class="text-sm text-gray-500 mt-1">${notif.message}</p>
+              ${notif.imageUrl ? `<img src="${notif.imageUrl}" alt="Notification Image" class="mt-2 rounded-lg max-h-40">` : ""}
+              ${notif.linkUrl ? `<a href="${notif.linkUrl}" target="_blank" class="text-blue-600 hover:underline mt-2 block">Read More</a>` : ""}
+            </div>
+            <button class="dismiss bg-red-500 text-white px-3 py-1 rounded" data-id="${notif.id}">
+              Dismiss
+            </button>
+          `;
+
+          notifList.appendChild(li);
         }
-      }, { onlyOnce: true });
-    }
-  };
+      });
 
-  // ✅ Close Modal
-  document.getElementById("closeModal").addEventListener("click", () => {
-    document.getElementById("popupModal").classList.add("hidden");
+    // handle dismiss
+    document.querySelectorAll(".dismiss").forEach(btn => {
+      btn.addEventListener("click", async e => {
+        const notifId = e.target.dataset.id;
+        await set(ref(db, `userNotifications/${user.uid}/${notifId}`), true);
+      });
+    });
   });
-
-  loadNotifications();
+});
 </script>
-
+ 
 <!-- ✅ Bottom Navigation -->
 
 <script type="module">
