@@ -1,42 +1,85 @@
-<!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>My Account - TamilGeo</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo - Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    .fade-in { animation: fadeIn 0.5s ease-in-out; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes wave {
-      0% { transform: rotate(0deg); }
-      10% { transform: rotate(14deg); }
-      20% { transform: rotate(-8deg); }
-      30% { transform: rotate(14deg); }
-      40% { transform: rotate(-4deg); }
-      50% { transform: rotate(10deg); }
-      60% { transform: rotate(0deg); }
-      100% { transform: rotate(0deg); }
+    .bottom-nav {
+      backdrop-filter: blur(15px);
+      background: linear-gradient(90deg, #32a852, #28b66f);
+      border-radius: 1.5rem 1.5rem 0 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
     }
-    .wave-hand {
-      display: inline-block;
-      transform-origin: 70% 70%;
-      animation: wave 2s ease-in-out infinite;
+    .dial {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
+      margin: auto;
+      position: relative;
     }
-
-    /* Smaller sign out and delete buttons */
-    #signOutBtn, #deleteAccountBtn {
-      padding: 0.5rem 1.5rem;
-      font-size: 0.875rem; /* text-sm */
-      height: 2.75rem;
+    .dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #f0fff4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
     }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    .card { border-radius: 1.25rem; }
+    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
+.install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease-in-out;
+}
+.install-btn:hover {
+  transform: scale(1.1);
+}
+.hidden {
+  display: none;
+}
   </style>
+<!-- ✅ Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- ✅ FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+  <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- ✅ Shared Header -->
-  <div id="shared-header"></div>
+     <!-- ✅ Header -->
+  <script type="module" src="assets/js/header.js"></script>
 
   <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
     
@@ -150,15 +193,10 @@
       <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
     </form>
 
-    <!-- Sign Out and Delete Account Buttons (Reduced size) -->
-    <div class="grid grid-cols-2 gap-4 mt-10 mb-10 max-w-md mx-auto">
-      <button id="signOutBtn" class="bg-gradient-to-r from-green-400 to-green-700 text-white font-semibold rounded-lg shadow hover:from-green-500 hover:to-green-800 transition w-full flex items-center justify-center gap-2">
-        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
-      </button>
-      <button id="deleteAccountBtn" class="bg-gradient-to-r from-red-400 to-red-700 text-white font-semibold rounded-lg shadow hover:from-red-500 hover:to-red-800 transition w-full flex items-center justify-center gap-2">
-        <i class="fa-solid fa-trash"></i> Delete Account
-      </button>
-    </div>
+   <script type="module">
+  import { initFooter } from './assets/js/footer.js';
+  initFooter();
+</script>       
 
   </main>
 
