@@ -30,7 +30,7 @@ leftDiv.className = "flex items-center space-x-3";
 if (isHome) {
   // Logo + TamilGeo
   const logo = document.createElement("img");
-  logo.src = "assets/icon/Logo.jpg";
+  logo.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg";
   logo.alt = "TamilGeo";
   logo.className = "w-10 h-10 rounded-full";
 
