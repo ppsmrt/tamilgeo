@@ -76,266 +76,135 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
   <!-- ✅ FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
+
+</head>
   <body class="bg-gray-100 min-h-screen flex flex-col">
 
      <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
 
-  <main class="max-w-3xl mx-auto p-6 flex-grow fade-in">
-    
-    <!-- ✅ Welcome Section -->
-    <div class="bg-white shadow-lg rounded-lg p-6 mb-6 w-full">
-      <div class="flex items-center space-x-3">
-        <span class="wave-hand text-3xl text-yellow-500"><i class="fa-solid fa-hand"></i></span>
-        <h1 class="text-xl font-bold">
-          Hi, <span id="userNameDisplay" class="capitalize"></span>
-        </h1>
-      </div>
-      <p class="text-gray-600 mt-3">Welcome back, we hope the day is well</p>
-    </div>
+<!-- ✅ Profile Section -->
+<main class="flex-1 px-4 py-6 space-y-6">
 
-    
-    <!-- ✅ Profile Card -->
-    <div id="profileCard" class="bg-white shadow rounded-lg p-6 mb-6">
-      <div class="flex items-center space-x-4">
-        <img id="profilePic" src="https://via.placeholder.com/80" alt="Profile Picture" class="w-20 h-20 rounded-full object-cover border">
-        <div>
-          <div class="flex items-center space-x-2">
-            <h2 id="displayName" class="text-xl font-semibold">Loading...</h2>
-          </div>
-          <p id="username" class="text-gray-600 text-sm">@username</p>
-          <p id="bio" class="text-gray-500 text-sm italic mt-1">Loading bio...</p>
-        </div>
-      </div>
-
-      <!-- ✅ Profile info rows -->
-      <div class="mt-4 space-y-2 text-sm text-gray-500">
-        <p class="flex items-center"><i class="fa-regular fa-calendar-days w-5 text-blue-500"></i> <span id="accountCreated">Account created: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-regular fa-clock w-5 text-green-500"></i> <span id="lastLogin">Last login: Loading...</span></p>
-        <p class="flex items-center"><i class="fa-solid fa-file-lines w-5 text-purple-500"></i> <span id="postCount">Posts: 0</span></p>
+  <!-- Profile Header -->
+  <div class="bg-white rounded-2xl shadow p-6 text-center">
+      <div class="flex flex-col items-center">
+        <img id="profilePic" src="https://via.placeholder.com/100" alt="Profile"
+          class="w-24 h-24 rounded-full object-cover border-4 border-green-500 shadow-md" />
+        <h2 id="profileName" class="mt-4 text-xl font-semibold text-gray-800">Loading...</h2>
+        <p id="profileEmail" class="text-gray-500 text-sm"></p>
+        <button id="editProfileBtn" class="mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-600 text-white shadow hover:scale-105 transition">
+          Edit Profile
+        </button>
       </div>
     </div>
 
-    <!-- 📊 Dashboard Stat Cards -->
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Total Posts</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-posts">0</p>
+  <!-- Profile Options -->
+  <div class="bg-white rounded-2xl shadow divide-y">
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-heart text-green-600"></i>
+        <span>About Us</span>
       </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Followers</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-followers">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Likes</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-likes">0</p>
-      </div>
-      <div class="bg-white p-6 rounded-lg shadow text-center">
-        <h3 class="text-sm font-medium text-gray-500">Comments</h3>
-        <p class="text-2xl font-bold text-gray-800" id="stat-comments">0</p>
-      </div>
-    </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
 
-    <!-- ⚡ Quick Actions -->
-    <section id="user-actions" class="bg-white shadow rounded-lg p-6 mt-10">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-bolt"></i> Quick Actions</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="submit.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-pen"></i> Submit Post</a>
-        <a href="posts.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-newspaper"></i> View Posts</a>
-        <a href="bookmarks.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-bookmark"></i> Bookmarks</a>
-        <a href="contact.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-envelope"></i> Contact</a>
-        <a href="donate.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-heart"></i> Donate </a>
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-download text-green-600"></i>
+        <span>Contact Us</span>
       </div>
-    </section>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
 
-    <!-- 📄 Important Links -->
-    <section id="site-pages" class="bg-white shadow rounded-lg p-6 mt-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4"><i class="fa-solid fa-link"></i> Important Links</h2>
-      <div class="grid grid-cols-2 gap-4 text-left">
-        <a href="about.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-circle-info"></i> About </a>
-        <a href="disclaimer.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-triangle-exclamation"></i> Disclaimer</a>
-        <a href="privacy.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-lock"></i> Privacy Policy</a>
-        <a href="terms.html" class="flex items-center gap-2 border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-800 px-4 py-3 rounded-lg shadow-sm transition"><i class="fa-solid fa-file-contract"></i> Terms</a>
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-language text-green-600"></i>
+        <span>Donate Us</span>
       </div>
-    </section>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
 
-    <!-- 📌 Edit Account Form -->
-    <form id="accountForm" class="bg-white p-6 rounded shadow space-y-4">
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Account Name</label>
-        <input type="text" id="name" class="w-full p-2 border rounded" required>
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-map-marker-alt text-green-600"></i>
+        <span>Disclaimer</span>
       </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
-        <input type="text" id="usernameField" class="w-full p-2 border rounded bg-gray-100" readonly>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Registered Email</label>
-        <input type="email" id="emailField" class="w-full p-2 border rounded bg-gray-100" readonly>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Bio</label>
-        <textarea id="bioField" rows="3" class="w-full p-2 border rounded"></textarea>
-      </div>
-      <div>
-        <label class="block mb-1 text-sm font-medium text-gray-700">Profile Picture</label>
-        <input type="file" id="profilePicUpload" class="w-full p-2 border rounded">
-      </div>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Save Changes</button>
-    </form>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
 
-   <script type="module">
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-tv text-green-600"></i>
+        <span>Privacy Policy</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-desktop text-green-600"></i>
+        <span>Terms & Conditions</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+  </div>
+
+  <!-- Account Actions -->
+  <div class="bg-white rounded-2xl shadow divide-y">
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-trash text-red-500"></i>
+        <span>Clear Cache</span>
+      </div>
+    </a>
+
+    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-clock-rotate-left text-red-500"></i>
+        <span>Clear History</span>
+      </div>
+    </a>
+
+    <a href="#" id="logoutBtn" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+  <div class="flex items-center gap-3">
+    <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+    <span>Log Out</span>
+  </div>
+</a>
+  </div>
+
+</main>
+<!-- Firebase + Auth -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="/assets/js/auth.js"></script>
+  <script src="/assets/js/account.js"></script>
+<script>
+  feather.replace();
+</script>
+<script type="module">
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  const auth = getAuth();
+
+  document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+    e.preventDefault(); // stop link from reloading page
+    try {
+      await signOut(auth);
+      // redirect to login page
+      window.location.href = "https://ppsmrt.github.io/tamilgeo/login.html";
+    } catch (error) {
+      console.error("Logout failed:", error.message);
+      alert("Failed to log out. Try again.");
+    }
+  });
+</script>
+
+ <!-- ✅ Bottom Navigation -->
+
+<script type="module">
   import { initFooter } from './assets/js/footer.js';
   initFooter();
 </script>       
-
-  </main>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-    import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-    const storage = getStorage(app);
-
-    const profilePic = document.getElementById("profilePic");
-    const nameInput = document.getElementById("name");
-    const bioField = document.getElementById("bioField");
-    const usernameField = document.getElementById("usernameField");
-    const emailField = document.getElementById("emailField");
-    const profilePicUpload = document.getElementById("profilePicUpload");
-    const userNameDisplay = document.getElementById("userNameDisplay");
-
-    let uploadedPicUrl = "";
-
-    profilePicUpload.addEventListener("change", async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const storageRef = sRef(storage, "profilePictures/" + auth.currentUser.uid + ".jpg");
-      await uploadBytes(storageRef, file);
-      uploadedPicUrl = await getDownloadURL(storageRef);
-      profilePic.src = uploadedPicUrl; // Instant preview
-    });
-
-    async function loadNotifications(userId) {
-      const notifList = document.getElementById("notificationsList");
-      notifList.innerHTML = "Loading notifications...";
-      
-      try {
-        const notifsSnap = await get(ref(db, "notifications"));
-        if (!notifsSnap.exists()) {
-          notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
-          return;
-        }
-
-        const notifications = notifsSnap.val();
-        notifList.innerHTML = "";
-
-        let anyVisible = false;
-        for (const [notifId, notif] of Object.entries(notifications)) {
-          if (!notif.active) continue;
-
-          const dismissedBy = notif.dismissedBy || {};
-          if (dismissedBy[userId]) continue;
-
-          anyVisible = true;
-          const card = document.createElement("div");
-          card.className = "rounded-md p-3 mb-3 text-xs text-white flex items-center gap-2 font-semibold";
-          card.style.background = "linear-gradient(90deg, #34d399, #059669)";
-
-          const iconClass = notif.type === "alert" ? "fa-solid fa-bell" : "fa-solid fa-info-circle";
-
-          card.innerHTML = `
-            <i class="${iconClass}"></i>
-            <div class="whitespace-pre-wrap">${notif.message}</div>
-            <button aria-label="Dismiss notification" class="ml-auto text-white hover:text-gray-200 font-bold text-xl leading-none">&times;</button>
-          `;
-
-          card.querySelector("button").addEventListener("click", async () => {
-            try {
-              await update(ref(db, \`notifications/\${notifId}/dismissedBy/\${userId}\`), true);
-              card.remove();
-              if (notifList.children.length === 0) {
-                notifList.innerHTML = "<p class='text-gray-500'>No notifications found.</p>";
-              }
-            } catch (error) {
-              alert("Error dismissing notification.");
-              console.error(error);
-            }
-          });
-
-          notifList.appendChild(card);
-        }
-
-        if (!anyVisible) {
-          notifList.innerHTML = "<p class='text-gray-500'>No notifications to show.</p>";
-        }
-      } catch (error) {
-        notifList.innerHTML = "<p class='text-red-500'>Failed to load notifications.</p>";
-        console.error(error);
-      }
-    }
-
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        alert("Please log in to view your account.");
-        window.location.href = "/login.html";
-        return;
-      }
-      const snap = await get(ref(db, "users/" + user.uid));
-      if (snap.exists()) {
-        const data = snap.val();
-        profilePic.src = data.profilePicture || "https://via.placeholder.com/80";
-        nameInput.value = data.name || "";
-        bioField.value = data.bio || "";
-        usernameField.value = data.username || "";
-        emailField.value = user.email || "";
-        userNameDisplay.textContent = data.name || "User";
-        document.getElementById("displayName").textContent = data.name || "No Name";
-        document.getElementById("username").textContent = "@" + (data.username || "");
-        document.getElementById("bio").textContent = data.bio || "";
-
-        // Show account creation & last login
-        const createdDate = new Date(user.metadata.creationTime);
-        const lastLoginDate = new Date(user.metadata.lastSignInTime);
-        document.getElementById("accountCreated").textContent = `Account created: ${createdDate.toLocaleDateString()}`;
-        document.getElementById("lastLogin").textContent = `Last login: ${lastLoginDate.toLocaleDateString()}`;
-
-        // Load notifications
-        await loadNotifications(user.uid);
-      }
-    });
-
-    document.getElementById("accountForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      if (!user) return;
-      await update(ref(db, "users/" + user.uid), { 
-        name: nameInput.value, 
-        bio: bioField.value, 
-        profilePicture: uploadedPicUrl || profilePic.src
-      });
-      await updateProfile(user, { displayName: nameInput.value, photoURL: uploadedPicUrl || profilePic.src });
-      location.reload();
-    });
-
-    // Sign Out and Delete Account buttons handlers
-    document.getElementById("signOutBtn").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        alert("Signed out successfully.");
-        window.location.href
