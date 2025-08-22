@@ -178,24 +178,31 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 
 </main>
 <!-- Firebase + Auth -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="/assets/js/auth.js"></script>
   <script src="/assets/js/account.js"></script>
 <script>
   feather.replace();
-</script>
 <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-  const auth = getAuth();
+  const firebaseConfig = {
+    apiKey: "YOUR_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "YOUR_PROJECT.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
 
   document.getElementById("logoutBtn").addEventListener("click", async (e) => {
-    e.preventDefault(); // stop link from reloading page
+    e.preventDefault();
     try {
       await signOut(auth);
-      // redirect to login page
       window.location.href = "https://ppsmrt.github.io/tamilgeo/login.html";
     } catch (error) {
       console.error("Logout failed:", error.message);
@@ -203,7 +210,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
     }
   });
 </script>
-
  <!-- ✅ Bottom Navigation -->
 
 <script type="module">
