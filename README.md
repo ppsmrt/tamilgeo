@@ -49,6 +49,12 @@ Version : 2.1<br>
 
 ---
 
+### 💲Buy This Script 
+
+I'm happy to sell this script for purchasing script contact me at tamilgeo.off@gmail.com if you need me to build a app like this contact us. 
+
+---
+
 ### ❤️ Donate
 
 If you love my work kindly donate on the done page.
@@ -60,7 +66,7 @@ If you love my work kindly donate on the done page.
 Made with ❤️ by **TamilGeo**
 
 * 🌐 [Website](https://tamilgeo.wordpress.com)
-* 🐙 [GitHub](https://github.com/your-username)
+* 🐙 [GitHub](https://github.com/ppsmrt)
 
 ---
 
