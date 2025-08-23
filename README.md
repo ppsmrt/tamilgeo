@@ -18,100 +18,28 @@
 
 ---
 
-### 🚀 Features
+### 🚀 Features Of TamilGeo
 
 ✅ WordPress API integration (Posts, Authors, Images)<br>
-✅ Firebase-powered real-time **likes** & **comments**<br>
-✅ Responsive video embeds<br>
-✅ "Load More Posts" with pagination<br>
-✅ Clean Tailwind UI<br>
-✅ Copy-to-clipboard **Share** button<br>
-✅ SEO-friendly code<br>
-✅ Sync commenting & Likes (with Firebase Auth)
+✅ Post View With Typography, Quotes, Video Embeds & Much More <br>
+✅ Clean Login & Signup<br>
+✅ Clean Ui & With Simplified Options<br>
+✅ In Site Notifications<br>
+✅ Bookmark for saving loves posts<br>
+✅ Dashboard for users (Improving day by day)<br>
+✅ Submit Your Post<br>
 
 ---
 
-### 🛠️ Setup Instructions
+### 💡 Android Support 
 
-#### 1. 🔗 Clone the Repo
-
-```bash
-git clone https://github.com/your-username/tamilgeo-blog.git
-cd tamilgeo-blog
-```
-
-#### 2. 🌐 Set Up Firebase
-
-1. Go to [Firebase Console](https://console.firebase.google.com/)
-2. Create a new project
-3. Go to **Realtime Database** → Create Database
-4. Go to **Project Settings** → Add Web App
-5. Copy your Firebase config and replace in `post.html`:
-
-   ```js
-   const firebaseConfig = {
-     apiKey: "XXXX",
-     authDomain: "XXXX",
-     databaseURL: "XXXX",
-     ...
-   }
-   ```
-
-#### 3. ✍️ Customize WordPress Site Source
-
-In `index.js` and `post.js`, replace:
-
-```js
-const blogURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com";
-```
-
-With your WordPress site’s API endpoint:
-
-```
-https://public-api.wordpress.com/wp/v2/sites/YOURSITE.wordpress.com
-```
+* Android 5+ Above<br>
 
 ---
 
-### 🧾 Folder Structure
+### ❤️ Donate
 
-```
-tamilgeo-blog/
-├── index.html
-├── post.html
-├── js/
-│   ├── index.js      # Fetch & render posts
-│   └── post.js       # Fetch & display single post (with Firebase)
-├── css/              # (optional custom styles)
-└── README.md
-```
-
----
-
-### 🔥 Firebase Data Format
-
-```json
-{
-  "likes": {
-    "post_123": 4
-  },
-  "comments": {
-    "post_123": {
-      "comment_1": "Great post!",
-      "comment_2": "Loved it!"
-    }
-  }
-}
-```
-
----
-
-### 💡 Future Improvements
-
-* 🔒 Authenticated commenting (with Firebase Auth)
-* 📅 Scheduled posts display
-* 🗂️ Categories / tags filtering
-* 🌙 Dark mode toggle
+If you love my work kindly donate on the done page.
 
 ---
 
