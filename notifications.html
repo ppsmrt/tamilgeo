@@ -82,109 +82,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 
      <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
-    
-    
-  <!-- ✅ Notifications List -->
- <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  // ✅ Your Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-    authDomain: "tamilgeoapp.firebaseapp.com",
-    databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-    projectId: "tamilgeoapp",
-    storageBucket: "tamilgeoapp.appspot.com",
-    messagingSenderId: "1092623024431",
-    appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-  };
+<!-- Placeholder Messages -->
+<p id="loginMsg" class="hidden text-center text-gray-500 mt-10">Login to see notifications</p>
+<p id="emptyState" class="hidden text-center text-gray-500 mt-10">No notifications yet.</p>
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+<!-- Notifications List -->
+<div id="notificationsList" class="p-4 space-y-3"></div>
 
-  const listEl = document.getElementById("notificationsList");
-  const emptyState = document.getElementById("emptyState");
-
-  // ✅ Category Icons + Colors
-  const categories = {
-    General: { icon: "fa-clipboard", color: "bg-gray-400" },
-    Entertainment: { icon: "fa-film", color: "bg-purple-500" },
-    Political: { icon: "fa-landmark", color: "bg-red-500" },
-    Nature: { icon: "fa-leaf", color: "bg-green-500" },
-    Technology: { icon: "fa-microchip", color: "bg-blue-500" },
-    Health: { icon: "fa-heart-pulse", color: "bg-pink-500" },
-    Shopping: { icon: "fa-cart-shopping", color: "bg-yellow-500" }
-  };
-
-  // ✅ Load Notifications
-  function loadNotifications() {
-    const notiRef = ref(db, "notifications");
-
-    onValue(notiRef, (snapshot) => {
-      if (!snapshot.exists()) {
-        listEl.innerHTML = "";
-        emptyState.classList.remove("hidden");
-        return;
-      }
-
-      emptyState.classList.add("hidden");
-      const data = snapshot.val();
-      const items = Object.entries(data).reverse();
-
-      listEl.innerHTML = items.map(([id, noti]) => {
-        const cat = categories[noti.category] || categories.General;
-
-        return `
-          <div class="flex items-center space-x-3 p-3 rounded-xl bg-white shadow hover:bg-gray-50 cursor-pointer"
-               onclick="handleClick('${id}', '${noti.link || ""}')">
-            <div class="p-3 rounded-full ${cat.color} text-white">
-              <i class="fa-solid ${cat.icon}"></i>
-            </div>
-            <div class="flex-1">
-              <p class="text-gray-800 font-medium truncate">${noti.title}</p>
-              <span class="text-xs text-gray-500">${noti.category}</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-    });
-  }
-
-  // ✅ Handle Notification Click
-  window.handleClick = function(id, link) {
-    const notiRef = ref(db, "notifications/" + id);
-
-    if (link && link !== "") {
-      window.open(link, "_blank");
-    } else {
-      // fetch full notification details
-      onValue(notiRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const noti = snapshot.val();
-          document.getElementById("popupTitle").innerText = noti.title;
-          document.getElementById("popupDesc").innerText = noti.description || "";
-          const imgEl = document.getElementById("popupImg");
-          if (noti.image) {
-            imgEl.src = noti.image;
-            imgEl.classList.remove("hidden");
-          } else {
-            imgEl.classList.add("hidden");
-          }
-          document.getElementById("popupModal").classList.remove("hidden");
-        }
-      }, { onlyOnce: true });
-    }
-  };
-
-  // ✅ Close Modal
-  document.getElementById("closeModal").addEventListener("click", () => {
-    document.getElementById("popupModal").classList.add("hidden");
-  });
-
-  loadNotifications();
-</script>
-
+<!-- Popup Modal -->
+<div id="popupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
+    <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-black">
+      <i class="fa-solid fa-xmark text-xl"></i>
+    </button>
+    <img id="popupImg" class="w-full h-40 object-cover rounded-md mb-4 hidden" />
+    <h2 id="popupTitle" class="text-lg font-bold mb-2"></h2>
+    <p id="popupDesc" class="text-gray-600"></p>
+  </div>
+</div>
+  
 <!-- ✅ Bottom Navigation -->
 
 <script type="module">
