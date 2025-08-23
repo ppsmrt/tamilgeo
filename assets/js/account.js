@@ -2,7 +2,7 @@
 firebase.auth().onAuthStateChanged(user => {
   if (!user) {
     // Redirect if not logged in
-    window.location.href = "/login.html";
+    window.location.href = "/tamilgeo/login.html";
     return;
   }
 
