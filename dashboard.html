@@ -441,13 +441,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
         if (snapshot.exists()) {
           const userData = snapshot.val();
           if (userData.role !== "admin") {
-            window.location.href = "account.html";
+            window.location.href = "tamilgeo/account.html";
           }
         } else {
-          window.location.href = "account.html";
+          window.location.href = "tamilgeo/account.html";
         }
       } else {
-        window.location.href = "login.html";
+        window.location.href = "/tamilgeo/login.html";
       }
     });
   </script>
