@@ -1,6 +1,6 @@
-## 📘 TamilGeo Blog
+## 📘 TamilGeo Blog - Wordpress Posts Pulling
 
-**TamilGeo** is a modern, mobile-first blog platform built using:
+**TamilGeo** is a modern and first of the mobile-first blog web app built using below concepts:
 
 * WordPress REST API (for blog content)
 * Firebase (for realtime likes & comments)
