@@ -12,8 +12,13 @@
   <!-- Header -->
   <h1 class="text-2xl font-bold text-green-600 mb-6">Admin - Send Notification</h1>
 
-  <!-- Notification Form -->
-  <div id="adminPanel" class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4">
+  <!-- Loading / Status Message -->
+  <p id="statusMsg" class="text-center mt-3 text-sm text-gray-500">
+    ⏳ Checking admin access...
+  </p>
+
+  <!-- Notification Form (hidden until admin verified) -->
+  <div id="adminPanel" class="hidden bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4">
 
     <!-- Title -->
     <div>
@@ -60,10 +65,9 @@
 
     <!-- Send Button -->
     <button id="sendBtn"
-      class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Send Notification</button>
-
-    <!-- Success/Error Message -->
-    <p id="statusMsg" class="text-center mt-3 text-sm"></p>
+      class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+      Send Notification
+    </button>
   </div>
 
   <!-- JS -->
