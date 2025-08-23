@@ -29,6 +29,9 @@ const closeModal = document.getElementById("close-modal");
 let selectedPostId = null;
 let selectedPost = null;
 
+// ✅ Allowed admin emails
+const adminEmails = ["admin@example.com"]; // change to your admin email(s)
+
 // Auth check
 onAuthStateChanged(auth, user => {
   if (!user) {
@@ -36,6 +39,13 @@ onAuthStateChanged(auth, user => {
     window.location.href = "login.html";
     return;
   }
+
+  if (!adminEmails.includes(user.email)) {
+    alert("Access denied. Redirecting...");
+    window.location.href = "dashboard.html";
+    return;
+  }
+
   loadPosts();
 });
 
