@@ -37,6 +37,14 @@
 
 ---
 
+### 🔽 Download TamilGeo
+
+Name    : TamilGeo <br>
+Package : com.tamilgeo.app<br>
+Version : 2.1<br>
+
+[![Download](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/android-badge_black220582327436912550.png)](https://drive.google.com/file/d/13EV-4b7IzxBPZeU83OeCHuAVGSJgT98u/view?usp=drivesdk)
+
 ### ❤️ Donate
 
 If you love my work kindly donate on the done page.
