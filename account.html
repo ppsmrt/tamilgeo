@@ -127,7 +127,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
       <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
     </a>
 
-    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+    <a href="/tamilgeo/disclaimer" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-triangle-exclamation text-green-600"></i>
         <span>Disclaimer</span>
@@ -135,7 +135,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
       <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
     </a>
 
-    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+    <a href="/tamilgeo/privacy" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-shield text-green-600"></i>
         <span>Privacy Policy</span>
@@ -143,7 +143,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
       <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
     </a>
 
-    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+    <a href="/tamilgeo/terms" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
       <div class="flex items-center gap-3">
         <i class="fa-solid fa-desktop text-green-600"></i>
         <span>Terms & Conditions</span>
@@ -177,41 +177,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
   </div>
 
 </main>
-<!-- Firebase + Auth -->
-  <script src="/assets/js/auth.js"></script>
-  <script src="/assets/js/account.js"></script>
-<script>
-  feather.replace();
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-  const firebaseConfig = {
-  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-  authDomain: "tamilgeoapp.firebaseapp.com",
-  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-  projectId: "tamilgeoapp",
-  storageBucket: "tamilgeoapp.appspot.com",
-  messagingSenderId: "1092623024431",
-  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-};
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  document.getElementById("logoutBtn").addEventListener("click", async (e) => {
-    e.preventDefault();
-    try {
-      await signOut(auth);
-      window.location.href = "https://ppsmrt.github.io/tamilgeo/login.html";
-    } catch (error) {
-      console.error("Logout failed:", error.message);
-      alert("Failed to log out. Try again.");
-    }
-  });
-</script>
+    
  <!-- ✅ Bottom Navigation -->
-
 <script type="module">
   import { initFooter } from './assets/js/footer.js';
   initFooter();
