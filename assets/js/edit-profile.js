@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
 // ✅ Firebase Config
@@ -33,6 +33,10 @@ const phone = document.getElementById("phone");
 const birth = document.getElementById("birth");
 const gender = document.getElementById("gender");
 
+// ✅ Disable username & email (non-editable)
+username.setAttribute("readonly", true);
+email.setAttribute("readonly", true);
+
 // ✅ Load user data
 onAuthStateChanged(auth, async (user) => {
   if (user) {
@@ -52,7 +56,13 @@ onAuthStateChanged(auth, async (user) => {
         phone.value = data.phone || "";
         birth.value = data.birth || "";
         gender.value = data.gender || "Other";
-        profilePic.src = data.profilePic || "https://via.placeholder.com/100";
+        
+        // ✅ Default picture if not set
+        profilePic.src = data.profilePic || "/tamilgeo/assets/icon/dp.png";
+      } else {
+        // fallback if no data
+        profilePic.src = "/tamilgeo/assets/icon/dp.png";
+        email.value = user.email;
       }
     } catch (error) {
       console.error("❌ Error loading user data:", error);
@@ -76,6 +86,7 @@ form.addEventListener("submit", async (e) => {
   const userData = {
     firstName: firstName.value.trim(),
     lastName: lastName.value.trim(),
+    // username & email are read-only, but we keep them for consistency
     username: username.value.trim(),
     email: email.value.trim(),
     phone: phone.value.trim(),
@@ -93,7 +104,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-// ✅ Change profile picture
+// ✅ Change profile picture (preview only, not uploading to Firebase Storage)
 changePicBtn.addEventListener("click", () => {
   const fileInput = document.createElement("input");
   fileInput.type = "file";
@@ -104,7 +115,7 @@ changePicBtn.addEventListener("click", () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        profilePic.src = e.target.result; // preview image
+        profilePic.src = e.target.result; // preview image (Base64)
       };
       reader.readAsDataURL(file);
     }
