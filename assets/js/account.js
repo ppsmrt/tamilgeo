@@ -1,0 +1,45 @@
+// ✅ Check auth state
+firebase.auth().onAuthStateChanged(user => {
+  if (!user) {
+    // Redirect if not logged in
+    window.location.href = "/login.html";
+    return;
+  }
+
+  // ✅ Fetch user profile from Firebase Realtime Database
+  firebase.database().ref("users/" + user.uid).on("value", snapshot => {
+    const profile = snapshot.val();
+    if (profile) {
+      document.getElementById("profileName").textContent = profile.fullname || "No Name";
+      document.getElementById("profileEmail").textContent = profile.email || user.email;
+      document.getElementById("profilePic").src =
+        profile.profilePicture || "https://via.placeholder.com/100";
+    }
+  });
+});
+
+// ✅ Logout button (redirect to index.html after logout)
+document.addEventListener("DOMContentLoaded", () => {
+  const logoutBtn = document.getElementById("logoutBtn");
+  const editProfileBtn = document.getElementById("editProfileBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      try {
+        // ✅ Correct v8 Firebase logout
+        await firebase.auth().signOut();
+        window.location.href = "index.html"; // Redirect after logout
+      } catch (error) {
+        console.error("Logout Error:", error);
+      }
+    });
+  }
+
+  // ✅ Edit profile button (redirect to edit page)
+  if (editProfileBtn) {
+    editProfileBtn.addEventListener("click", () => {
+      window.location.href = "edit-profile.html";
+    });
+  }
+});
