@@ -1,154 +1,36 @@
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo - Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .bottom-nav {
-      backdrop-filter: blur(15px);
-      background: linear-gradient(90deg, #32a852, #28b66f);
-      border-radius: 1.5rem 1.5rem 0 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .dial {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
-      margin: auto;
-      position: relative;
-    }
-    .dial-inner {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f0fff4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
-    }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-    .card { border-radius: 1.25rem; }
-    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.install-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00c853, #64dd17);
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s ease-in-out;
-}
-.install-btn:hover {
-  transform: scale(1.1);
-}
-.hidden {
-  display: none;
-}
-  </style>
-
-<script>
-  // Disable right-click menu
-  document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-    alert("Right-click is disabled on this site!");
-  });
-
-  // Disable key shortcuts for DevTools and View Source
-  document.addEventListener('keydown', function(e) {
-    // F12
-    if (e.key === "F12") e.preventDefault();
-
-    // Ctrl+Shift+I or Ctrl+Shift+J (DevTools)
-    if (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j')) e.preventDefault();
-
-    // Ctrl+U (View Source)
-    if (e.ctrlKey && e.key.toLowerCase() === 'u') e.preventDefault();
-
-    // Ctrl+Shift+C (Inspect Element)
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c') e.preventDefault();
-
-    // Ctrl+S (Save Page)
-    if (e.ctrlKey && e.key.toLowerCase() === 's') e.preventDefault();
-
-    // Ctrl+Shift+K (Firefox Web Console)
-    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') e.preventDefault();
-  });
-
-  // Optional: Disable text selection and dragging
-  document.addEventListener('selectstart', e => e.preventDefault());
-  document.addEventListener('dragstart', e => e.preventDefault());
-
-  // Optional: Overlay to block developer tools (works only in some cases)
-  let devtoolsOpen = false;
-  setInterval(() => {
-    const widthThreshold = window.outerWidth - window.innerWidth > 100;
-    const heightThreshold = window.outerHeight - window.innerHeight > 100;
-    if (widthThreshold || heightThreshold) {
-      if (!devtoolsOpen) {
-        devtoolsOpen = true;
-        alert("Developer tools detected! Some functionality may be blocked.");
-      }
-    } else {
-      devtoolsOpen = false;
-    }
-  }, 1000);
-</script>
-  
-<!-- ✅ Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ✅ FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-</head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-
-     <!-- ✅ Header -->
-  <script type="module" src="assets/js/header.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TamilGeo - Home</title>
  
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- Tailwind -->
+  <link href="/assets/css/style.css" rel="stylesheet">
   
-<!-- ✅ Post Grid -->
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <!-- Header -->
+  <script type="module" src="assets/js/header.js"></script>
+  </head>
+  
+  <body class="bg-gray-100 min-h-screen flex flex-col">
+  <!-- Post Grid -->
   <main class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow max-w-7xl mx-auto" id="posts-container">
     <!-- Posts will be injected here by main.js -->
   </main>
 
-  <!-- ✅ Bottom Navigation -->
-
-<script type="module">
+  <!-- Bottom Navigation -->
+  <script type="module">
   import { initFooter } from './assets/js/footer.js';
   initFooter();
-</script>       
-  <script>
-    feather.replace();
-  </script>
-<script type="module" src="assets/js/feed.js"></script>
-  
-</body>
-</html>
+  </script>  
+    
+    <!-- Pull Main Content -->
+  <script> feather.replace(); </script>
+  <script type="module" src="assets/js/feed.js"></script>
+  </body>
+  </html>
 
  
