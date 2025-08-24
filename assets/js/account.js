@@ -1,4 +1,24 @@
-// ✅ Check auth state
+// ===============================
+// ✅ Firebase Configuration
+// ===============================
+const firebaseConfig = {
+  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+  authDomain: "tamilgeoapp.firebaseapp.com",
+  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com", // ✅ Required for Realtime DB
+  projectId: "tamilgeoapp",
+  storageBucket: "tamilgeoapp.appspot.com",
+  messagingSenderId: "1092623024431",
+  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+};
+
+// ✅ Initialize Firebase (only once)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+// ===============================
+// ✅ Auth State Check
+// ===============================
 firebase.auth().onAuthStateChanged(user => {
   if (!user) {
     // Redirect if not logged in
@@ -9,37 +29,47 @@ firebase.auth().onAuthStateChanged(user => {
   // ✅ Fetch user profile from Firebase Realtime Database
   firebase.database().ref("users/" + user.uid).on("value", snapshot => {
     const profile = snapshot.val();
+
     if (profile) {
-      document.getElementById("profileName").textContent = profile.fullname || "No Name";
-      document.getElementById("profileEmail").textContent = profile.email || user.email;
-      document.getElementById("profilePic").src =
-        profile.profilePicture || "https://via.placeholder.com/100";
+      // ✅ Full Name (fallback if missing)
+      document.getElementById("profileName").textContent =
+        profile.fullname || "No Name";
+
+      // ✅ Email (fallback to auth email)
+      document.getElementById("profileEmail").textContent =
+        profile.email || user.email;
+
+      // ✅ Profile Picture (default if missing or empty)
+      const profilePic = document.getElementById("profilePic");
+      profilePic.src =
+        profile.profilePicture && profile.profilePicture.trim() !== ""
+          ? profile.profilePicture
+          : "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+
+      // ✅ Fallback if broken link
+      profilePic.onerror = () => {
+        profilePic.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+      };
     }
   });
 });
 
-// ✅ Logout button (redirect to index.html after logout)
+// ===============================
+// ✅ DOMContentLoaded (Logout only)
+// ===============================
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
-  const editProfileBtn = document.getElementById("editProfileBtn");
 
+  // ✅ Logout button
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", async (e) => {
+    logoutBtn.addEventListener("click", async e => {
       e.preventDefault();
       try {
-        // ✅ Correct v8 Firebase logout
         await firebase.auth().signOut();
         window.location.href = "index.html"; // Redirect after logout
       } catch (error) {
         console.error("Logout Error:", error);
       }
-    });
-  }
-
-  // ✅ Edit profile button (redirect to edit page)
-  if (editProfileBtn) {
-    editProfileBtn.addEventListener("click", () => {
-      window.location.href = "edit-profile.html";
     });
   }
 });
