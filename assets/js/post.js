@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue, set, increment, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -12,11 +11,9 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Get post ID from URL
 const postId = new URLSearchParams(window.location.search).get("id");
 const container = document.getElementById("post-container");
 
@@ -25,7 +22,6 @@ if (!postId) {
   throw new Error("Missing post ID");
 }
 
-// Fetch WordPress post
 const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`;
 
 fetch(postURL)
@@ -48,8 +44,8 @@ fetch(postURL)
     container.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow-md">
         ${featuredImage}
-        <h1 class="text-3xl mb-4">${post.title.rendered}</h1>
-        <div class="prose prose-green prose-lg max-w-none leading-relaxed">
+        <h1 id="post-title" class="text-3xl mb-4">${post.title.rendered}</h1>
+        <div id="post-content" class="prose prose-green prose-lg max-w-none leading-relaxed">
           ${contentStyled}
         </div>
 
@@ -88,7 +84,15 @@ fetch(postURL)
     container.innerHTML = "<p class='text-red-600 font-semibold'>Post not found or failed to load.</p>";
   });
 
-// Firebase setup for likes/comments/shares
+function formatDaysAgo(dateStr) {
+  const postDate = new Date(dateStr);
+  const now = new Date();
+  const diffDays = Math.floor((now - postDate) / (1000 * 60 * 60 * 24));
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "1 day ago";
+  return `${diffDays} days ago`;
+}
+
 function setupFirebase() {
   const likesRef = ref(db, `posts/${postId}/likes`);
   const sharesRef = ref(db, `posts/${postId}/shares`);
@@ -108,7 +112,7 @@ function setupFirebase() {
   commentForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const commentText = document.getElementById('comment-input').value.trim();
-    if (!commentText) return;
+    if(!commentText) return;
     push(commentsRef, { text: commentText, timestamp: Date.now() });
     document.getElementById('comment-input').value = '';
   });
