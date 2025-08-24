@@ -1,5 +1,3 @@
-// ===================== ACCOUNT PAGE =====================
-
 // ✅ Check auth state
 Auth.onAuthStateChanged(user => {
   if (!user) {
