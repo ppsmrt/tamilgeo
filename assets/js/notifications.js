@@ -1,9 +1,9 @@
-// assets/js/notifications.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+// notifications.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// ✅ Firebase Config
+// ✅ Your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -14,101 +14,87 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
+// Init Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
-// ✅ DOM
-const listEl = document.getElementById("notificationsList");
-const emptyState = document.getElementById("emptyState");
-const loginMsg = document.getElementById("loginMsg");
+// Elements
+const adminPanel = document.getElementById("adminPanel");
+const sendBtn = document.getElementById("sendBtn");
+const notificationsContainer = document.getElementById("notificationsContainer"); // 👈 must exist in notifications.html
 
-// ✅ Category Icons + Colors
-const categories = {
-  General: { icon: "fa-clipboard", color: "bg-gray-400" },
-  Entertainment: { icon: "fa-film", color: "bg-purple-500" },
-  Political: { icon: "fa-landmark", color: "bg-red-500" },
-  Nature: { icon: "fa-leaf", color: "bg-green-500" },
-  Technology: { icon: "fa-microchip", color: "bg-blue-500" },
-  Health: { icon: "fa-heart-pulse", color: "bg-pink-500" },
-  Shopping: { icon: "fa-cart-shopping", color: "bg-yellow-500" }
-};
-
-// ✅ Check login state
+// 🔹 Show admin panel only if user is admin
 onAuthStateChanged(auth, (user) => {
-  if (!user) {
-    // User NOT logged in
-    listEl.innerHTML = "";
-    emptyState.classList.add("hidden");
-    loginMsg.classList.remove("hidden");
-    return;
+  if (user && user.getIdTokenResult) {
+    user.getIdTokenResult().then((idTokenResult) => {
+      if (idTokenResult.claims.admin) {
+        adminPanel.classList.remove("hidden");
+      }
+    });
   }
-
-  // User is logged in
-  loginMsg.classList.add("hidden");
-  loadNotifications();
 });
 
-// ✅ Load Notifications for logged in users
-function loadNotifications() {
-  const notiRef = ref(db, "notifications");
+// 🔹 Send notification (admin only)
+if (sendBtn) {
+  sendBtn.addEventListener("click", () => {
+    const title = document.getElementById("title").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const image = document.getElementById("image").value.trim();
+    const link = document.getElementById("link").value.trim();
+    const category = document.getElementById("category").value;
 
-  onValue(notiRef, (snapshot) => {
-    if (!snapshot.exists()) {
-      listEl.innerHTML = "";
-      emptyState.classList.remove("hidden");
+    if (!title || !description) {
+      alert("⚠️ Please fill in both title and description.");
       return;
     }
 
-    emptyState.classList.add("hidden");
-    const data = snapshot.val();
-    const items = Object.entries(data).reverse();
-
-    listEl.innerHTML = items.map(([id, noti]) => {
-      const cat = categories[noti.category] || categories.General;
-
-      return `
-        <div class="flex items-center space-x-3 p-3 rounded-xl bg-white shadow hover:bg-gray-50 cursor-pointer"
-             onclick="handleClick('${id}', '${noti.postLink || ""}')">
-          <div class="p-3 rounded-full ${cat.color} text-white">
-            <i class="fa-solid ${cat.icon}"></i>
-          </div>
-          <div class="flex-1">
-            <p class="text-gray-800 font-medium truncate">${noti.title}</p>
-            <span class="text-xs text-gray-500">${noti.category}</span>
-          </div>
-        </div>
-      `;
-    }).join("");
+    const notifRef = ref(db, "notifications");
+    push(notifRef, {
+      title,
+      description,
+      image: image || null,
+      link: link || null,
+      category,
+      timestamp: Date.now()
+    })
+      .then(() => {
+        alert("✅ Notification sent!");
+        document.getElementById("title").value = "";
+        document.getElementById("description").value = "";
+        document.getElementById("image").value = "";
+        document.getElementById("link").value = "";
+        document.getElementById("category").value = "General";
+      })
+      .catch((err) => {
+        console.error("Error sending notification:", err);
+        alert("❌ Failed to send notification");
+      });
   });
 }
 
-// ✅ Handle Notification Click
-window.handleClick = function(id, link) {
-  const notiRef = ref(db, "notifications/" + id);
+// 🔹 Display notifications for everyone
+if (notificationsContainer) {
+  const notifRef = ref(db, "notifications");
+  onValue(notifRef, (snapshot) => {
+    notificationsContainer.innerHTML = ""; // Clear old
 
-  if (link && link !== "") {
-    window.open(link, "_blank");
-  } else {
-    onValue(notiRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const noti = snapshot.val();
-        document.getElementById("popupTitle").innerText = noti.title;
-        document.getElementById("popupDesc").innerText = noti.description || "";
-        const imgEl = document.getElementById("popupImg");
-        if (noti.imageUrl) {
-          imgEl.src = noti.imageUrl;
-          imgEl.classList.remove("hidden");
-        } else {
-          imgEl.classList.add("hidden");
-        }
-        document.getElementById("popupModal").classList.remove("hidden");
-      }
-    }, { onlyOnce: true });
-  }
-};
+    snapshot.forEach((child) => {
+      const notif = child.val();
 
-// ✅ Close Popup
-document.getElementById("closeModal").addEventListener("click", () => {
-  document.getElementById("popupModal").classList.add("hidden");
-});
+      const card = document.createElement("div");
+      card.className =
+        "bg-white shadow-md rounded-xl p-4 mb-4 border border-gray-200";
+
+      card.innerHTML = `
+        <h2 class="text-lg font-semibold">${notif.title}</h2>
+        <p class="text-gray-600">${notif.description}</p>
+        ${notif.image ? `<img src="${notif.image}" class="mt-2 rounded-lg"/>` : ""}
+        ${notif.link ? `<a href="${notif.link}" target="_blank" class="text-blue-600 mt-2 block">Read More</a>` : ""}
+        <span class="text-xs text-gray-400 block mt-1">Category: ${notif.category}</span>
+      `;
+
+      notificationsContainer.prepend(card); // newest first
+    });
+  });
+}
