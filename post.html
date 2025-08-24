@@ -70,22 +70,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 .hidden {
   display: none;
 }
-    /* Back to Top button */
-    .back-to-top {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      background-color: #2563eb;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      transition: background 0.3s;
-    }
-
-    .back-to-top:hover {
-      background-color: #1d4ed8;
-    }
   </style>
 <!-- ✅ Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -99,11 +83,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 
   <!-- Post Container -->
   <main id="post-container" class="w-full max-w-3xl"></main>
-
-  <!-- Back to Top Button -->
-  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="back-to-top">
-    ↑ Top
-  </button>
 
   <!-- Bottom Navigation -->
   <script type="module">
