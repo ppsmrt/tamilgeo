@@ -60,6 +60,14 @@ fetch(postURL)
         </div>
       `);
 
+  // Videos inside content: responsive, boxed, premium
+contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, `
+  <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top: 56.25%;">
+    <iframe$1 class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="absolute top-0 left-0 w-full h-full pointer-events-none rounded-lg"></div>
+  </div>
+`);
+
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
