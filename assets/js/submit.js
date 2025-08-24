@@ -19,22 +19,6 @@ const db = getDatabase(app);
 const postForm = document.getElementById("postForm");
 const authorInput = document.getElementById("author");
 
-// ✅ Initialize Quill
-var quill = new Quill('#editor-container', {
-  theme: 'snow',
-  modules: {
-    toolbar: [
-      [{ 'header': [1, 2, 3, false] }],
-      [{ 'font': [] }],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
-      ['link', 'blockquote', 'code-block']
-    ]
-  }
-});
-
 // ✅ Ensure only logged-in users
 onAuthStateChanged(auth, (user) => {
   if (!user) {
@@ -58,8 +42,7 @@ postForm.addEventListener("submit", async (e) => {
   const category = document.getElementById("category").value.trim();
   const tags = document.getElementById("tags").value.trim();
   const excerpt = document.getElementById("excerpt").value.trim();
-  const contentText = quill.getText().trim();
-  const contentHTML = quill.root.innerHTML.trim();
+  const contentText = document.getElementById("content").value.trim();
   const image = document.getElementById("image").value.trim();
   const acceptRules = document.getElementById("acceptRules").checked;
 
@@ -80,7 +63,7 @@ postForm.addEventListener("submit", async (e) => {
     category,
     tags: tags ? tags.split(",").map(t => t.trim()) : [],
     excerpt,
-    content: contentHTML,
+    content: contentText, // ✅ Plain text content from textarea
     image: image || null,
     authorId: user.uid,
     authorName: user.displayName || user.email,
@@ -92,7 +75,6 @@ postForm.addEventListener("submit", async (e) => {
     await set(ref(db, "pendingPosts/" + postId), postData);
     alert("✅ Post submitted for approval!");
     postForm.reset();
-    quill.setContents([]);
     authorInput.value = user.displayName || user.email;
   } catch (err) {
     console.error(err);
