@@ -42,7 +42,7 @@ fetch(postURL)
     const contentStyled = post.content.rendered
       .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
       .replace(/<hr\s*\/?>/g, '<div class="my-6 border-t-2 border-dashed border-gray-300"></div>')
-      .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-4">$1</pre>');
+      .replace(/<pre><code>([\\s\\S]*?)<\\/code><\\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-4">$1</pre>');
 
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-6">
@@ -68,62 +68,50 @@ fetch(postURL)
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
 
-// ✅ Back to top //
 
-function BackToTopButton() {
-  const [visible, setVisible] = useState(false);
+// ✅ Back to top button (Vanilla JS, no React)
+const backToTopBtn = document.createElement("button");
+backToTopBtn.innerText = "↑ Back to top";
+backToTopBtn.setAttribute("aria-label", "Back to top");
 
-  useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || document.documentElement.scrollTop;
-      setVisible(y > 300);
-    };
+// style it like a blue pill with white font
+Object.assign(backToTopBtn.style, {
+  position: "fixed",
+  right: "1.25rem",
+  bottom: "1.25rem",
+  padding: "0.75rem 1rem",
+  borderRadius: "9999px",
+  background: "#1d4ed8",
+  color: "#ffffff",
+  border: "none",
+  fontWeight: "600",
+  cursor: "pointer",
+  boxShadow:
+    "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+  opacity: "0",
+  transform: "translateY(8px)",
+  transition: "opacity 200ms ease, transform 200ms ease",
+  zIndex: "1000",
+});
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+document.body.appendChild(backToTopBtn);
 
-  const scrollToTop = () => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) {
-      window.scrollTo(0, 0);
-    } else {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+// show/hide on scroll
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    backToTopBtn.style.opacity = "1";
+    backToTopBtn.style.transform = "translateY(0)";
+  } else {
+    backToTopBtn.style.opacity = "0";
+    backToTopBtn.style.transform = "translateY(8px)";
+  }
+});
 
-  return (
-    <button
-      type="button"
-      aria-label="Back to top"
-      onClick={scrollToTop}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          scrollToTop();
-        }
-      }}
-      style={{
-        position: "fixed",
-        right: "1.25rem",
-        bottom: "1.25rem",
-        padding: "0.75rem 1rem",
-        borderRadius: 9999,
-        background: "#1d4ed8",
-        color: "#ffffff",
-        border: "none",
-        fontWeight: 600,
-        cursor: "pointer",
-        boxShadow:
-          "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
-        opacity: visible ? 1 : 0,
-        transform: `translateY(${visible ? 0 : 8}px)`,
-        transition: "opacity 200ms ease, transform 200ms ease",
-        zIndex: 1000,
-      }}
-    >
-      ↑ Back to top
-    </button>
-  );
-}
+// scroll to top smoothly
+backToTopBtn.addEventListener("click", () => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    window.scrollTo(0, 0);
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
