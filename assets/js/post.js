@@ -34,6 +34,27 @@ fetch(postURL)
       match => `<div class="video-container">${match}</div>`
     );
 
+    // Apply Tailwind styles dynamically
+    const styledContent = contentWithResponsiveVideos
+      // Paragraph spacing and line height
+      .replace(/<p>/g, '<p class="mb-5 leading-relaxed">')
+      // Headings green and sized
+      .replace(/<h1>/g, '<h1 class="text-green-600 text-3xl font-bold mb-4 mt-8">')
+      .replace(/<h2>/g, '<h2 class="text-green-600 text-2xl font-bold mb-4 mt-6">')
+      .replace(/<h3>/g, '<h3 class="text-green-600 text-xl font-semibold mb-3 mt-5">')
+      .replace(/<h4>/g, '<h4 class="text-green-600 text-lg font-semibold mb-3 mt-4">')
+      .replace(/<h5>/g, '<h5 class="text-green-600 text-base font-semibold mb-2 mt-3">')
+      // Blockquotes styling
+      .replace(
+        /<blockquote>/g,
+        '<blockquote class="border-l-4 border-green-600 bg-gray-50 p-4 rounded-md italic text-gray-700 my-6">'
+      )
+      // Images in a box with shadow
+      .replace(
+        /<img /g,
+        '<img class="mx-auto my-6 rounded-xl shadow-md border border-gray-200 p-1 bg-white" '
+      );
+
     // Calculate Posted Days Ago
     const postDate = new Date(post.date);
     const today = new Date();
@@ -46,7 +67,7 @@ fetch(postURL)
           👤 Author: TamilGeo | 🗓️ ${postDate.toLocaleDateString()}
         </div>
         ${image}
-        <div class="post-content prose max-w-none mb-6">${contentWithResponsiveVideos}</div>
+        <div class="post-content prose prose-lg max-w-none mb-6">${styledContent}</div>
 
         <!-- 🔽 NEW AUTHOR META SECTION 🔽 -->
         <div class="border-t border-gray-200 pt-4 mb-4 text-sm text-gray-700">
