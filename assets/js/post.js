@@ -52,22 +52,20 @@ fetch(postURL)
       // Code blocks
       .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
       // Images inside content: rounded + boxed + shadow
-      .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>')
-      // Videos inside content: responsive, boxed, premium
-      .replace(/<iframe(.*?)><\/iframe>/g, `
-        <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top: 56.25%;">
-          <iframe$1 class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0" allowfullscreen></iframe>
+      .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
+
+    // YouTube / iframe videos: responsive 16:9, premium look
+    contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, (match, attrs) => {
+      return `
+        <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top:56.25%;">
+          <iframe ${attrs} class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
         </div>
-      `);
+      `;
+    });
 
-  // Videos inside content: responsive, boxed, premium
-contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, `
-  <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top: 56.25%;">
-    <iframe$1 class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <div class="absolute top-0 left-0 w-full h-full pointer-events-none rounded-lg"></div>
-  </div>
-`);
-
+    // Inject post
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
@@ -80,6 +78,7 @@ contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, `
       </div>
     `;
 
+    // Fade-in animation
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
       wrapper.classList.remove("opacity-0");
@@ -91,3 +90,50 @@ contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, `
     console.error(err);
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
+
+// ✅ Back to top button (Vanilla JS)
+const backToTopBtn = document.createElement("button");
+backToTopBtn.innerText = "↑ Back to top";
+backToTopBtn.setAttribute("aria-label", "Back to top");
+
+// style it like a blue pill with white font
+Object.assign(backToTopBtn.style, {
+  position: "fixed",
+  right: "1.25rem",
+  bottom: "1.25rem",
+  padding: "0.75rem 1rem",
+  borderRadius: "9999px",
+  background: "#1d4ed8",
+  color: "#ffffff",
+  border: "none",
+  fontWeight: "600",
+  cursor: "pointer",
+  boxShadow:
+    "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
+  opacity: "0",
+  transform: "translateY(8px)",
+  transition: "opacity 200ms ease, transform 200ms ease",
+  zIndex: "1000",
+});
+
+document.body.appendChild(backToTopBtn);
+
+// show/hide on scroll
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 300) {
+    backToTopBtn.style.opacity = "1";
+    backToTopBtn.style.transform = "translateY(0)";
+  } else {
+    backToTopBtn.style.opacity = "0";
+    backToTopBtn.style.transform = "translateY(8px)";
+  }
+});
+
+// scroll to top smoothly
+backToTopBtn.addEventListener("click", () => {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    window.scrollTo(0, 0);
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
