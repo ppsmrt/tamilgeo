@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
+// ✅ Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -11,10 +13,12 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// Initialize Firebase
-initializeApp(firebaseConfig);
+// ✅ Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-// Get post ID from URL
+// ✅ Get post ID from URL
 const postId = new URLSearchParams(window.location.search).get("id");
 const container = document.getElementById("post-container");
 
@@ -23,10 +27,10 @@ if (!postId) {
   throw new Error("Missing post ID");
 }
 
-// WordPress API URL
+// ✅ WordPress API URL
 const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`;
 
-// Fetch post
+// ✅ Fetch post and render
 fetch(postURL)
   .then(res => {
     if (!res.ok) throw new Error("Failed to fetch post");
@@ -39,57 +43,22 @@ fetch(postURL)
          </div>`
       : "";
 
-    // Style content
-let contentStyled = post.content.rendered
-  // Headings with custom sizes, green, shadow, and spacing
-  .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
-  .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
-  .replace(/<h([3-5])>(.*?)<\/h[3-5]>/g, '<h$1 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$2</h$1>')
+    // ✅ Style post content (same as before)
+    let contentStyled = post.content.rendered
+      .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
+      .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
+      .replace(/<h([3-5])>(.*?)<\/h[3-5]>/g, '<h$1 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$2</h$1>')
+      .replace(/<p>(.*?)<\/p>/g, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
+      .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
+      .replace(/<hr\s*\/?>/g, `<div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>`)
+      .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
+      .replace(/<table>/g, `<div class="overflow-x-auto my-6"><table class="w-full border border-green-600 border-collapse rounded-lg">`)
+      .replace(/<\/table>/g, '</table></div>')
+      .replace(/<th>(.*?)<\/th>/g, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
+      .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
+      .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-  // Paragraphs
-  .replace(/<p>(.*?)<\/p>/g, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
-
-  // Blockquotes
-  .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
-
-  // Horizontal rules
-  .replace(/<hr\s*\/?>/g, `
-  <div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>
-`)
-  
-  // Code blocks
-  .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
-
-  // Responsive Tables with rounded corners
-  .replace(/<table>/g, `
-    <div class="overflow-x-auto my-6">
-      <table class="w-full border border-green-600 border-collapse rounded-lg">
-  `)
-  .replace(/<\/table>/g, '</table></div>')
-  .replace(/<th>(.*?)<\/th>/g, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
-  .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
-
-  // Images inside content: rounded + boxed + shadow
-  .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
-
-    // Premium YouTube/iframe embed
-    contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, (match, attrs) => {
-      return `
-        <div class="my-6 relative group rounded-xl overflow-hidden border border-gray-200 shadow-lg" style="padding-top:56.25%;">
-          <iframe ${attrs} class="absolute top-0 left-0 w-full h-full rounded-xl" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
-          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
-          <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
-            <button class="bg-white bg-opacity-90 text-green-700 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <i class="fas fa-play fa-lg"></i>
-            </button>
-          </div>
-        </div>
-      `;
-    });
-
-    // Inject post
+    // ✅ Inject post + comments section
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
@@ -98,15 +67,108 @@ let contentStyled = post.content.rendered
           <div class="prose prose-green prose-lg max-w-none leading-relaxed">
             ${contentStyled}
           </div>
+
+          <!-- ✅ Comment Box -->
+          <div class="mt-10">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
+            <div id="commentsList" class="space-y-4"></div>
+          </div>
         </div>
       </div>
     `;
 
-    // Fade-in animation
+    // ✅ Fade-in effect
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
       wrapper.classList.remove("opacity-0");
       wrapper.classList.add("opacity-100");
+    });
+
+    // ✅ Firebase Comments Logic
+    const commentInput = document.getElementById("commentInput");
+    const submitComment = document.getElementById("submitComment");
+    const commentsList = document.getElementById("commentsList");
+    const commentsRef = ref(db, `comments/${postId}`);
+
+    let currentUser = null;
+
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        currentUser = user;
+      } else {
+        document.getElementById("comment-box").innerHTML = `
+          <p class="text-center text-gray-600 w-full">Please <a href="/login.html" class="text-green-600 font-semibold">login</a> to comment.</p>
+        `;
+      }
+    });
+
+    submitComment.addEventListener("click", () => {
+      const text = commentInput.value.trim();
+      if (!text) return alert("Comment cannot be empty!");
+      if (!currentUser) return alert("You must be logged in!");
+
+      push(commentsRef, {
+        author: currentUser.displayName || "Anonymous",
+        text,
+        likes: 0,
+        replies: []
+      });
+
+      commentInput.value = "";
+    });
+
+    onValue(commentsRef, snapshot => {
+      commentsList.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) {
+        commentsList.innerHTML = "<p class='text-gray-500 text-center'>No comments yet. Be the first!</p>";
+        return;
+      }
+
+      Object.entries(data).forEach(([id, comment]) => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-50 p-4 rounded-xl shadow flex flex-col";
+        div.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="font-semibold text-gray-800">${comment.author}</p>
+              <p class="text-gray-700 mt-1">${comment.text}</p>
+            </div>
+            <div class="flex space-x-2 text-gray-500">
+              <button data-id="${id}" class="likeBtn hover:text-green-600">👍 ${comment.likes}</button>
+              <button data-id="${id}" class="replyBtn hover:text-green-600">Reply</button>
+            </div>
+          </div>
+        `;
+        commentsList.appendChild(div);
+      });
+
+      document.querySelectorAll(".likeBtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.target.getAttribute("data-id");
+          update(ref(db, `comments/${postId}/${id}`), { likes: (data[id].likes || 0) + 1 });
+        });
+      });
+
+      document.querySelectorAll(".replyBtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.target.getAttribute("data-id");
+          const replyText = prompt(`Reply to ${data[id].author}`);
+          if (replyText) {
+            const replies = data[id].replies || [];
+            replies.push({ author: currentUser.displayName || "Anonymous", text: `@${data[id].author} ${replyText}` });
+            update(ref(db, `comments/${postId}/${id}`), { replies });
+          }
+        });
+      });
     });
 
   })
@@ -114,47 +176,3 @@ let contentStyled = post.content.rendered
     console.error(err);
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
-
-// ✅ Back to top button (Vanilla JS)
-const backToTopBtn = document.createElement("button");
-backToTopBtn.innerText = "↑ Back to top";
-backToTopBtn.setAttribute("aria-label", "Back to top");
-
-Object.assign(backToTopBtn.style, {
-  position: "fixed",
-  right: "1.25rem",
-  bottom: "1.25rem",
-  padding: "0.75rem 1rem",
-  borderRadius: "9999px",
-  background: "#1d4ed8",
-  color: "#ffffff",
-  border: "none",
-  fontWeight: "600",
-  cursor: "pointer",
-  boxShadow:
-    "0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05)",
-  opacity: "0",
-  transform: "translateY(8px)",
-  transition: "opacity 200ms ease, transform 200ms ease",
-  zIndex: "1000",
-});
-
-document.body.appendChild(backToTopBtn);
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 300) {
-    backToTopBtn.style.opacity = "1";
-    backToTopBtn.style.transform = "translateY(0)";
-  } else {
-    backToTopBtn.style.opacity = "0";
-    backToTopBtn.style.transform = "translateY(8px)";
-  }
-});
-
-backToTopBtn.addEventListener("click", () => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    window.scrollTo(0, 0);
-  } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-});
