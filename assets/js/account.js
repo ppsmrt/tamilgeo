@@ -36,11 +36,3 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  // ✅ Edit profile button (redirect to edit page)
-  if (editProfileBtn) {
-    editProfileBtn.addEventListener("click", () => {
-      window.location.href = "edit-profile.html";
-    });
-  }
-});
