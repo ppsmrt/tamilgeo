@@ -83,6 +83,61 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 
   <main class="max-w-7xl mx-auto p-6 flex-grow space-y-10 fade-in w-full">
 
+<!-- Admin Panel -->
+  <div id="adminPanel" class="hidden bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4">
+
+    <h1 class="text-xl font-bold text-center">📢 Admin Notification Panel</h1>
+
+    <!-- Title -->
+    <div>
+      <label class="block text-gray-700 mb-1 font-medium">Title</label>
+      <input id="title" type="text" placeholder="Enter notification title"
+        class="w-full border border-gray-300 rounded-lg p-2"/>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label class="block text-gray-700 mb-1 font-medium">Description</label>
+      <textarea id="description" rows="3" placeholder="Enter notification message"
+        class="w-full border border-gray-300 rounded-lg p-2"></textarea>
+    </div>
+
+    <!-- Post Image URL -->
+    <div>
+      <label class="block text-gray-700 mb-1 font-medium">Post Image URL</label>
+      <input id="image" type="url" placeholder="https://example.com/image.jpg"
+        class="w-full border border-gray-300 rounded-lg p-2"/>
+    </div>
+
+    <!-- Post Link URL -->
+    <div>
+      <label class="block text-gray-700 mb-1 font-medium">Post Link URL</label>
+      <input id="link" type="url" placeholder="https://example.com/post"
+        class="w-full border border-gray-300 rounded-lg p-2"/>
+    </div>
+
+    <!-- Category -->
+    <div>
+      <label class="block text-gray-700 mb-1 font-medium">Category</label>
+      <select id="category"
+        class="w-full border border-gray-300 rounded-lg p-2">
+        <option value="General">📋 General</option>
+        <option value="Political">🏛️ Political</option>
+        <option value="Nature">🌿 Nature</option>
+        <option value="Technology">💻 Technology</option>
+        <option value="Health">❤️ Health</option>
+        <option value="Entertainment">🎬 Entertainment</option>
+        <option value="Shopping">🛍️ Shopping</option>
+      </select>
+    </div>
+
+    <!-- Send Button -->
+    <button id="sendBtn"
+      class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+      Send Notification
+    </button>
+  </div>
+
     <!-- Dashboard Overview / Summary Widgets -->
     <section class="bg-white rounded-lg shadow p-6">
       <h2 class="text-2xl font-bold mb-6 flex items-center space-x-3">
