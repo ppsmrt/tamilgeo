@@ -22,9 +22,11 @@ const db = getDatabase(app);
 const postId = new URLSearchParams(window.location.search).get("id");
 const container = document.getElementById("post-container");
 
-if (!postId) {
-  container.innerHTML = "<p class='text-red-500 text-center'>Invalid Post ID.</p>";
-  throw new Error("Missing post ID");
+// ✅ Validate postId
+if (!postId || isNaN(postId)) {
+  container.innerHTML = "<p class='text-red-500 text-center'>Invalid or missing Post ID.</p>";
+  console.error("Invalid Post ID:", postId);
+  return;
 }
 
 // ✅ WordPress API URL
@@ -33,10 +35,18 @@ const postURL = `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress
 // ✅ Fetch post and render
 fetch(postURL)
   .then(res => {
-    if (!res.ok) throw new Error("Failed to fetch post");
+    if (!res.ok) {
+      console.error(`Fetch failed with status: ${res.status}`);
+      throw new Error(`Failed to fetch post: ${res.status}`);
+    }
     return res.json();
   })
   .then(post => {
+    if (!post || post.code === 'rest_post_invalid_id') {
+      container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found.</p>";
+      return;
+    }
+
     console.log("Fetched post:", post); // Debug log
 
     const featuredImage = post.jetpack_featured_media_url
@@ -61,7 +71,7 @@ fetch(postURL)
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
     // ✅ Inject post + comments section
-container.innerHTML = `
+    container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
           ${featuredImage}
@@ -70,98 +80,54 @@ container.innerHTML = `
             ${contentStyled}
           </div>
 
-<!-- ✅ Author Section -->
-<div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
-  <div class="flex items-center mb-4">
-    <img 
-      src="${
-        post.isPulled
-          ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
-          : userProfile?.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile?.name || 'User') + '&background=34D399&color=fff'
-      }"
-      class="w-14 h-14 rounded-full border-2 border-green-500" 
-      alt="Author"
-    >
+          <!-- ✅ Author Section -->
+          <div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
+            <div class="flex items-center mb-4">
+              <img src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+              <div class="ml-4">
+                <h2 class="text-lg font-semibold text-gray-800">Admin</h2>
+                <p class="text-sm text-gray-500">@admin • tamilgeo</p>
+                <p class="text-xs text-gray-400">Posted on: ${new Date(post.date).toDateString()}</p>
+              </div>
+            </div>
+          </div>
 
-    <div class="ml-4">
-      <h2 class="text-lg font-semibold text-gray-800">
-        ${ post.isPulled ? 'Admin' : userProfile?.fullName || 'Author' }
-      </h2>
-      <p class="text-sm text-gray-500">
-        ${ post.isPulled ? '@admin' : '@' + (userProfile?.username || 'username') } • 
-        ${ userProfile?.email || 'author@gmail.com' }
-      </p>
-      <p class="text-xs text-gray-400">
-        Posted on: ${ new Date(post.date).toDateString() }
-      </p>
-    </div>
-  </div>
+          <!-- ✅ Like Section -->
+          <div class="border-t border-gray-200 pt-3">
+            <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
+            <div class="flex space-x-4" id="likeReactions">
+              <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
+              <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
+              <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
+              <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
+              <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+            </div>
+            <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+          </div>
 
-  <!-- ✅ Category Tag -->
-  ${
-    post.categories?.length
-      ? `<span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
-          ${post.categories[0]}
-        </span>`
-      : ''
-  }
-</div>
+          <!-- ✅ Comments -->
+          <div class="mt-10">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
+            <div id="commentsList" class="space-y-4"></div>
+          </div>
+        </div>
+      </div>
+    `;
 
-<!-- ✅ Like Section -->
-<div class="border-t border-gray-200 pt-3">
-  <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
-  <div class="flex space-x-4" id="likeReactions">
-    <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
-    <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
-    <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
-    <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
-    <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
-  </div>
-  <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
-</div>
-
-<!-- ✅ Share Section -->
-<div class="border-t border-gray-200 mt-4 pt-3">
-  <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
-  <div class="flex space-x-3">
-    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
-      <i class="fab fa-facebook-f text-lg"></i>
-    </a>
-    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
-      <i class="fab fa-twitter text-lg"></i>
-    </a>
-    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
-      <i class="fab fa-telegram-plane text-lg"></i>
-    </a>
-    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
-      <i class="fab fa-whatsapp text-lg"></i>
-    </a>
-  </div>
-</div>
-
-<!-- ✅ Comment Box -->
-<div class="mt-10">
-  <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
-  <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
-    <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
-    <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-      </svg>
-    </button>
-  </div>
-  <div id="commentsList" class="space-y-4"></div>
-</div>
-</div>
-</div>
-`;
-
-// ✅ Fade-in effect
-const wrapper = document.getElementById("post-content-wrapper");
-requestAnimationFrame(() => {
-  wrapper.classList.remove("opacity-0");
-  wrapper.classList.add("opacity-100");
-});
+    // ✅ Fade-in effect
+    const wrapper = document.getElementById("post-content-wrapper");
+    requestAnimationFrame(() => {
+      wrapper.classList.remove("opacity-0");
+      wrapper.classList.add("opacity-100");
+    });
 
     // ✅ Firebase Comments Logic
     const commentInput = document.getElementById("commentInput");
@@ -176,7 +142,7 @@ requestAnimationFrame(() => {
         currentUser = user;
       } else {
         document.getElementById("comment-box").innerHTML = `
-          <p class="text-center text-white-600 w-full">Please <a href="/tamilgeo/login.html" class="text-green-600 font-semibold">login</a> to comment.</p>
+          <p class="text-center text-white w-full">Please <a href="/tamilgeo/login.html" class="text-green-600 font-semibold">login</a> to comment.</p>
         `;
       }
     });
@@ -224,14 +190,14 @@ requestAnimationFrame(() => {
 
       document.querySelectorAll(".likeBtn").forEach(btn => {
         btn.addEventListener("click", e => {
-          const id = e.target.getAttribute("data-id");
+          const id = e.currentTarget.getAttribute("data-id");
           update(ref(db, `comments/${postId}/${id}`), { likes: (data[id].likes || 0) + 1 });
         });
       });
 
       document.querySelectorAll(".replyBtn").forEach(btn => {
         btn.addEventListener("click", e => {
-          const id = e.target.getAttribute("data-id");
+          const id = e.currentTarget.getAttribute("data-id");
           const replyText = prompt(`Reply to ${data[id].author}`);
           if (replyText) {
             const replies = data[id].replies || [];
@@ -244,14 +210,14 @@ requestAnimationFrame(() => {
 
   })
   .catch(err => {
-    console.error(err);
+    console.error("Fetch Error:", err);
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
 
 // ✅ Feather icons
 feather.replace();
 
-// ✅ Firebase Refs
+// ✅ Firebase Refs for Reactions
 const ratingRef = ref(db, `ratings/${postId}`);
 const likesRef = ref(db, `likes/${postId}`);
 
