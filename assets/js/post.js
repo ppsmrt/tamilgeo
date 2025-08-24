@@ -68,36 +68,29 @@ fetch(postURL)
             ${contentStyled}
           </div>
 
-
-  <!-- ✅ Author Section -->
+<!-- ✅ Author Section -->
 <div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
   <div class="flex items-center mb-4">
-    <img src="${
-      post.isPulled
-        ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
-        : userProfile?.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile?.name || 'User') + '&background=34D399&color=fff'
-    }"
-    class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+    <img 
+      src="${
+        post.isPulled
+          ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
+          : userProfile?.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile?.name || 'User') + '&background=34D399&color=fff'
+      }"
+      class="w-14 h-14 rounded-full border-2 border-green-500" 
+      alt="Author"
+    >
 
     <div class="ml-4">
       <h2 class="text-lg font-semibold text-gray-800">
-        ${
-          post.isPulled
-            ? 'Admin'
-            : userProfile?.fullName || 'Author'
-        }
+        ${ post.isPulled ? 'Admin' : userProfile?.fullName || 'Author' }
       </h2>
       <p class="text-sm text-gray-500">
-        ${
-          post.isPulled
-            ? '@admin'
-            : '@' + (userProfile?.username || 'username')
-        } • ${
-          userProfile?.email || 'author@gmail.com'
-        }
+        ${ post.isPulled ? '@admin' : '@' + (userProfile?.username || 'username') } • 
+        ${ userProfile?.email || 'author@gmail.com' }
       </p>
       <p class="text-xs text-gray-400">
-        Posted on: ${new Date(post.date).toDateString()}
+        Posted on: ${ new Date(post.date).toDateString() }
       </p>
     </div>
   </div>
@@ -111,22 +104,22 @@ fetch(postURL)
       : ''
   }
 </div>
-          
-        <!-- ✅ Like Section -->
-        <div class="border-t border-gray-200 pt-3">
-          <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
-          <div class="flex space-x-4" id="likeReactions">
-            <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
-            <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
-            <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
-            <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
-            <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
-          </div>
-          <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
-        </div>
 
-        <!-- ✅ Share Section -->
-        <div class="border-t border-gray-200 mt-4 pt-3">
+<!-- ✅ Like Section -->
+<div class="border-t border-gray-200 pt-3">
+  <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
+  <div class="flex space-x-4" id="likeReactions">
+    <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
+    <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
+    <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
+    <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
+    <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+  </div>
+  <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+</div>
+
+<!-- ✅ Share Section -->
+<div class="border-t border-gray-200 mt-4 pt-3">
   <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
   <div class="flex space-x-3">
     <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
@@ -142,25 +135,22 @@ fetch(postURL)
       <i class="fab fa-whatsapp text-lg"></i>
     </a>
   </div>
-</div>      </div>
+</div>
 
-          <!-- ✅ Comment Box -->
-          <div class="mt-10">
-            <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
-            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
-              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
-              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-              </button>
-            </div>
-            <div id="commentsList" class="space-y-4"></div>
-          </div>
-        </div>
-      </div>
-    `;
-
+<!-- ✅ Comment Box -->
+<div class="mt-10">
+  <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+  <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+    <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+    <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+    </button>
+  </div>
+  <div id="commentsList" class="space-y-4"></div>
+</div>
+  
     // ✅ Fade-in effect
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
