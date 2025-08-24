@@ -87,24 +87,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 <p id="loginMsg" class="hidden text-center text-gray-500 mt-10">Login to see notifications</p>
 <p id="emptyState" class="hidden text-center text-gray-500 mt-10">No notifications yet.</p>
 
-<!-- Notifications List -->
-<div id="notificationsList" class="p-4 space-y-3"></div>
-
-<!-- Popup Modal -->
-<div id="popupModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6 relative">
-    <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-black">
-      <i class="fa-solid fa-xmark text-xl"></i>
-    </button>
-    <img id="popupImg" class="w-full h-40 object-cover rounded-md mb-4 hidden" />
-    <h2 id="popupTitle" class="text-lg font-bold mb-2"></h2>
-    <p id="popupDesc" class="text-gray-600"></p>
-  </div>
-</div>
-
-<!-- JS -->
-  <script type="module" src="/assets/js/notifications.js"></script>
-
+<div id="notificationsContainer" class="space-y-4"></div>
+<script type="module" src="/assets/js/notifications.js"></script>
   
 <!-- ✅ Bottom Navigation -->
 
