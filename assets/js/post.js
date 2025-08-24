@@ -68,6 +68,63 @@ fetch(postURL)
             ${contentStyled}
           </div>
 
+
+  <!-- ✅ Author Section -->
+      <div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
+        <div class="flex items-center mb-4">
+          <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=34D399&color=fff" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+          <div class="ml-4">
+            <h2 class="text-lg font-semibold text-gray-800">${post.author_name || "Author"}</h2>
+            <p class="text-sm text-gray-500">@${post.author_slug || "username"} • ${post.author_email || "author@gmail.com"}</p>
+            <p class="text-xs text-gray-400">Posted on: ${new Date(post.date).toDateString()}</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between mb-4">
+          <span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
+            Category: ${post.categories && post.categories.length ? "Category" : "General"}
+          </span>
+
+          <!-- ✅ Rating Stars -->
+          <div class="flex items-center space-x-2">
+            <span class="text-gray-600 text-sm">Rate this post:</span>
+            <div id="ratingStars" class="flex space-x-1"></div>
+          </div>
+        </div>
+
+        <!-- ✅ Like Section -->
+        <div class="border-t border-gray-200 pt-3">
+          <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
+          <div class="flex space-x-4" id="likeReactions">
+            <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
+            <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
+            <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
+            <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
+            <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+          </div>
+          <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+        </div>
+
+        <!-- ✅ Share Section -->
+        <div class="border-t border-gray-200 mt-4 pt-3">
+          <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
+          <div class="flex space-x-3">
+            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
+              <i data-feather="facebook"></i><span>Facebook</span>
+            </a>
+            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
+              <i data-feather="twitter"></i><span>Twitter</span>
+            </a>
+            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
+              <i data-feather="send"></i><span>Telegram</span>
+            </a>
+            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
+              <i data-feather="message-circle"></i><span>WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
           <!-- ✅ Comment Box -->
           <div class="mt-10">
             <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
@@ -176,3 +233,60 @@ fetch(postURL)
     console.error(err);
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
+
+// ✅ Feather icons
+feather.replace();
+
+// ✅ Firebase Refs
+const ratingRef = ref(db, `ratings/${postId}`);
+const likesRef = ref(db, `likes/${postId}`);
+
+// ✅ Rating Stars Logic
+const ratingStars = document.getElementById('ratingStars');
+let currentRating = 0;
+
+for (let i = 1; i <= 5; i++) {
+  const star = document.createElement('span');
+  star.textContent = '★';
+  star.className = 'cursor-pointer text-gray-400 text-xl';
+  star.addEventListener('click', () => {
+    if (!currentUser) return alert("Login to rate");
+    currentRating = i;
+    updateStars();
+    update(ratingRef, { [currentUser.uid]: currentRating });
+  });
+  ratingStars.appendChild(star);
+}
+
+function updateStars() {
+  const stars = ratingStars.querySelectorAll('span');
+  stars.forEach((star, index) => {
+    star.className = index < currentRating ? 'text-yellow-400 text-xl cursor-pointer' : 'text-gray-400 text-xl cursor-pointer';
+  });
+}
+
+onValue(ratingRef, snapshot => {
+  const ratings = snapshot.val() || {};
+  const values = Object.values(ratings);
+  const avg = values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1) : 0;
+  console.log(`Average Rating: ${avg}`);
+});
+
+// ✅ Like Reactions Logic
+const likeButtons = document.querySelectorAll('#likeReactions button');
+const likeCounts = document.getElementById('likeCounts');
+
+likeButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!currentUser) return alert("Login to react");
+    const reaction = btn.dataset.reaction;
+    update(likesRef, { [`${reaction}_${currentUser.uid}`]: reaction });
+  });
+});
+
+onValue(likesRef, snapshot => {
+  const likes = snapshot.val() || {};
+  const counts = {};
+  Object.values(likes).forEach(r => counts[r] = (counts[r] || 0) + 1);
+  likeCounts.textContent = Object.entries(counts).map(([k, v]) => `${k}: ${v}`).join(' | ');
+});
