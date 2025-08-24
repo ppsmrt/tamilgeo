@@ -1,36 +1,66 @@
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+// ✅ Firebase instances
+const Auth = getAuth();
+const db = getDatabase();
+const storage = getStorage();
+
 // ✅ Check auth state
-Auth.onAuthStateChanged(user => {
+onAuthStateChanged(Auth, async (user) => {
   if (!user) {
-    // Redirect if not logged in
     window.location.href = "/login.html";
     return;
   }
 
-  // ✅ Fetch user profile from Firebase Realtime Database
-  db.ref("users/" + user.uid).on("value", snapshot => {
+  const profilePicEl = document.getElementById("profilePic");
+  const profileNameEl = document.getElementById("profileName");
+  const profileEmailEl = document.getElementById("profileEmail");
+
+  // Fetch profile from Realtime Database
+  onValue(ref(db, "users/" + user.uid), async (snapshot) => {
     const profile = snapshot.val();
-    if (profile) {
-      document.getElementById("profileName").textContent = profile.fullname || "No Name";
-      document.getElementById("profileEmail").textContent = profile.email || user.email;
-      document.getElementById("profilePic").src = profile.profilePicture || "https://via.placeholder.com/100";
+
+    // ✅ Full name
+    if (profileNameEl) profileNameEl.textContent = profile?.fullname || "No Name";
+
+    // ✅ Email
+    if (profileEmailEl) profileEmailEl.textContent = profile?.email || user.email;
+
+    // ✅ Profile Picture
+    if (profilePicEl) {
+      if (profile?.profilePicture) {
+        try {
+          // If profilePicture is a path in Storage, get download URL
+          const url = await getDownloadURL(storageRef(storage, profile.profilePicture));
+          profilePicEl.src = url;
+        } catch (err) {
+          console.warn("Failed to load profile picture from Storage, using default:", err);
+          profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+        }
+      } else {
+        // Default picture
+        profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+      }
     }
   });
 });
 
-// ✅ Logout button (redirect to index.html after logout)
+// ✅ Logout button
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
-  const editProfileBtn = document.getElementById("editProfileBtn");
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       try {
-        // ✅ Use Firebase Auth signOut instead of Auth.logout()
-        await Auth.signOut();
-        window.location.href = "/tamilgeo/index.html"; // Redirect after logout
+        await signOut(Auth);
+        window.location.href = "/tamilgeo/index.html";
       } catch (error) {
         console.error("Logout Error:", error);
+        alert("Failed to logout. Please try again.");
       }
     });
   }
+});
