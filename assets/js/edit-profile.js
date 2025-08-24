@@ -38,9 +38,9 @@ const roleEl = document.getElementById("role");
 // ✅ Set non-editable fields
 [username, email, locationEl, roleEl].forEach(el => el.setAttribute("readonly", true));
 
-// ✅ Load user data
-let selectedFile = null; // store the chosen profile picture file
+let selectedFile = null; // store chosen profile picture
 
+// ✅ Load user data
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "/login.html";
@@ -54,9 +54,11 @@ onAuthStateChanged(auth, async (user) => {
     const snapshot = await get(userRef);
     const data = snapshot.exists() ? snapshot.val() : {};
 
+    console.log("Loaded user data:", data); // ✅ Debug log
+
     // Editable fields
     firstName.value = data.firstName || "";
-    lastName.value = data.lastName || "";
+    lastName.value = data.secondName || ""; // secondName in your DB
     bio.value = data.bio || "";
 
     // Non-editable fields
@@ -65,7 +67,7 @@ onAuthStateChanged(auth, async (user) => {
     locationEl.value = data.location || "";
     roleEl.value = data.role || "";
 
-    // Profile picture
+    // Profile picture (fixed key to match DB)
     profilePic.src = data.profilePic || "/tamilgeo/assets/icon/dp.png";
 
   } catch (error) {
@@ -74,7 +76,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
-// ✅ Change profile picture (select file)
+// ✅ Change profile picture
 editPicBtn.addEventListener("click", () => {
   const fileInput = document.createElement("input");
   fileInput.type = "file";
@@ -106,7 +108,7 @@ form.addEventListener("submit", async (e) => {
   let profilePicUrl = profilePic.src;
 
   try {
-    // ✅ Upload profile picture to Firebase Storage if new file selected
+    // Upload profile picture if new file selected
     if (selectedFile) {
       const storagePath = `profilePictures/${uid}/${selectedFile.name}`;
       const storageReference = storageRef(storage, storagePath);
@@ -114,20 +116,18 @@ form.addEventListener("submit", async (e) => {
       profilePicUrl = await getDownloadURL(storageReference);
     }
 
-    // ✅ Update user data in Realtime Database
+    // Update user data
     const userData = {
       firstName: firstName.value.trim(),
-      lastName: lastName.value.trim(),
+      secondName: lastName.value.trim(), // map lastName to secondName
       bio: bio.value.trim(),
       profilePic: profilePicUrl,
     };
 
     await update(userRef, userData);
     alert("✅ Profile updated successfully!");
-    selectedFile = null; // reset file after upload
+    selectedFile = null; // reset after upload
 
   } catch (error) {
     console.error("❌ Error updating profile:", error);
-    alert("Error saving profile. Try again.");
-  }
-});
+    alert("Error saving profile
