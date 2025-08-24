@@ -1,9 +1,8 @@
-// ✅ Notifications //
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-// ✅ Your Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -25,29 +24,29 @@ const notAdmin = document.getElementById("notAdmin");
 const sendBtn = document.getElementById("sendBtn");
 const logoutBtn = document.getElementById("logoutBtn");
 
-// 🔹 Auth check (show panel only if admin)
-onAuthStateChanged(auth, (user) => {
+// Auth check (show panel only if role === "admin")
+onAuthStateChanged(auth, async (user) => {
   if (user) {
-    user.getIdTokenResult().then((idTokenResult) => {
-      const isAdmin = idTokenResult.claims.admin === true;
+    try {
+      const snapshot = await get(child(ref(db), `users/${user.uid}/role`));
+      const role = snapshot.val();
 
-      if (isAdmin) {
+      if (role === "admin") {
         if (adminPanel) adminPanel.classList.remove("hidden");
         if (notAdmin) notAdmin.classList.add("hidden");
       } else {
         if (notAdmin) notAdmin.classList.remove("hidden");
         if (adminPanel) adminPanel.classList.add("hidden");
       }
-    }).catch((error) => {
-      console.error("Error fetching token claims:", error);
-    });
+    } catch (err) {
+      console.error("Error checking role:", err);
+    }
   } else {
-    // Redirect to login if not logged in
     window.location.href = "login.html";
   }
 });
 
-// 🔹 Send notification
+// Send notification
 if (sendBtn) {
   sendBtn.addEventListener("click", () => {
     const title = document.getElementById("title").value.trim();
@@ -72,7 +71,6 @@ if (sendBtn) {
     })
     .then(() => {
       alert("✅ Notification sent successfully!");
-      // Reset form
       document.getElementById("title").value = "";
       document.getElementById("description").value = "";
       document.getElementById("image").value = "";
@@ -86,11 +84,11 @@ if (sendBtn) {
   });
 }
 
-// 🔹 Logout
+// Logout
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     signOut(auth).then(() => {
-      window.location.href = "login.html"; // Redirect after logout
+      window.location.href = "login.html";
     }).catch((error) => {
       console.error("Logout error:", error);
     });
