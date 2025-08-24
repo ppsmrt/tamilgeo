@@ -143,7 +143,7 @@ fetch(postURL)
               <p class="text-gray-700 mt-1">${comment.text}</p>
             </div>
             <div class="flex space-x-2 text-gray-500">
-              <button data-id="${id}" class="likeBtn hover:text-green-600">👍 ${comment.likes}</button>
+              <button data-id="${id}" class="likeBtn hover:text-green-600"><i class="fa-regular fa-heart"></i> ${comment.likes}</button>
               <button data-id="${id}" class="replyBtn hover:text-green-600">Reply</button>
             </div>
           </div>
