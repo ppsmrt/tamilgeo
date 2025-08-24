@@ -105,7 +105,7 @@ fetch(postURL)
         currentUser = user;
       } else {
         document.getElementById("comment-box").innerHTML = `
-          <p class="text-center text-gray-600 w-full">Please <a href="/tamilgeo/login.html" class="text-green-600 font-semibold">login</a> to comment.</p>
+          <p class="text-center text-white-600 w-full">Please <a href="/tamilgeo/login.html" class="text-green-600 font-semibold">login</a> to comment.</p>
         `;
       }
     });
