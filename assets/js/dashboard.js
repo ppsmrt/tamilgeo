@@ -1,4 +1,4 @@
-// ✅ Notifications//
+// ✅ Notifications //
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -29,17 +29,21 @@ const logoutBtn = document.getElementById("logoutBtn");
 onAuthStateChanged(auth, (user) => {
   if (user) {
     user.getIdTokenResult().then((idTokenResult) => {
-      if (idTokenResult.claims.admin) {
-        adminPanel.classList.remove("hidden");
-        notAdmin.classList.add("hidden");
+      const isAdmin = idTokenResult.claims.admin === true;
+
+      if (isAdmin) {
+        if (adminPanel) adminPanel.classList.remove("hidden");
+        if (notAdmin) notAdmin.classList.add("hidden");
       } else {
-        notAdmin.classList.remove("hidden");
-        adminPanel.classList.add("hidden");
+        if (notAdmin) notAdmin.classList.remove("hidden");
+        if (adminPanel) adminPanel.classList.add("hidden");
       }
+    }).catch((error) => {
+      console.error("Error fetching token claims:", error);
     });
   } else {
     // Redirect to login if not logged in
-    window.location.href = "login.html"; // 👈 change if you use a different login page
+    window.location.href = "login.html";
   }
 });
 
@@ -66,18 +70,19 @@ if (sendBtn) {
       category,
       timestamp: Date.now()
     })
-      .then(() => {
-        alert("✅ Notification sent!");
-        document.getElementById("title").value = "";
-        document.getElementById("description").value = "";
-        document.getElementById("image").value = "";
-        document.getElementById("link").value = "";
-        document.getElementById("category").value = "General";
-      })
-      .catch((err) => {
-        console.error("Error sending notification:", err);
-        alert("❌ Failed to send notification");
-      });
+    .then(() => {
+      alert("✅ Notification sent successfully!");
+      // Reset form
+      document.getElementById("title").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("image").value = "";
+      document.getElementById("link").value = "";
+      document.getElementById("category").value = "General";
+    })
+    .catch((err) => {
+      console.error("Error sending notification:", err);
+      alert("❌ Failed to send notification");
+    });
   });
 }
 
@@ -85,7 +90,9 @@ if (sendBtn) {
 if (logoutBtn) {
   logoutBtn.addEventListener("click", () => {
     signOut(auth).then(() => {
-      window.location.href = "login.html"; // redirect after logout
+      window.location.href = "login.html"; // Redirect after logout
+    }).catch((error) => {
+      console.error("Logout error:", error);
     });
   });
 }
