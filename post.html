@@ -3,9 +3,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TamilGeo - Post</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Custom CSS -->
   <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+
     .bottom-nav {
       backdrop-filter: blur(15px);
       background: linear-gradient(90deg, #32a852, #28b66f);
@@ -19,6 +30,7 @@
       align-items: center;
       color: white;
     }
+
     .dial {
       width: 180px;
       height: 180px;
@@ -31,6 +43,7 @@
       margin: auto;
       position: relative;
     }
+
     .dial-inner {
       width: 140px;
       height: 140px;
@@ -42,17 +55,19 @@
       justify-content: center;
       box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
     }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+
     .card { border-radius: 1.25rem; }
     .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.video-container {
+
+    .video-container {
       position: relative;
       padding-bottom: 56.25%; /* 16:9 ratio */
       height: 0;
       overflow: hidden;
-      border-radius: 0.5rem; /* rounded-lg */
+      border-radius: 0.5rem;
       margin-bottom: 1.5rem;
     }
+
     .video-container iframe {
       position: absolute;
       top: 0;
@@ -62,37 +77,34 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
       border: 0;
     }
   </style>
-<!-- ✅ Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ✅ FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
-</head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-<!-- ✅ Post Container -->
+  <!-- Post Container -->
   <main class="max-w-3xl mx-auto p-4 flex-grow" id="post-container">
     <p class="text-gray-500 italic">Loading post...</p>
   </main>
 
-  <!-- ✅ Back to Top Button -->
+  <!-- Back to Top Button -->
   <div class="fixed bottom-4 right-4">
     <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">
       ↑ Top
     </button>
   </div>
 
- <!-- ✅ Bottom Navigation -->
-
-<script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-</script>       
+  <!-- Bottom Navigation -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
 
   <script>
     feather.replace();
   </script>
+
+  <!-- Post JS -->
+  <script type="module" src="./assets/js/post.js"></script>
 
 </body>
 </html>
