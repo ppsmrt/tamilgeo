@@ -55,16 +55,17 @@ firebase.auth().onAuthStateChanged(user => {
 });
 
 // ===============================
-// ✅ DOMContentLoaded (Logout only)
+✅ Logout button (redirect to index.html after logout)
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
+  const editProfileBtn = document.getElementById("editProfileBtn");
 
-  // ✅ Logout button
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", async e => {
+    logoutBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       try {
+        // ✅ Correct v8 Firebase logout
         await firebase.auth().signOut();
         window.location.href = "index.html"; // Redirect after logout
       } catch (error) {
@@ -72,4 +73,3 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-});
