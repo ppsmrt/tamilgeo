@@ -1,159 +1,53 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo - Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .bottom-nav {
-      backdrop-filter: blur(15px);
-      background: linear-gradient(90deg, #32a852, #28b66f);
-      border-radius: 1.5rem 1.5rem 0 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .dial {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
-      margin: auto;
-      position: relative;
-    }
-    .dial-inner {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f0fff4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
-    }
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-    .card { border-radius: 1.25rem; }
-    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-    .install-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border: none;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00c853, #64dd17);
-      color: white;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 9999;
-      transition: transform 0.2s ease-in-out;
-    }
-    .install-btn:hover {
-      transform: scale(1.1);
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-  <!-- ✅ FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TamilGeo - Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<link rel="stylesheet" href="dashboard.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 p-6">
 
-  <!-- ✅ Header -->
-  <script type="module" src="assets/js/header.js"></script>
+<h1 class="text-2xl font-bold text-center mb-6">TamilGeo Dashboard</h1>
 
-  <main class="max-w-7xl mx-auto p-6 flex-grow space-y-10 fade-in w-full">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-    <!-- ✅ Admin Notification Panel -->
-    <div id="adminPanel" class="hidden bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4 mx-auto">
-      <h1 class="text-xl font-bold text-center">📢 Admin Notification Panel</h1>
+  <div class="card bg-gradient-to-r from-green-400 to-green-600 p-6 shadow-lg rounded-xl transform transition hover:-translate-y-2">
+    <i data-feather="users" class="mb-2 text-white" width="36" height="36"></i>
+    <h2 id="users-count" class="text-3xl font-bold text-white">0</h2>
+    <p class="text-white font-semibold mt-1">Users</p>
+    <span id="users-trend" class="text-green-100 text-sm mt-1">+0 today</span>
+  </div>
 
-      <!-- Title -->
-      <div>
-        <label class="block text-gray-700 mb-1 font-medium">Title</label>
-        <input id="title" type="text" placeholder="Enter notification title"
-          class="w-full border border-gray-300 rounded-lg p-2"/>
-      </div>
+  <div class="card bg-gradient-to-r from-pink-400 to-red-500 p-6 shadow-lg rounded-xl transform transition hover:-translate-y-2">
+    <i data-feather="heart" class="mb-2 text-white" width="36" height="36"></i>
+    <h2 id="likes-count" class="text-3xl font-bold text-white">0</h2>
+    <p class="text-white font-semibold mt-1">Likes</p>
+    <span id="likes-trend" class="text-pink-100 text-sm mt-1">+0 today</span>
+  </div>
 
-      <!-- Description -->
-      <div>
-        <label class="block text-gray-700 mb-1 font-medium">Description</label>
-        <textarea id="description" rows="3" placeholder="Enter notification message"
-          class="w-full border border-gray-300 rounded-lg p-2"></textarea>
-      </div>
+  <div class="card bg-gradient-to-r from-blue-400 to-blue-600 p-6 shadow-lg rounded-xl transform transition hover:-translate-y-2">
+    <i data-feather="message-circle" class="mb-2 text-white" width="36" height="36"></i>
+    <h2 id="comments-count" class="text-3xl font-bold text-white">0</h2>
+    <p class="text-white font-semibold mt-1">Comments</p>
+    <span id="comments-trend" class="text-blue-100 text-sm mt-1">+0 today</span>
+  </div>
 
-      <!-- Post Image URL -->
-      <div>
-        <label class="block text-gray-700 mb-1 font-medium">Post Image URL</label>
-        <input id="image" type="url" placeholder="https://example.com/image.jpg"
-          class="w-full border border-gray-300 rounded-lg p-2"/>
-      </div>
+  <div class="card bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 shadow-lg rounded-xl transform transition hover:-translate-y-2">
+    <i data-feather="file-text" class="mb-2 text-white" width="36" height="36"></i>
+    <h2 id="posts-count" class="text-3xl font-bold text-white">0</h2>
+    <p class="text-white font-semibold mt-1">Posts</p>
+    <span id="posts-trend" class="text-yellow-100 text-sm mt-1">+0 today</span>
+  </div>
 
-      <!-- Post Link URL -->
-      <div>
-        <label class="block text-gray-700 mb-1 font-medium">Post Link URL</label>
-        <input id="link" type="url" placeholder="https://example.com/post"
-          class="w-full border border-gray-300 rounded-lg p-2"/>
-      </div>
+</div>
 
-      <!-- Category -->
-      <div>
-        <label class="block text-gray-700 mb-1 font-medium">Category</label>
-        <select id="category" class="w-full border border-gray-300 rounded-lg p-2">
-          <option value="General">📋 General</option>
-          <option value="Political">🏛️ Political</option>
-          <option value="Nature">🌿 Nature</option>
-          <option value="Technology">💻 Technology</option>
-          <option value="Health">❤️ Health</option>
-          <option value="Entertainment">🎬 Entertainment</option>
-          <option value="Shopping">🛍️ Shopping</option>
-        </select>
-      </div>
-
-      <!-- Send Button -->
-      <button id="sendBtn"
-        class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-        Send Notification
-      </button>
-    </div>
-
-    <!-- ✅ Non-Admin Message -->
-    <div id="notAdmin" class="hidden text-center text-gray-500 mt-10">
-      You are not authorized to send notifications.
-    </div>
-
-    <!-- ✅ Logout Button -->
-    <div class="text-center mt-6">
-      <button id="logoutBtn"
-        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
-        Logout
-      </button>
-    </div>
-
-  </main>
-
-  <script src="assets/js/dashboard.js" type="module"></script>
-  <script type="module">
-    import { initFooter } from './assets/js/footer.js';
-    initFooter();
-  </script>
+<script src="dashboard.js" type="module"></script>
+<script>
+  feather.replace()
+</script>
 
 </body>
 </html>
