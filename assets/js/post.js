@@ -53,8 +53,10 @@ let contentStyled = post.content.rendered
   .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
 
   // Horizontal rules
-  .replace(/<hr\s*\/?>/g, '<div class="my-6 border-t-2 border-dashed border-gray-300"></div>')
-
+  .replace(/<hr\s*\/?>/g, `
+  <div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>
+`)
+  
   // Code blocks
   .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
 
