@@ -85,13 +85,7 @@ fetch(postURL)
             Category: ${post.categories && post.categories.length ? "Category" : "General"}
           </span>
 
-          <!-- ✅ Rating Stars -->
-          <div class="flex items-center space-x-2">
-            <span class="text-gray-600 text-sm">Rate this post:</span>
-            <div id="ratingStars" class="flex space-x-1"></div>
-          </div>
-        </div>
-
+          
         <!-- ✅ Like Section -->
         <div class="border-t border-gray-200 pt-3">
           <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
@@ -239,37 +233,6 @@ feather.replace();
 // ✅ Firebase Refs
 const ratingRef = ref(db, `ratings/${postId}`);
 const likesRef = ref(db, `likes/${postId}`);
-
-// ✅ Rating Stars Logic
-const ratingStars = document.getElementById('ratingStars');
-let currentRating = 0;
-
-for (let i = 1; i <= 5; i++) {
-  const star = document.createElement('span');
-  star.textContent = '★';
-  star.className = 'cursor-pointer text-gray-400 text-xl';
-  star.addEventListener('click', () => {
-    if (!currentUser) return alert("Login to rate");
-    currentRating = i;
-    updateStars();
-    update(ratingRef, { [currentUser.uid]: currentRating });
-  });
-  ratingStars.appendChild(star);
-}
-
-function updateStars() {
-  const stars = ratingStars.querySelectorAll('span');
-  stars.forEach((star, index) => {
-    star.className = index < currentRating ? 'text-yellow-400 text-xl cursor-pointer' : 'text-gray-400 text-xl cursor-pointer';
-  });
-}
-
-onValue(ratingRef, snapshot => {
-  const ratings = snapshot.val() || {};
-  const values = Object.values(ratings);
-  const avg = values.length ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(1) : 0;
-  console.log(`Average Rating: ${avg}`);
-});
 
 // ✅ Like Reactions Logic
 const likeButtons = document.querySelectorAll('#likeReactions button');
