@@ -107,23 +107,22 @@ fetch(postURL)
 
         <!-- ✅ Share Section -->
         <div class="border-t border-gray-200 mt-4 pt-3">
-          <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
-          <div class="flex space-x-3">
-            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
-              <i data-feather="facebook"></i><span>Facebook</span>
-            </a>
-            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
-              <i data-feather="twitter"></i><span>Twitter</span>
-            </a>
-            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
-              <i data-feather="send"></i><span>Telegram</span>
-            </a>
-            <a href="#" class="px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-green-700 text-white flex items-center space-x-2">
-              <i data-feather="message-circle"></i><span>WhatsApp</span>
-            </a>
-          </div>
-        </div>
-      </div>
+  <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
+  <div class="flex space-x-3">
+    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
+      <i class="fab fa-facebook-f text-lg"></i>
+    </a>
+    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
+      <i class="fab fa-twitter text-lg"></i>
+    </a>
+    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
+      <i class="fab fa-telegram-plane text-lg"></i>
+    </a>
+    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition">
+      <i class="fab fa-whatsapp text-lg"></i>
+    </a>
+  </div>
+</div>      </div>
 
           <!-- ✅ Comment Box -->
           <div class="mt-10">
