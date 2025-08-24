@@ -13,7 +13,6 @@
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
-  <!-- Custom CSS -->
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif;
@@ -21,72 +20,21 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
     }
 
-    /* Spinner loader */
+    /* Loader styles (will be injected by JS) */
     .dial-loader {
-      position: relative;
-      width: 12rem; /* 48 */
-      height: 12rem;
-    }
-
-    .dial-outer {
-      border-style: solid;
-      border-width: 8px;
-      border-color: rgba(34,197,94,0.2);
-      border-top-color: #22c55e;
-      border-radius: 50%;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      animation: spin 1.5s linear infinite;
-    }
-
-    .dial-inner {
-      width: 9rem; /* 36 */
-      height: 9rem;
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background-color: #ecfdf5;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      animation: pulse 1.2s ease-in-out infinite alternate;
-      box-shadow: inset 4px 4px 8px #d1fae5, inset -4px -4px 8px #ffffff;
+      width: 12rem;
+      height: 12rem;
+      z-index: 50;
     }
 
-    .dial-inner i {
-      font-size: 2rem;
-      color: #16a34a;
-      animation: spin 1s linear infinite;
-    }
-
-    .dial-inner span {
-      margin-top: 0.5rem;
-      color: #15803d;
-      font-weight: 600;
-      font-size: 0.875rem;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(0.95); }
-      100% { transform: scale(1.05); }
-    }
-
-    /* Back to Top button */
     .back-to-top {
       position: fixed;
       bottom: 1rem;
@@ -106,18 +54,8 @@
 </head>
 
 <body>
-
-  <!-- Loader Container -->
-  <div class="dial-loader flex justify-center items-center">
-    <!-- Outer spinning ring -->
-    <div class="dial-outer"></div>
-
-    <!-- Inner pulsating dial -->
-    <div class="dial-inner">
-      <i class="fas fa-spinner"></i>
-      <span>Loading...</span>
-    </div>
-  </div>
+  <!-- Post container -->
+  <div id="post-container" class="w-full max-w-4xl p-4"></div>
 
   <!-- Back to Top Button -->
   <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="back-to-top">
@@ -130,13 +68,11 @@
     initFooter();
   </script>
 
-  <!-- Feather Icons -->
   <script>
     feather.replace();
   </script>
 
   <!-- Post JS -->
   <script type="module" src="./assets/js/post.js"></script>
-
 </body>
 </html>
