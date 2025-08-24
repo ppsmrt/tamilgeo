@@ -70,21 +70,47 @@ fetch(postURL)
 
 
   <!-- ✅ Author Section -->
-      <div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
-        <div class="flex items-center mb-4">
-          <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.author)}&background=34D399&color=fff" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
-          <div class="ml-4">
-            <h2 class="text-lg font-semibold text-gray-800">${post.author_name || "Author"}</h2>
-            <p class="text-sm text-gray-500">@${post.author_slug || "username"} • ${post.author_email || "author@gmail.com"}</p>
-            <p class="text-xs text-gray-400">Posted on: ${new Date(post.date).toDateString()}</p>
-          </div>
-        </div>
+<div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
+  <div class="flex items-center mb-4">
+    <img src="${
+      post.isPulled
+        ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
+        : userProfile?.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(userProfile?.name || 'User') + '&background=34D399&color=fff'
+    }"
+    class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
 
-        <div class="flex flex-wrap items-center justify-between mb-4">
-          <span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
-            Category: ${post.categories && post.categories.length ? "Category" : "General"}
-          </span>
+    <div class="ml-4">
+      <h2 class="text-lg font-semibold text-gray-800">
+        ${
+          post.isPulled
+            ? 'Admin'
+            : userProfile?.fullName || 'Author'
+        }
+      </h2>
+      <p class="text-sm text-gray-500">
+        ${
+          post.isPulled
+            ? '@admin'
+            : '@' + (userProfile?.username || 'username')
+        } • ${
+          userProfile?.email || 'author@gmail.com'
+        }
+      </p>
+      <p class="text-xs text-gray-400">
+        Posted on: ${new Date(post.date).toDateString()}
+      </p>
+    </div>
+  </div>
 
+  <!-- ✅ Category Tag -->
+  ${
+    post.categories && post.categories.length
+      ? `<span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
+          ${post.categories[0]}
+        </span>`
+      : ''
+  }
+</div>
           
         <!-- ✅ Like Section -->
         <div class="border-t border-gray-200 pt-3">
