@@ -37,13 +37,15 @@ fetch(postURL)
     return res.json();
   })
   .then(post => {
+    console.log("Fetched post:", post); // Debug log
+
     const featuredImage = post.jetpack_featured_media_url
       ? `<div class="aspect-video rounded-xl overflow-hidden mb-6 shadow-lg border border-gray-200">
            <img src="${post.jetpack_featured_media_url}" class="w-full h-full object-cover rounded-lg shadow-md" alt="Featured Image">
          </div>`
       : "";
 
-    // ✅ Style post content (same as before)
+    // ✅ Style post content
     let contentStyled = post.content.rendered
       .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
       .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
@@ -97,7 +99,7 @@ fetch(postURL)
 
   <!-- ✅ Category Tag -->
   ${
-    post.categories && post.categories.length
+    post.categories?.length
       ? `<span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
           ${post.categories[0]}
         </span>`
