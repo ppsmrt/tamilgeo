@@ -60,6 +60,15 @@ let contentStyled = post.content.rendered
   // Code blocks
   .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
 
+  // Responsive Tables with rounded corners
+  .replace(/<table>/g, `
+    <div class="overflow-x-auto my-6">
+      <table class="w-full border border-green-600 border-collapse rounded-lg">
+  `)
+  .replace(/<\/table>/g, '</table></div>')
+  .replace(/<th>(.*?)<\/th>/g, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
+  .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
+
   // Images inside content: rounded + boxed + shadow
   .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
