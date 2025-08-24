@@ -71,6 +71,55 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
   display: none;
 }
   </style>
+
+<script>
+  // Disable right-click menu
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    alert("Right-click is disabled on this site!");
+  });
+
+  // Disable key shortcuts for DevTools and View Source
+  document.addEventListener('keydown', function(e) {
+    // F12
+    if (e.key === "F12") e.preventDefault();
+
+    // Ctrl+Shift+I or Ctrl+Shift+J (DevTools)
+    if (e.ctrlKey && e.shiftKey && (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 'j')) e.preventDefault();
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && e.key.toLowerCase() === 'u') e.preventDefault();
+
+    // Ctrl+Shift+C (Inspect Element)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'c') e.preventDefault();
+
+    // Ctrl+S (Save Page)
+    if (e.ctrlKey && e.key.toLowerCase() === 's') e.preventDefault();
+
+    // Ctrl+Shift+K (Firefox Web Console)
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'k') e.preventDefault();
+  });
+
+  // Optional: Disable text selection and dragging
+  document.addEventListener('selectstart', e => e.preventDefault());
+  document.addEventListener('dragstart', e => e.preventDefault());
+
+  // Optional: Overlay to block developer tools (works only in some cases)
+  let devtoolsOpen = false;
+  setInterval(() => {
+    const widthThreshold = window.outerWidth - window.innerWidth > 100;
+    const heightThreshold = window.outerHeight - window.innerHeight > 100;
+    if (widthThreshold || heightThreshold) {
+      if (!devtoolsOpen) {
+        devtoolsOpen = true;
+        alert("Developer tools detected! Some functionality may be blocked.");
+      }
+    } else {
+      devtoolsOpen = false;
+    }
+  }, 1000);
+</script>
+  
 <!-- ✅ Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- ✅ FontAwesome -->
@@ -80,8 +129,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
 
      <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
-
-<!-- ✅ Post Grid -->
 
  
   
