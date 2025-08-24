@@ -61,7 +61,7 @@ fetch(postURL)
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
     // ✅ Inject post + comments section
-    container.innerHTML = `
+container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
           ${featuredImage}
@@ -152,13 +152,16 @@ fetch(postURL)
   </div>
   <div id="commentsList" class="space-y-4"></div>
 </div>
-  
-    // ✅ Fade-in effect
-    const wrapper = document.getElementById("post-content-wrapper");
-    requestAnimationFrame(() => {
-      wrapper.classList.remove("opacity-0");
-      wrapper.classList.add("opacity-100");
-    });
+</div>
+</div>
+`;
+
+// ✅ Fade-in effect
+const wrapper = document.getElementById("post-content-wrapper");
+requestAnimationFrame(() => {
+  wrapper.classList.remove("opacity-0");
+  wrapper.classList.add("opacity-100");
+});
 
     // ✅ Firebase Comments Logic
     const commentInput = document.getElementById("commentInput");
