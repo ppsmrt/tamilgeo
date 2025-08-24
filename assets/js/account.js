@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         // ✅ Use Firebase Auth signOut instead of Auth.logout()
         await Auth.signOut();
-        window.location.href = "index.html"; // Redirect after logout
+        window.location.href = "/tamilgeo/index.html"; // Redirect after logout
       } catch (error) {
         console.error("Logout Error:", error);
       }
