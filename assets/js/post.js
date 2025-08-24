@@ -34,15 +34,15 @@ fetch(postURL)
   })
   .then(post => {
     const featuredImage = post.jetpack_featured_media_url
-      ? `<div class="aspect-video rounded-xl overflow-hidden mb-6 shadow-lg">
+      ? `<div class="aspect-video rounded-xl overflow-hidden mb-6 shadow-lg border border-gray-200">
            <img src="${post.jetpack_featured_media_url}" class="w-full h-full object-cover rounded-lg shadow-md" alt="Featured Image">
          </div>`
       : "";
 
-    // Style content: headings green + shadow, paragraphs, images, code blocks
+    // Style content
     let contentStyled = post.content.rendered
       // Headings H1–H6 in green with subtle shadow
-      .replace(/<h([1-6])>(.*?)<\/h[1-6]>/g, '<h$1 class="text-green-700 font-semibold mt-6 mb-4 text-[calc(1.25rem+0.25rem*($1-1))] drop-shadow-sm">$2</h$1>')
+      .replace(/<h([1-6])>(.*?)<\/h[1-6]>/g, '<h$1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm">$2</h$1>')
       // Paragraphs
       .replace(/<p>(.*?)<\/p>/g, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
       // Blockquotes
@@ -51,8 +51,14 @@ fetch(postURL)
       .replace(/<hr\s*\/?>/g, '<div class="my-6 border-t-2 border-dashed border-gray-300"></div>')
       // Code blocks
       .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
-      // Images inside content
-      .replace(/<img(.*?)>/g, '<img$1 class="rounded-lg mb-6 w-full object-cover shadow-md">');
+      // Images inside content: rounded + boxed + shadow
+      .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>')
+      // Videos inside content: responsive, boxed, premium
+      .replace(/<iframe(.*?)><\/iframe>/g, `
+        <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top: 56.25%;">
+          <iframe$1 class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0" allowfullscreen></iframe>
+        </div>
+      `);
 
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
@@ -66,7 +72,6 @@ fetch(postURL)
       </div>
     `;
 
-    // Fade-in post
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
       wrapper.classList.remove("opacity-0");
