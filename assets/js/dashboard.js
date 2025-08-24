@@ -1,8 +1,7 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, get, child, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+// ✅ Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -13,84 +12,36 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// Init Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-const auth = getAuth(app);
 
-// Elements
-const adminPanel = document.getElementById("adminPanel");
-const notAdmin = document.getElementById("notAdmin");
-const sendBtn = document.getElementById("sendBtn");
-const logoutBtn = document.getElementById("logoutBtn");
+// Helper to calculate trend (today's count)
+function calculateTrend(data) {
+  if (!data) return 0;
+  const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
+  let todayCount = 0;
+  Object.values(data).forEach(item => {
+    if (item.date === today) todayCount++;
+  });
+  return todayCount;
+}
 
-// Auth check (show panel only if role === "admin")
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    try {
-      const snapshot = await get(child(ref(db), `users/${user.uid}/role`));
-      const role = snapshot.val();
+// Fetch count and trend
+function fetchCount(path, countEl, trendEl) {
+  const dbRef = ref(db, path);
+  onValue(dbRef, (snapshot) => {
+    const data = snapshot.val();
+    const count = data ? Object.keys(data).length : 0;
+    document.getElementById(countEl).textContent = count;
 
-      if (role === "admin") {
-        if (adminPanel) adminPanel.classList.remove("hidden");
-        if (notAdmin) notAdmin.classList.add("hidden");
-      } else {
-        if (notAdmin) notAdmin.classList.remove("hidden");
-        if (adminPanel) adminPanel.classList.add("hidden");
-      }
-    } catch (err) {
-      console.error("Error checking role:", err);
-    }
-  } else {
-    window.location.href = "login.html";
-  }
-});
-
-// Send notification
-if (sendBtn) {
-  sendBtn.addEventListener("click", () => {
-    const title = document.getElementById("title").value.trim();
-    const description = document.getElementById("description").value.trim();
-    const image = document.getElementById("image").value.trim();
-    const link = document.getElementById("link").value.trim();
-    const category = document.getElementById("category").value;
-
-    if (!title || !description) {
-      alert("⚠️ Please fill in both title and description.");
-      return;
-    }
-
-    const notifRef = ref(db, "notifications");
-    push(notifRef, {
-      title,
-      description,
-      image: image || null,
-      link: link || null,
-      category,
-      timestamp: Date.now()
-    })
-    .then(() => {
-      alert("✅ Notification sent successfully!");
-      document.getElementById("title").value = "";
-      document.getElementById("description").value = "";
-      document.getElementById("image").value = "";
-      document.getElementById("link").value = "";
-      document.getElementById("category").value = "General";
-    })
-    .catch((err) => {
-      console.error("Error sending notification:", err);
-      alert("❌ Failed to send notification");
-    });
+    const trend = calculateTrend(data);
+    document.getElementById(trendEl).textContent = `+${trend} today`;
   });
 }
 
-// Logout
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    signOut(auth).then(() => {
-      window.location.href = "login.html";
-    }).catch((error) => {
-      console.error("Logout error:", error);
-    });
-  });
-}
+// Replace these with your actual DB paths
+fetchCount("users", "users-count", "users-trend");
+fetchCount("likes", "likes-count", "likes-trend");
+fetchCount("comments", "comments-count", "comments-trend");
+fetchCount("posts", "posts-count", "posts-trend");
