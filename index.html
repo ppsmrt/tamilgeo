@@ -1,36 +1,42 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TamilGeo - Home</title>
- 
-  <script src="https://unpkg.com/feather-icons"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TamilGeo - Home</title>
 
-  <!-- Tailwind -->
-  <link href="/assets/css/style.css" rel="stylesheet">
-  
-  <!-- FontAwesome -->
+  <!-- ✅ Local Tailwind + custom CSS -->
+  <link href="tamilgeo/assets/css/style.css" rel="stylesheet">
+
+  <!-- ✅ FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  <!-- Header -->
+
+  <!-- ✅ Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
-  </head>
-  
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-  <!-- Post Grid -->
+
+  <!-- ✅ Post Grid -->
   <main class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow max-w-7xl mx-auto" id="posts-container">
-    <!-- Posts will be injected here by main.js -->
+    <!-- Posts will be injected here by feed.js -->
   </main>
 
-  <!-- Bottom Navigation -->
+  <!-- ✅ Bottom Navigation -->
   <script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-  </script>  
-    
-    <!-- Pull Main Content -->
-  <script> feather.replace(); </script>
-  <script type="module" src="assets/js/feed.js"></script>
-  </body>
-  </html>
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
 
- 
+  <!-- ✅ Feather Icons replacement -->
+  <script>
+    feather.replace();
+  </script>
+
+  <!-- ✅ Feed JS -->
+  <script type="module" src="assets/js/feed.js"></script>
+
+</body>
+</html>
