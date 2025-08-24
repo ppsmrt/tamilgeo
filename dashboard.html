@@ -42,108 +42,118 @@
       justify-content: center;
       box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
     }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
     .card { border-radius: 1.25rem; }
     .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.install-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00c853, #64dd17);
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s ease-in-out;
-}
-.install-btn:hover {
-  transform: scale(1.1);
-}
-.hidden {
-  display: none;
-}
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c853, #64dd17);
+      color: white;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.2s ease-in-out;
+    }
+    .install-btn:hover {
+      transform: scale(1.1);
+    }
+    .hidden {
+      display: none;
+    }
   </style>
-<!-- ✅ Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <!-- ✅ FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-     <!-- ✅ Header -->
+  <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
 
   <main class="max-w-7xl mx-auto p-6 flex-grow space-y-10 fade-in w-full">
 
-<!-- Notifications Panel -->
-<div id="adminPanel" class="bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4">
+    <!-- ✅ Admin Notification Panel -->
+    <div id="adminPanel" class="hidden bg-white shadow-lg rounded-2xl p-6 w-full max-w-lg space-y-4 mx-auto">
+      <h1 class="text-xl font-bold text-center">📢 Admin Notification Panel</h1>
 
-  <h1 class="text-xl font-bold text-center">📢 Admin Notification Panel</h1>
+      <!-- Title -->
+      <div>
+        <label class="block text-gray-700 mb-1 font-medium">Title</label>
+        <input id="title" type="text" placeholder="Enter notification title"
+          class="w-full border border-gray-300 rounded-lg p-2"/>
+      </div>
 
-  <!-- Title -->
-  <div>
-    <label class="block text-gray-700 mb-1 font-medium">Title</label>
-    <input id="title" type="text" placeholder="Enter notification title"
-      class="w-full border border-gray-300 rounded-lg p-2"/>
-  </div>
+      <!-- Description -->
+      <div>
+        <label class="block text-gray-700 mb-1 font-medium">Description</label>
+        <textarea id="description" rows="3" placeholder="Enter notification message"
+          class="w-full border border-gray-300 rounded-lg p-2"></textarea>
+      </div>
 
-  <!-- Description -->
-  <div>
-    <label class="block text-gray-700 mb-1 font-medium">Description</label>
-    <textarea id="description" rows="3" placeholder="Enter notification message"
-      class="w-full border border-gray-300 rounded-lg p-2"></textarea>
-  </div>
+      <!-- Post Image URL -->
+      <div>
+        <label class="block text-gray-700 mb-1 font-medium">Post Image URL</label>
+        <input id="image" type="url" placeholder="https://example.com/image.jpg"
+          class="w-full border border-gray-300 rounded-lg p-2"/>
+      </div>
 
-  <!-- Post Image URL -->
-  <div>
-    <label class="block text-gray-700 mb-1 font-medium">Post Image URL</label>
-    <input id="image" type="url" placeholder="https://example.com/image.jpg"
-      class="w-full border border-gray-300 rounded-lg p-2"/>
-  </div>
+      <!-- Post Link URL -->
+      <div>
+        <label class="block text-gray-700 mb-1 font-medium">Post Link URL</label>
+        <input id="link" type="url" placeholder="https://example.com/post"
+          class="w-full border border-gray-300 rounded-lg p-2"/>
+      </div>
 
-  <!-- Post Link URL -->
-  <div>
-    <label class="block text-gray-700 mb-1 font-medium">Post Link URL</label>
-    <input id="link" type="url" placeholder="https://example.com/post"
-      class="w-full border border-gray-300 rounded-lg p-2"/>
-  </div>
+      <!-- Category -->
+      <div>
+        <label class="block text-gray-700 mb-1 font-medium">Category</label>
+        <select id="category" class="w-full border border-gray-300 rounded-lg p-2">
+          <option value="General">📋 General</option>
+          <option value="Political">🏛️ Political</option>
+          <option value="Nature">🌿 Nature</option>
+          <option value="Technology">💻 Technology</option>
+          <option value="Health">❤️ Health</option>
+          <option value="Entertainment">🎬 Entertainment</option>
+          <option value="Shopping">🛍️ Shopping</option>
+        </select>
+      </div>
 
-  <!-- Category -->
-  <div>
-    <label class="block text-gray-700 mb-1 font-medium">Category</label>
-    <select id="category"
-      class="w-full border border-gray-300 rounded-lg p-2">
-      <option value="General">📋 General</option>
-      <option value="Political">🏛️ Political</option>
-      <option value="Nature">🌿 Nature</option>
-      <option value="Technology">💻 Technology</option>
-      <option value="Health">❤️ Health</option>
-      <option value="Entertainment">🎬 Entertainment</option>
-      <option value="Shopping">🛍️ Shopping</option>
-    </select>
-  </div>
+      <!-- Send Button -->
+      <button id="sendBtn"
+        class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+        Send Notification
+      </button>
+    </div>
 
-  <!-- Send Button -->
-  <button id="sendBtn"
-    class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
-    Send Notification
-  </button>
+    <!-- ✅ Non-Admin Message -->
+    <div id="notAdmin" class="hidden text-center text-gray-500 mt-10">
+      You are not authorized to send notifications.
+    </div>
 
-</div>
-<script src="assets/js/dashboard.js"></script>
+    <!-- ✅ Logout Button -->
+    <div class="text-center mt-6">
+      <button id="logoutBtn"
+        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition">
+        Logout
+      </button>
+    </div>
 
-<script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-</script>       
+  </main>
+
+  <script src="assets/js/dashboard.js" type="module"></script>
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
 
 </body>
 </html>
