@@ -15,119 +15,114 @@
 
   <!-- Custom CSS -->
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-
-    .bottom-nav {
-      backdrop-filter: blur(15px);
-      background: linear-gradient(90deg, #32a852, #28b66f);
-      border-radius: 1.5rem 1.5rem 0 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-
-    .dial {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
-      margin: auto;
-      position: relative;
-    }
-
-    .dial-inner {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f0fff4;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif;
+      background-color: #f3f4f6;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
+      align-items: center;
     }
 
-    .card { border-radius: 1.25rem; }
-    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-
-    .video-container {
+    /* Spinner loader */
+    .dial-loader {
       position: relative;
-      padding-bottom: 56.25%; /* 16:9 ratio */
-      height: 0;
-      overflow: hidden;
-      border-radius: 0.5rem;
-      margin-bottom: 1.5rem;
+      width: 12rem; /* 48 */
+      height: 12rem;
     }
 
-    .video-container iframe {
+    .dial-outer {
+      border-style: solid;
+      border-width: 8px;
+      border-color: rgba(34,197,94,0.2);
+      border-top-color: #22c55e;
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      border: 0;
+      animation: spin 1.5s linear infinite;
     }
-    /* Outer spinning ring */
-.dial-outer {
-  border-style: solid;
-  border-width: 8px;
-  border-color: rgba(34,197,94,0.2);
-  border-top-color: #22c55e;
-  animation: spin 1.5s linear infinite;
-}
 
-/* Inner pulsating dial */
-.dial-inner {
-  animation: pulse 1.2s ease-in-out infinite alternate;
-}
+    .dial-inner {
+      width: 9rem; /* 36 */
+      height: 9rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background-color: #ecfdf5;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      animation: pulse 1.2s ease-in-out infinite alternate;
+      box-shadow: inset 4px 4px 8px #d1fae5, inset -4px -4px 8px #ffffff;
+    }
 
-/* Spin keyframes */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    .dial-inner i {
+      font-size: 2rem;
+      color: #16a34a;
+      animation: spin 1s linear infinite;
+    }
 
-/* Pulse keyframes */
-@keyframes pulse {
-  0% { transform: scale(0.95); }
-  100% { transform: scale(1.05); }
-}
+    .dial-inner span {
+      margin-top: 0.5rem;
+      color: #15803d;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
 
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* Back to Top button */
+    .back-to-top {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background-color: #2563eb;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+
+    .back-to-top:hover {
+      background-color: #1d4ed8;
+    }
   </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body>
 
-  <!-- Post Container -->
-  <div class="flex justify-center items-center w-full h-full">
-  <div class="dial-loader relative w-48 h-48">
+  <!-- Loader Container -->
+  <div class="dial-loader flex justify-center items-center">
     <!-- Outer spinning ring -->
-    <div class="dial-outer absolute w-48 h-48 rounded-full border-8 border-green-200 border-t-green-600 animate-spin"></div>
+    <div class="dial-outer"></div>
 
     <!-- Inner pulsating dial -->
-    <div class="dial-inner flex flex-col items-center justify-center absolute w-36 h-36 rounded-full bg-green-50 shadow-inner animate-pulse">
-      <i class="fas fa-spinner fa-spin text-green-600 text-3xl"></i>
-      <span class="mt-2 text-green-700 font-semibold text-sm">Loading...</span>
+    <div class="dial-inner">
+      <i class="fas fa-spinner"></i>
+      <span>Loading...</span>
     </div>
   </div>
-</div>
-
 
   <!-- Back to Top Button -->
-  <div class="fixed bottom-4 right-4">
-    <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700 transition">
-      ↑ Top
-    </button>
-  </div>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})" class="back-to-top">
+    ↑ Top
+  </button>
 
   <!-- Bottom Navigation -->
   <script type="module">
@@ -135,6 +130,7 @@
     initFooter();
   </script>
 
+  <!-- Feather Icons -->
   <script>
     feather.replace();
   </script>
