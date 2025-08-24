@@ -54,13 +54,19 @@ fetch(postURL)
       // Images inside content: rounded + boxed + shadow
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // YouTube / iframe videos: responsive 16:9, premium look
+    // Premium YouTube/iframe embed
     contentStyled = contentStyled.replace(/<iframe(.*?)><\/iframe>/g, (match, attrs) => {
       return `
-        <div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative" style="padding-top:56.25%;">
-          <iframe ${attrs} class="absolute top-0 left-0 w-full h-full rounded-lg" frameborder="0"
+        <div class="my-6 relative group rounded-xl overflow-hidden border border-gray-200 shadow-lg" style="padding-top:56.25%;">
+          <iframe ${attrs} class="absolute top-0 left-0 w-full h-full rounded-xl" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen></iframe>
+          <div class="absolute top-0 left-0 w-full h-full bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none"></div>
+          <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
+            <button class="bg-white bg-opacity-90 text-green-700 p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <i class="fas fa-play fa-lg"></i>
+            </button>
+          </div>
         </div>
       `;
     });
@@ -96,7 +102,6 @@ const backToTopBtn = document.createElement("button");
 backToTopBtn.innerText = "↑ Back to top";
 backToTopBtn.setAttribute("aria-label", "Back to top");
 
-// style it like a blue pill with white font
 Object.assign(backToTopBtn.style, {
   position: "fixed",
   right: "1.25rem",
@@ -118,7 +123,6 @@ Object.assign(backToTopBtn.style, {
 
 document.body.appendChild(backToTopBtn);
 
-// show/hide on scroll
 window.addEventListener("scroll", () => {
   if (window.scrollY > 300) {
     backToTopBtn.style.opacity = "1";
@@ -129,7 +133,6 @@ window.addEventListener("scroll", () => {
   }
 });
 
-// scroll to top smoothly
 backToTopBtn.addEventListener("click", () => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     window.scrollTo(0, 0);
