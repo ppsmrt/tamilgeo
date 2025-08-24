@@ -40,9 +40,11 @@ fetch(postURL)
       : "";
 
     // Style content
-    let contentStyled = post.content.rendered
-      // Headings H1–H6 in green with subtle shadow
-      .replace(/<h([1-6])>(.*?)<\/h[1-6]>/g, '<h$1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm">$2</h$1>')
+let contentStyled = post.content.rendered
+  // Headings with custom sizes, green, shadow, and spacing
+  .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
+  .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
+  .replace(/<h([3-5])>(.*?)<\/h[3-5]>/g, '<h$1 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$2</h$1>');
       // Paragraphs
       .replace(/<p>(.*?)<\/p>/g, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
       // Blockquotes
