@@ -1,19 +1,11 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo - Submit Post</title>
-
-  <!-- ✅ Tailwind CSS -->
+  <title>TamilGeo - Home</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- ✅ FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
+  <script src="https://unpkg.com/feather-icons"></script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-
     .bottom-nav {
       backdrop-filter: blur(15px);
       background: linear-gradient(90deg, #32a852, #28b66f);
@@ -27,38 +19,68 @@
       align-items: center;
       color: white;
     }
-
-    .install-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border: none;
+    .dial {
+      width: 180px;
+      height: 180px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #00c853, #64dd17);
-      color: white;
-      font-size: 28px;
+      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 9999;
-      transition: transform 0.2s ease-in-out;
+      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
+      margin: auto;
+      position: relative;
     }
-
-    .install-btn:hover { transform: scale(1.1); }
-    .hidden { display: none; }
+    .dial-inner {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: #f0fff4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
+    }
+body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    .card { border-radius: 1.25rem; }
+    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
+.install-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: white;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 9999;
+  transition: transform 0.2s ease-in-out;
+}
+.install-btn:hover {
+  transform: scale(1.1);
+}
+.hidden {
+  display: none;
+}
   </style>
-</head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-
+<!-- ✅ Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- ✅ FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  
   <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
+</head>
 
-  <main class="max-w-3xl mx-auto p-6 flex-grow">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800">Submit a Post</h1>
 
     <!-- 📜 Rules Box -->
     <div class="bg-yellow-50 border border-yellow-300 p-5 mb-6 rounded-xl shadow-md">
@@ -112,18 +134,16 @@
     </form>
   </main>
 
-  <!-- ✅ Footer -->
-  <script type="module">
-    import { initFooter } from './assets/js/footer.js';
-    initFooter();
-  </script>
-
-  <!-- ✅ Removed Quill JS -->
-  <script type="module" src="assets/js/submit.js"></script>
-
+<script type="module">
+  import { initFooter } from './assets/js/footer.js';
+  initFooter();
+</script>       
   <script>
     feather.replace();
   </script>
-
+<script type="module" src="assets/js/submit.js"></script>
+  
 </body>
 </html>
+
+ 
