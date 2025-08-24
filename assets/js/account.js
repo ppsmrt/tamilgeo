@@ -1,11 +1,24 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-// ✅ Firebase instances
-const Auth = getAuth();
-const db = getDatabase();
-const storage = getStorage();
+// ✅ Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
+  authDomain: "tamilgeoapp.firebaseapp.com",
+  databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
+  projectId: "tamilgeoapp",
+  storageBucket: "tamilgeoapp.appspot.com",
+  messagingSenderId: "1092623024431",
+  appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
+};
+
+// Init Firebase
+const app = initializeApp(firebaseConfig);
+const Auth = getAuth(app);
+const db = getDatabase(app);
+const storage = getStorage(app);
 
 // ✅ Check auth state
 onAuthStateChanged(Auth, async (user) => {
@@ -32,7 +45,6 @@ onAuthStateChanged(Auth, async (user) => {
     if (profilePicEl) {
       if (profile?.profilePicture) {
         try {
-          // If profilePicture is a path in Storage, get download URL
           const url = await getDownloadURL(storageRef(storage, profile.profilePicture));
           profilePicEl.src = url;
         } catch (err) {
@@ -40,27 +52,27 @@ onAuthStateChanged(Auth, async (user) => {
           profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
         }
       } else {
-        // Default picture
         profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
       }
     }
   });
 });
 
-// ✅ Logout button
+// ✅ Logout button (fixed version from v9 style)
 document.addEventListener("DOMContentLoaded", () => {
   const logoutBtn = document.getElementById("logoutBtn");
 
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", async (e) => {
+    logoutBtn.addEventListener("click", (e) => {
       e.preventDefault();
-      try {
-        await signOut(Auth);
-        window.location.href = "/tamilgeo/index.html";
-      } catch (error) {
-        console.error("Logout Error:", error);
-        alert("Failed to logout. Please try again.");
-      }
+      signOut(Auth)
+        .then(() => {
+          window.location.href = "/tamilgeo/index.html";
+        })
+        .catch((error) => {
+          console.error("Logout error:", error);
+          alert("Failed to logout. Please try again.");
+        });
     });
   }
 });
