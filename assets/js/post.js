@@ -33,6 +33,8 @@ const postURL = isNumeric
   ? `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`
   : `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?slug=${postId}`;
 
+let currentUser = null; // Track logged-in user
+
 // ✅ Fetch post and render
 fetch(postURL)
   .then(res => {
@@ -40,9 +42,7 @@ fetch(postURL)
     return res.json();
   })
   .then(post => {
-    // ✅ Handle slug (WordPress returns array)
     const wpPost = Array.isArray(post) ? post[0] : post;
-
     if (!wpPost) {
       container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found.</p>";
       return;
@@ -71,7 +71,7 @@ fetch(postURL)
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // ✅ Inject post + comments section (everything intact)
+    // ✅ Inject post + Author / React / Share / Comment Sections
     container.innerHTML = `
       <div class="w-full max-w-3xl px-4 py-4">
         <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
@@ -82,19 +82,56 @@ fetch(postURL)
           </div>
 
           <!-- ✅ Author Section -->
-          <div class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
+          <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
             <div class="flex items-center mb-4">
-              <img src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+              <img id="authorImage" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
               <div class="ml-4">
-                <h2 class="text-lg font-semibold text-gray-800">Admin</h2>
-                <p class="text-sm text-gray-500">@admin • tamilgeo</p>
-                <p class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
+                <h2 id="authorName" class="text-lg font-semibold text-gray-800">Author</h2>
+                <p id="authorUsernameEmail" class="text-sm text-gray-500">@username • email@example.com</p>
+                <p id="authorPostDate" class="text-xs text-gray-400">Posted on: DATE</p>
               </div>
+            </div>
+            <span id="authorCategory" class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium"></span>
+          </div>
+
+          <!-- ✅ Like / React Section -->
+          <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
+            <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
+            <div class="flex space-x-4" id="likeReactions">
+              <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
+              <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
+              <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
+              <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
+              <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+            </div>
+            <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+          </div>
+
+          <!-- ✅ Share Section -->
+          <div id="shareSection" class="border-t border-gray-200 mt-4 pt-3">
+            <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
+            <div class="flex space-x-3">
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="facebook"><i class="fab fa-facebook-f text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="twitter"><i class="fab fa-twitter text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="telegram"><i class="fab fa-telegram-plane text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="whatsapp"><i class="fab fa-whatsapp text-lg"></i></a>
             </div>
           </div>
 
-          <!-- ✅ Likes / Share / Comments -->
-          <!-- Keep your original code here exactly as it was -->
+          <!-- ✅ Comment Box Section -->
+          <div id="commentSection" class="mt-10">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
+            <div id="commentsList" class="space-y-4"></div>
+          </div>
+
         </div>
       </div>
     `;
@@ -106,7 +143,108 @@ fetch(postURL)
       wrapper.classList.add("opacity-100");
     });
 
-    // ✅ Firebase Comments, Like Reactions, etc. all remain exactly as in your original code
+    // ✅ Set Author Info
+    document.getElementById("authorImage").src = wpPost.isPulled
+      ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
+      : 'https://ui-avatars.com/api/?name=Admin&background=34D399&color=fff';
+    document.getElementById("authorName").textContent = wpPost.isPulled ? 'Admin' : 'Author';
+    document.getElementById("authorUsernameEmail").textContent = wpPost.isPulled ? '@admin • tamilgeo' : '@username • author@gmail.com';
+    document.getElementById("authorPostDate").textContent = `Posted on: ${new Date(wpPost.date).toDateString()}`;
+    document.getElementById("authorCategory").textContent = wpPost.categories?.length ? wpPost.categories[0] : '';
+
+    // ✅ Firebase Auth
+    onAuthStateChanged(auth, user => { currentUser = user; });
+
+    // ✅ Like Reactions
+    const likeButtons = document.querySelectorAll('#likeReactions button');
+    const likeCounts = document.getElementById('likeCounts');
+
+    likeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!currentUser) return alert("Login to react");
+        const reaction = btn.dataset.reaction;
+        update(ref(db, `likes/${postId}`), { [`${reaction}_${currentUser.uid}`]: reaction });
+      });
+    });
+
+    onValue(ref(db, `likes/${postId}`), snapshot => {
+      const likes = snapshot.val() || {};
+      const counts = {};
+      Object.values(likes).forEach(r => counts[r] = (counts[r] || 0) + 1);
+      likeCounts.textContent = Object.entries(counts).map(([k,v]) => `${k}: ${v}`).join(' | ');
+    });
+
+    // ✅ Comment Logic
+    const commentInput = document.getElementById("commentInput");
+    const submitComment = document.getElementById("submitComment");
+    const commentsList = document.getElementById("commentsList");
+    const commentsRef = ref(db, `comments/${postId}`);
+
+    submitComment.addEventListener("click", () => {
+      const text = commentInput.value.trim();
+      if (!text) return alert("Comment cannot be empty!");
+      if (!currentUser) return alert("You must be logged in!");
+      push(commentsRef, { author: currentUser.displayName || "Anonymous", text, likes:0, replies:[] });
+      commentInput.value = "";
+    });
+
+    onValue(commentsRef, snapshot => {
+      commentsList.innerHTML = "";
+      const data = snapshot.val();
+      if (!data) return commentsList.innerHTML = "<p class='text-gray-500 text-center'>No comments yet.</p>";
+      Object.entries(data).forEach(([id, comment]) => {
+        const div = document.createElement("div");
+        div.className = "bg-gray-50 p-4 rounded-xl shadow flex flex-col";
+        div.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <p class="font-semibold text-gray-800">${comment.author}</p>
+              <p class="text-gray-700 mt-1">${comment.text}</p>
+            </div>
+            <div class="flex space-x-2 text-gray-500">
+              <button data-id="${id}" class="likeBtn hover:text-green-600"><i class="fa-regular fa-heart"></i> ${comment.likes}</button>
+              <button data-id="${id}" class="replyBtn hover:text-green-600">Reply</button>
+            </div>
+          </div>
+        `;
+        commentsList.appendChild(div);
+      });
+
+      document.querySelectorAll(".likeBtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.currentTarget.dataset.id;
+          update(ref(db, `comments/${postId}/${id}`), { likes: (snapshot.val()[id].likes || 0)+1 });
+        });
+      });
+
+      document.querySelectorAll(".replyBtn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.currentTarget.dataset.id;
+          const replyText = prompt(`Reply to ${snapshot.val()[id].author}`);
+          if(replyText){
+            const replies = snapshot.val()[id].replies || [];
+            replies.push({ author: currentUser.displayName || "Anonymous", text:`@${snapshot.val()[id].author} ${replyText}` });
+            update(ref(db, `comments/${postId}/${id}`), { replies });
+          }
+        });
+      });
+    });
+
+    // ✅ Share Buttons
+    document.querySelectorAll(".shareBtn").forEach(btn=>{
+      btn.addEventListener("click", e=>{
+        const platform = e.currentTarget.dataset.platform;
+        const url = window.location.href;
+        let link = "";
+        switch(platform){
+          case "facebook": link=`https://www.facebook.com/sharer.php?u=${url}`; break;
+          case "twitter": link=`https://twitter.com/intent/tweet?url=${url}`; break;
+          case "telegram": link=`https://t.me/share/url?url=${url}`; break;
+          case "whatsapp": link=`https://api.whatsapp.com/send?text=${url}`; break;
+        }
+        window.open(link,"_blank");
+      });
+    });
 
   })
   .catch(err => {
@@ -114,4 +252,5 @@ fetch(postURL)
     container.innerHTML = "<p class='text-red-600 font-semibold text-center'>Post not found or failed to load.</p>";
   });
 
-// ✅ Feather icons, Firebase likes & comments logic remain unchanged
+// ✅ Feather icons
+feather.replace();
