@@ -14,7 +14,7 @@
 
 | Home Page                                                             | Post Page                                                              |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![Homepage Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/screenshot_20250806_121634633158948234342873.jpg) | ![Post Page Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/screenshot_20250806_121648315025798513707344.jpg) |
+| ![Homepage Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/home6885059451074591857.jpg) | ![Post Page Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/screenshot_20250806_121648315025798513707344.jpg) |
 
 ---
 
@@ -43,7 +43,7 @@ Name    : TamilGeo <br>
 Package : com.tamilgeo.app<br>
 Version : 2.1<br>
 
-<a href="https://drive.google.com/file/d/13EV-4b7IzxBPZeU83OeCHuAVGSJgT98u/view?usp=drivesdk">
+<a href="https://drive.google.com/file/d/14t4JDu6CgX4NtwtSApc-jvOHid8oqWra/view?usp=drivesdk">
   <img src="https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/android-badge_black220582327436912550.png" width="150" height="50" align="center">
 </a>
 
