@@ -71,59 +71,71 @@ fetch(postURL)
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // ✅ Inject post + Author / React / Share / Comment Sections
+    // ✅ Inject post + Author / React / Share / Comment Sections (Premium Unified Container)
     container.innerHTML = `
-      <div class="w-full max-w-3xl px-4 py-4">
-        <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
+      <div class="w-full max-w-3xl px-4 py-6">
+        <div class="bg-gradient-to-br from-gray-100 via-gray-200 to-gray-100 p-6 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-500 opacity-0" id="post-content-wrapper">
+
+          <!-- Featured Image -->
           ${featuredImage}
-          <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
-          <div class="prose prose-green prose-lg max-w-none leading-relaxed">
+
+          <!-- Post Title -->
+          <h1 class="text-3xl font-extrabold mb-6 text-green-700 drop-shadow-md">${wpPost.title.rendered}</h1>
+
+          <!-- Post Content -->
+          <div class="prose prose-green prose-lg max-w-none leading-relaxed mb-6">
             ${contentStyled}
           </div>
 
-          <!-- ✅ Author Section -->
-          <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
-            <div class="flex items-center mb-4">
-              <img id="authorImage" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
-              <div class="ml-4">
-                <h2 id="authorName" class="text-lg font-semibold text-gray-800">Author</h2>
-                <p id="authorUsernameEmail" class="text-sm text-gray-500">@username • email@example.com</p>
-                <p id="authorPostDate" class="text-xs text-gray-400">Posted on: DATE</p>
-              </div>
+          <hr class="border-gray-300 my-6">
+
+          <!-- Author Section -->
+          <div class="flex items-center mb-4">
+            <img id="authorImage" class="w-16 h-16 rounded-full border-2 border-green-500 shadow-sm" alt="Author">
+            <div class="ml-4">
+              <h2 id="authorName" class="text-lg font-semibold text-gray-800">Author</h2>
+              <p id="authorUsernameEmail" class="text-sm text-gray-500">@username • email@example.com</p>
+              <p id="authorPostDate" class="text-xs text-gray-400">Posted on: DATE</p>
             </div>
-            <span id="authorCategory" class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium"></span>
+            <span id="authorCategory" class="ml-auto text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium shadow-md"></span>
           </div>
 
-          <!-- ✅ Like / React Section -->
-          <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
+          <hr class="border-gray-300 my-6">
+
+          <!-- React Section -->
+          <div id="likeSection" class="pt-3">
             <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
             <div class="flex space-x-4" id="likeReactions">
-              <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
-              <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
-              <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
-              <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
-              <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+              <button data-reaction="love" class="text-2xl hover:scale-125 transition transform">❤️</button>
+              <button data-reaction="laugh" class="text-2xl hover:scale-125 transition transform">😂</button>
+              <button data-reaction="wow" class="text-2xl hover:scale-125 transition transform">😮</button>
+              <button data-reaction="sad" class="text-2xl hover:scale-125 transition transform">😢</button>
+              <button data-reaction="like" class="text-2xl hover:scale-125 transition transform">👍</button>
             </div>
             <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
           </div>
 
-          <!-- ✅ Share Section -->
-          <div id="shareSection" class="border-t border-gray-200 mt-4 pt-3">
+          <hr class="border-gray-300 my-6">
+
+          <!-- Share Section -->
+          <div id="shareSection" class="pt-3">
             <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
             <div class="flex space-x-3">
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="facebook"><i class="fab fa-facebook-f text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="twitter"><i class="fab fa-twitter text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="telegram"><i class="fab fa-telegram-plane text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="whatsapp"><i class="fab fa-whatsapp text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition transform" data-platform="facebook"><i class="fab fa-facebook-f text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition transform" data-platform="twitter"><i class="fab fa-twitter text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition transform" data-platform="telegram"><i class="fab fa-telegram-plane text-lg"></i></a>
+              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition transform" data-platform="whatsapp"><i class="fab fa-whatsapp text-lg"></i></a>
             </div>
           </div>
 
-          <!-- ✅ Comment Box Section -->
-          <div id="commentSection" class="mt-10">
+          <hr class="border-gray-300 my-6">
+
+          <!-- Comment Box Section -->
+          <div id="commentSection" class="mt-6">
             <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
-            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
-              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
-              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6 shadow-md">
+              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800 shadow-inner" />
+              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700 shadow-md">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
