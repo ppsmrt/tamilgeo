@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maintenance Mode</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+</head>
+<body class="flex items-center justify-center h-screen bg-gradient-to-r from-green-100 via-white to-green-50 font-sans">
+  <div class="text-center p-10 rounded-2xl shadow-2xl bg-white max-w-lg animate__animated animate__fadeIn">
+    <img src="https://cdn-icons-png.flaticon.com/512/748/748113.png" 
+         alt="maintenance" 
+         class="w-32 mx-auto animate__animated animate__tada animate__infinite animate__slow">
+    <h1 class="text-3xl font-bold mt-6 text-gray-800">🚧 This website is under maintenance!</h1>
+    <p class="mt-3 text-gray-600">We are currently performing scheduled maintenance. Please check back soon.</p>
+    <p class="mt-2 text-green-600 font-medium">Expected resolution: within 24 hours</p>
+    <div class="mt-6 animate__animated animate__fadeInUp animate__delay-1s">
+      <div class="w-48 mx-auto h-2 bg-green-200 rounded-full overflow-hidden">
+        <div class="w-1/2 h-2 bg-green-500 animate-pulse"></div>
+      </div>
+      <p class="text-sm text-gray-500 mt-2">Restoring service...</p>
+    </div>
+  </div>
+</body>
+</html>
