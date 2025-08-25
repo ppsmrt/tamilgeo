@@ -14,7 +14,7 @@
 
 | Home Page                                                             | Post Page                                                              |
 | --------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![Homepage Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/home6885059451074591857.jpg) | ![Post Page Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/screenshot_20250806_121648315025798513707344.jpg) |
+| ![Homepage Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/home6885059451074591857.jpg) | ![Post Page Screenshot](https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/post8930118767698017753.jpg) |
 
 ---
 
