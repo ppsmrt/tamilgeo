@@ -24,6 +24,8 @@ const storage = getStorage(app);
 const profilePicEl = document.getElementById("profilePic");
 const profileNameEl = document.getElementById("profileName");
 const profileEmailEl = document.getElementById("profileEmail");
+const profileUsernameEl = document.getElementById("profileUsername");
+const profileBioEl = document.getElementById("profileBio");
 const logoutBtn = document.getElementById("logoutBtn");
 
 // ✅ Auth check
@@ -33,19 +35,17 @@ onAuthStateChanged(Auth, async (user) => {
     return;
   }
 
-  // ✅ Fetch profile from Realtime Database
+  // ✅ Fetch profile from Realtime Database (publicly readable now)
   onValue(ref(db, "users/" + user.uid), async (snapshot) => {
     const profile = snapshot.val() || {};
 
-    // ✅ Full name / first name
+    // ✅ Name
     if (profileNameEl) {
       const fullName =
         (profile.firstName || "") +
-        (profile.secondName ? " " + profile.secondName : "") ||
-        profile.fullname ||
-        profile.username ||
-        "No Name";
-      profileNameEl.textContent = fullName.trim();
+        (profile.secondName ? " " + profile.secondName : "");
+      profileNameEl.textContent =
+        fullName.trim() || profile.fullname || "No Name";
     }
 
     // ✅ Email
@@ -53,18 +53,32 @@ onAuthStateChanged(Auth, async (user) => {
       profileEmailEl.textContent = profile.email || user.email;
     }
 
+    // ✅ Username
+    if (profileUsernameEl) {
+      profileUsernameEl.textContent = profile.username || "No Username";
+    }
+
+    // ✅ Bio
+    if (profileBioEl) {
+      profileBioEl.textContent = profile.bio || "No bio yet";
+    }
+
     // ✅ Profile picture
     if (profilePicEl) {
       if (profile.profilePicture && profile.profilePicture.trim() !== "") {
         try {
-          const url = await getDownloadURL(storageRef(storage, profile.profilePicture));
+          const url = await getDownloadURL(
+            storageRef(storage, profile.profilePicture)
+          );
           profilePicEl.src = url;
         } catch (err) {
           console.warn("Failed to load profile picture, using default:", err);
-          profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+          profilePicEl.src =
+            "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
         }
       } else {
-        profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
+        profilePicEl.src =
+          "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
       }
     }
   });
@@ -76,7 +90,7 @@ if (logoutBtn) {
     e.preventDefault();
     signOut(Auth)
       .then(() => {
-        window.location.href = "/index.html"; // 🔥 Make sure this matches your home page
+        window.location.href = "/index.html"; // 🔥 Adjust if your home page is different
       })
       .catch((error) => {
         console.error("Logout error:", error);
