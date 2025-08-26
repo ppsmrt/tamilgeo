@@ -44,7 +44,15 @@ if (isHome) {
 } else {
   // Back arrow + Page title
   const backButton = document.createElement("button");
-  backButton.onclick = () => window.location.href = "index.html";
+  backButton.onclick = () => {
+    if (document.referrer) {
+      // Go to previous page in history
+      window.history.back();
+    } else {
+      // Fallback to home page
+      window.location.href = "index.html";
+    }
+  };
   backButton.className = "text-gray-600 text-xl flex items-center space-x-2";
   backButton.innerHTML = `<i data-feather="chevron-left"></i>`;
 
