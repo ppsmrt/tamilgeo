@@ -43,7 +43,7 @@ Name    : TamilGeo <br>
 Package : com.tamilgeo.app<br>
 Version : 2.1<br>
 
-<a href="https://drive.google.com/file/d/14t4JDu6CgX4NtwtSApc-jvOHid8oqWra/view?usp=drivesdk">
+<a href="https://github.com/ppsmrt/tamilgeo/releases/download/TamilGeo2.1/TamilGeo_v2.1.apk">
   <img src="https://tamilgeo.wordpress.com/wp-content/uploads/2025/08/android-badge_black220582327436912550.png" width="150" height="50" align="center">
 </a>
 
