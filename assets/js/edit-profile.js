@@ -25,6 +25,7 @@ const storage = getStorage(app);
 const profilePic = document.getElementById("profile-pic");
 const editPicBtn = document.getElementById("edit-pic-btn");
 const form = document.getElementById("edit-profile-form");
+const saveBtn = form.querySelector("button[type='submit']"); // Save button
 
 // Fields
 const firstName = document.getElementById("first-name");
@@ -40,40 +41,43 @@ const roleEl = document.getElementById("role");
 
 let selectedFile = null; // store chosen profile picture
 
-// ✅ Load user data
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "/login.html";
-    return;
-  }
-
-  const uid = user.uid;
+// ✅ Function to load user data (reusable)
+async function loadUserData(uid, fallbackEmail = "") {
   const userRef = ref(db, "users/" + uid);
 
   try {
     const snapshot = await get(userRef);
     const data = snapshot.exists() ? snapshot.val() : {};
 
-    console.log("Loaded user data:", data); // ✅ Debug log
+    console.log("🔄 Reloaded user data:", data);
 
     // Editable fields
     firstName.value = data.firstName || "";
-    lastName.value = data.secondName || ""; // secondName in your DB
+    lastName.value = data.secondName || "";
     bio.value = data.bio || "";
 
     // Non-editable fields
     username.value = data.username || "";
-    email.value = data.email || user.email;
+    email.value = data.email || fallbackEmail;
     locationEl.value = data.location || "";
     roleEl.value = data.role || "";
 
-    // Profile picture (fixed key to match DB)
-    profilePic.src = data.profilePic || "/tamilgeo/assets/icon/dp.png";
+    // Profile picture (DB key = profilePicture)
+    profilePic.src = data.profilePicture || "/tamilgeo/assets/icon/dp.png";
 
   } catch (error) {
     console.error("❌ Error loading user data:", error);
     alert("Failed to load profile. Try again.");
   }
+}
+
+// ✅ Load user data on login
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "/login.html";
+    return;
+  }
+  await loadUserData(user.uid, user.email);
 });
 
 // ✅ Change profile picture
@@ -85,10 +89,10 @@ editPicBtn.addEventListener("click", () => {
   fileInput.onchange = () => {
     const file = fileInput.files[0];
     if (file) {
-      selectedFile = file; // store file for upload
+      selectedFile = file;
       const reader = new FileReader();
       reader.onload = (e) => {
-        profilePic.src = e.target.result; // preview
+        profilePic.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -96,6 +100,23 @@ editPicBtn.addEventListener("click", () => {
 
   fileInput.click();
 });
+
+// ✅ Show spinner inside button
+function setSavingState(isSaving) {
+  if (isSaving) {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = `
+      <svg class="animate-spin h-5 w-5 text-white inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+      </svg>
+      Saving...
+    `;
+  } else {
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = `Save Changes`;
+  }
+}
 
 // ✅ Save updates including uploading profile picture
 form.addEventListener("submit", async (e) => {
@@ -108,6 +129,8 @@ form.addEventListener("submit", async (e) => {
   let profilePicUrl = profilePic.src;
 
   try {
+    setSavingState(true); // ⏳ Start spinner
+
     // Upload profile picture if new file selected
     if (selectedFile) {
       const storagePath = `profilePictures/${uid}/${selectedFile.name}`;
@@ -116,18 +139,25 @@ form.addEventListener("submit", async (e) => {
       profilePicUrl = await getDownloadURL(storageReference);
     }
 
-    // Update user data
+    // ✅ Update only editable fields
     const userData = {
       firstName: firstName.value.trim(),
-      secondName: lastName.value.trim(), // map lastName to secondName
+      secondName: lastName.value.trim(),
       bio: bio.value.trim(),
-      profilePic: profilePicUrl,
+      profilePicture: profilePicUrl,
     };
 
     await update(userRef, userData);
     alert("✅ Profile updated successfully!");
-    selectedFile = null; // reset after upload
+    selectedFile = null;
+
+    // 🔄 Reload fresh data from DB
+    await loadUserData(uid, user.email);
 
   } catch (error) {
     console.error("❌ Error updating profile:", error);
-    alert("Error saving profile
+    alert("Error saving profile. Try again.");
+  } finally {
+    setSavingState(false); // ✅ Restore button
+  }
+});
