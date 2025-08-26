@@ -8,42 +8,48 @@
 </head>
 <body class="bg-gray-100 min-h-screen p-6 font-sans">
 
-  <h1 class="text-3xl font-bold mb-6 text-green-700">⚙️ Admin Dashboard</h1>
+  <!-- Loader -->
+  <div id="loading" class="text-gray-600 text-lg">🔄 Checking admin access...</div>
 
-  <!-- Tabs -->
-  <div class="flex gap-4 mb-6">
-    <button class="tab-btn bg-green-500 text-white px-4 py-2 rounded" data-tab="posts">Pending Posts</button>
-    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="users">Manage Users</button>
-    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="notifications">Manage Notifications</button>
-    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="send">Send Notification</button>
-  </div>
+  <!-- Main content (hidden until admin confirmed) -->
+  <div id="dashboard" class="hidden">
+    <h1 class="text-3xl font-bold mb-6 text-green-700">⚙️ Admin Dashboard</h1>
 
-  <!-- Sections -->
-  <div id="posts" class="tab-content">
-    <h2 class="text-xl font-semibold mb-4">📝 Pending Posts</h2>
-    <div id="pendingPostsContainer" class="space-y-4"></div>
-  </div>
+    <!-- Tabs -->
+    <div class="flex gap-4 mb-6">
+      <button class="tab-btn bg-green-500 text-white px-4 py-2 rounded" data-tab="posts">Pending Posts</button>
+      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="users">Manage Users</button>
+      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="notifications">Manage Notifications</button>
+      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="send">Send Notification</button>
+    </div>
 
-  <div id="users" class="tab-content hidden">
-    <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>
-    <div id="usersContainer" class="space-y-4"></div>
-  </div>
+    <!-- Sections -->
+    <div id="posts" class="tab-content">
+      <h2 class="text-xl font-semibold mb-4">📝 Pending Posts</h2>
+      <div id="pendingPostsContainer" class="space-y-4"></div>
+    </div>
 
-  <div id="notifications" class="tab-content hidden">
-    <h2 class="text-xl font-semibold mb-4">🔔 All Notifications</h2>
-    <div id="notificationsContainer" class="space-y-4"></div>
-  </div>
+    <div id="users" class="tab-content hidden">
+      <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>
+      <div id="usersContainer" class="space-y-4"></div>
+    </div>
 
-  <div id="send" class="tab-content hidden">
-    <h2 class="text-xl font-semibold mb-4">📢 Send Notification</h2>
-    <form id="notificationForm" class="space-y-3">
-      <input type="text" id="notifTitle" placeholder="Title" class="w-full p-2 border rounded" required>
-      <textarea id="notifMessage" placeholder="Message" class="w-full p-2 border rounded" required></textarea>
-      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Send</button>
-    </form>
+    <div id="notifications" class="tab-content hidden">
+      <h2 class="text-xl font-semibold mb-4">🔔 All Notifications</h2>
+      <div id="notificationsContainer" class="space-y-4"></div>
+    </div>
+
+    <div id="send" class="tab-content hidden">
+      <h2 class="text-xl font-semibold mb-4">📢 Send Notification</h2>
+      <form id="notificationForm" class="space-y-3">
+        <input type="text" id="notifTitle" placeholder="Title" class="w-full p-2 border rounded" required>
+        <textarea id="notifMessage" placeholder="Message" class="w-full p-2 border rounded" required></textarea>
+        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Send</button>
+      </form>
+    </div>
   </div>
 
   <!-- Import JS -->
-  <script type="module" src="assets/js/admin.js"></script>
+  <script type="module" src="admin.js"></script>
 </body>
 </html>
