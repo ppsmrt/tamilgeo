@@ -1,7 +1,9 @@
-// ✅ Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+// Import Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -12,36 +14,89 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// Initialize Firebase
+// Init Firebase
 const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Helper to calculate trend (today's count)
-function calculateTrend(data) {
-  if (!data) return 0;
-  const today = new Date().toISOString().slice(0,10); // YYYY-MM-DD
-  let todayCount = 0;
-  Object.values(data).forEach(item => {
-    if (item.date === today) todayCount++;
-  });
-  return todayCount;
-}
+// DOM references
+const usernameEl = document.getElementById("username");
+const likesEl = document.getElementById("likesCount");
+const commentsEl = document.getElementById("commentsCount");
+const pendingEl = document.getElementById("pendingCount");
+const approvedEl = document.getElementById("approvedCount");
+const publishedEl = document.getElementById("publishedCount");
+const reportsEl = document.getElementById("reportsCount");
+const pollsContainer = document.getElementById("pollsContainer");
+const achievementsContainer = document.getElementById("achievementsContainer");
 
-// Fetch count and trend
-function fetchCount(path, countEl, trendEl) {
-  const dbRef = ref(db, path);
-  onValue(dbRef, (snapshot) => {
-    const data = snapshot.val();
-    const count = data ? Object.keys(data).length : 0;
-    document.getElementById(countEl).textContent = count;
+// Auth listener
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    const uid = user.uid;
 
-    const trend = calculateTrend(data);
-    document.getElementById(trendEl).textContent = `+${trend} today`;
-  });
-}
+    // Get user stats
+    const userRef = ref(db, "users/" + uid);
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val() || {};
+      usernameEl.textContent = data.name || "User";
 
-// Replace these with your actual DB paths
-fetchCount("users", "users-count", "users-trend");
-fetchCount("likes", "likes-count", "likes-trend");
-fetchCount("comments", "comments-count", "comments-trend");
-fetchCount("posts", "posts-count", "posts-trend");
+      likesEl.textContent = data.stats?.likes || 0;
+      commentsEl.textContent = data.stats?.comments || 0;
+      pendingEl.textContent = data.stats?.pendingPosts || 0;
+      approvedEl.textContent = data.stats?.approvedPosts || 0;
+      publishedEl.textContent = data.stats?.publishedPosts || 0;
+      reportsEl.textContent = data.stats?.reports || 0;
+    });
+
+    // Get polls
+    const pollsRef = ref(db, "polls");
+    onValue(pollsRef, (snapshot) => {
+      pollsContainer.innerHTML = "";
+      const polls = snapshot.val() || {};
+      Object.entries(polls).forEach(([pollId, poll]) => {
+        if (poll.active) {
+          const pollCard = document.createElement("div");
+          pollCard.className = "bg-white p-4 rounded-xl shadow";
+          pollCard.innerHTML = `
+            <h3 class="text-lg font-semibold mb-2">${poll.question}</h3>
+            <ul>
+              ${Object.entries(poll.options)
+                .map(([option, count]) => `
+                  <li class="flex justify-between border-b py-1">
+                    <span>${option}</span>
+                    <span class="font-bold">${count}</span>
+                  </li>
+                `)
+                .join("")}
+            </ul>
+          `;
+          pollsContainer.appendChild(pollCard);
+        }
+      });
+    });
+
+    // Get achievements
+    const achievementsRef = ref(db, "achievements/" + uid);
+    onValue(achievementsRef, (snapshot) => {
+      achievementsContainer.innerHTML = "";
+      const data = snapshot.val() || {};
+      if (data.badges) {
+        Object.keys(data.badges).forEach((badge) => {
+          if (data.badges[badge]) {
+            const badgeCard = document.createElement("div");
+            badgeCard.className = "bg-white p-4 rounded-xl shadow text-center";
+            badgeCard.innerHTML = `
+              <i class="fa fa-medal text-yellow-500 text-3xl mb-2"></i>
+              <p class="font-semibold">${badge}</p>
+            `;
+            achievementsContainer.appendChild(badgeCard);
+          }
+        });
+      }
+    });
+
+  } else {
+    usernameEl.textContent = "Guest";
+  }
+});
