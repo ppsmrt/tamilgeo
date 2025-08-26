@@ -204,11 +204,11 @@
   }
 </script>
 
- <!-- Footer placeholder -->
-  <footer id="site-footer"></footer>
-
-  <!-- Footer Script -->
-  <script type="module" src="assets/js/footer.js"></script>
+<!-- Footer Script -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
   
   <!-- Submit Script -->
   <script type="module" src="assets/js/submit.js"></script>
