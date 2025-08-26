@@ -42,57 +42,51 @@
       justify-content: center;
       box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
     }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
     .card { border-radius: 1.25rem; }
     .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.install-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00c853, #64dd17);
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s ease-in-out;
-}
-.install-btn:hover {
-  transform: scale(1.1);
-}
-.hidden {
-  display: none;
-}
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c853, #64dd17);
+      color: white;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.2s ease-in-out;
+    }
+    .install-btn:hover {
+      transform: scale(1.1);
+    }
+    .hidden {
+      display: none;
+    }
   </style>
-<!-- ✅ Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ✅ FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
-</head>
-  <body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-     <!-- ✅ Header -->
+  <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
 
-<!-- ✅ Profile Section -->
-<main class="flex-1 px-4 py-6 space-y-6">
+  <!-- ✅ Profile Section -->
+  <main class="flex-1 px-4 py-6 space-y-6">
 
-  <!-- Profile Header -->
-  <div class="bg-white rounded-2xl shadow p-6 text-center">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-2xl shadow p-6 text-center">
       <div class="flex flex-col items-center">
-        <!-- ✅ Updated to use your default DP -->
         <img id="profilePic" src="https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png" alt="Profile"
           class="w-24 h-24 rounded-full object-cover border-4 border-green-500 shadow-md" />
-
         <h2 id="profileName" class="mt-4 text-xl font-semibold text-gray-800">Loading...</h2>
         <p id="profileEmail" class="text-gray-500 text-sm"></p>
 
@@ -104,91 +98,94 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
       </div>
     </div>
 
-  <!-- Profile Options -->
-  <div class="bg-white rounded-2xl shadow divide-y">
-    <a href="/tamilgeo/about" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-circle-exclamation text-green-600"></i>
-        <span>About Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+    <!-- Profile Options -->
+    <div class="bg-white rounded-2xl shadow divide-y">
+      <a href="/tamilgeo/about" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-circle-exclamation text-green-600"></i>
+          <span>About Us</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
 
-    <a href="/tamilgeo/contact" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-user-tie text-green-600"></i>
-        <span>Contact Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+      <a href="/tamilgeo/contact" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-user-tie text-green-600"></i>
+          <span>Contact Us</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
 
-    <a href="/tamilgeo/donate" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-dollar-sign text-green-600"></i>
-        <span>Donate Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+      <a href="/tamilgeo/donate" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-dollar-sign text-green-600"></i>
+          <span>Donate Us</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
 
-    <a href="/tamilgeo/disclaimer" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-triangle-exclamation text-green-600"></i>
-        <span>Disclaimer</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+      <a href="/tamilgeo/disclaimer" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-triangle-exclamation text-green-600"></i>
+          <span>Disclaimer</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
 
-    <a href="/tamilgeo/privacy" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-shield text-green-600"></i>
-        <span>Privacy Policy</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+      <a href="/tamilgeo/privacy" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-shield text-green-600"></i>
+          <span>Privacy Policy</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
 
-    <a href="/tamilgeo/terms" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-desktop text-green-600"></i>
-        <span>Terms & Conditions</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-  </div>
+      <a href="/tamilgeo/terms" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-desktop text-green-600"></i>
+          <span>Terms & Conditions</span>
+        </div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+    </div>
 
-  <!-- Account Actions -->
-  <div class="bg-white rounded-2xl shadow divide-y">
-    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-trash text-red-500"></i>
-        <span>Clear Cache</span>
-      </div>
-    </a>
+    <!-- Account Actions -->
+    <div class="bg-white rounded-2xl shadow divide-y">
+      <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-trash text-red-500"></i>
+          <span>Clear Cache</span>
+        </div>
+      </a>
 
-    <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-clock-rotate-left text-red-500"></i>
-        <span>Clear History</span>
-      </div>
-    </a>
+      <a href="#" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-clock-rotate-left text-red-500"></i>
+          <span>Clear History</span>
+        </div>
+      </a>
 
-    <a href="#" id="logoutBtn" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-  <div class="flex items-center gap-3">
-    <i class="fa-solid fa-right-from-bracket text-red-600"></i>
-    <span>Log Out</span>
-  </div>
-</a>
-  </div>
+      <a href="#" id="logoutBtn" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+          <span>Log Out</span>
+        </div>
+      </a>
+    </div>
 
-</main>
-    
-   <!--✅ contains firebase.initializeApp(...) -->
-<script src="/tamilgeo/assets/js/account.js"></script>
-<script>
-  feather.replace();
-</script>
+  </main>
 
- <!-- ✅ Bottom Navigation -->
-<script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-</script>       
+  <!-- ✅ Firebase + Account Script -->
+  <script type="module" src="/tamilgeo/assets/js/account.js"></script>
+  <script>
+    feather.replace();
+  </script>
+
+  <!-- ✅ Bottom Navigation -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
+
+</body>
+</html>
