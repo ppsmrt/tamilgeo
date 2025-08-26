@@ -75,28 +75,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
       <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
 
-      <!-- Author -->
-      <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md flex items-center">
-        <img id="authorImage" src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.png" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
-        <div class="ml-4">
-          <h2 id="authorName" class="text-lg font-semibold text-gray-800">Admin</h2>
-          <p id="authorUsernameEmail" class="text-sm text-gray-500">@tamilgeo</p>
-          <p id="authorPostDate" class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
-          <span id="authorCategory" class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
-            ${wpPost.categories?.map(catId => wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name).filter(Boolean).join(', ') || ''}
-          </span>
-        </div>
+      <!-- Author: simplified -->
+      <div id="authorSection" class="mt-6 mb-6">
+        <p class="text-gray-800 font-semibold">${wpPost.author?.name || "Admin"}</p>
+        <p class="text-sm text-gray-500">@tamilgeo</p>
+        <p class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
+        <span class="text-sm px-2 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
+          ${wpPost.categories?.map(catId => wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name).filter(Boolean).join(', ') || ''}
+        </span>
       </div>
 
       <!-- Reactions with FA icons -->
       <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
         <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
         <div class="flex space-x-4" id="likeReactions">
-          <button data-reaction="love" class="text-2xl hover:scale-125 transition"><i class="fa fa-heart"></i></button>
-          <button data-reaction="laugh" class="text-2xl hover:scale-125 transition"><i class="fa fa-laugh"></i></button>
-          <button data-reaction="wow" class="text-2xl hover:scale-125 transition"><i class="fa fa-surprise"></i></button>
-          <button data-reaction="sad" class="text-2xl hover:scale-125 transition"><i class="fa fa-sad-tear"></i></button>
-          <button data-reaction="like" class="text-2xl hover:scale-125 transition"><i class="fa fa-thumbs-up"></i></button>
+          <button data-reaction="love" class="text-2xl"><i class="fa fa-heart"></i></button>
+          <button data-reaction="laugh" class="text-2xl"><i class="fa fa-laugh"></i></button>
+          <button data-reaction="wow" class="text-2xl"><i class="fa fa-surprise"></i></button>
+          <button data-reaction="sad" class="text-2xl"><i class="fa fa-sad-tear"></i></button>
+          <button data-reaction="like" class="text-2xl"><i class="fa fa-thumbs-up"></i></button>
         </div>
         <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
       </div>
@@ -122,20 +119,36 @@ document.addEventListener("DOMContentLoaded", async () => {
       wrapper.classList.add("opacity-100");
     });
 
-    // Reactions logic
+    // Reactions logic with colors and animations
     const likeButtons = document.querySelectorAll('#likeReactions button');
     const likeCounts = document.getElementById('likeCounts');
 
+    const reactionColors = {
+      love: "text-red-500",
+      laugh: "text-yellow-400",
+      wow: "text-purple-500",
+      sad: "text-blue-400",
+      like: "text-green-500"
+    };
+
     likeButtons.forEach(btn => {
-      btn.onclick = async () => {
+      const reaction = btn.dataset.reaction;
+      btn.classList.add(reactionColors[reaction], "transition-transform", "duration-300", "cursor-pointer");
+
+      btn.addEventListener("mouseenter", () => btn.classList.add("scale-125"));
+      btn.addEventListener("mouseleave", () => btn.classList.remove("scale-125"));
+
+      btn.addEventListener("click", async () => {
         if (!currentUser) return alert("Login to react");
-        const reaction = btn.dataset.reaction;
+        btn.classList.add("animate-pulse");
+        setTimeout(() => btn.classList.remove("animate-pulse"), 500);
+
         const likesRef = ref(db, `likes/${postId}`);
         const snap = await get(likesRef);
         const currentData = snap.val() || {};
         currentData[`${reaction}_${currentUser.uid}`] = reaction;
         update(likesRef, currentData);
-      };
+      });
     });
 
     onValue(ref(db, `likes/${postId}`), snapshot => {
@@ -145,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       likeCounts.textContent = Object.entries(counts).map(([k,v]) => `${k}: ${v}`).join(' | ');
     });
 
-    // Comments logic (unchanged)
+    // Comments logic
     const commentInput = document.getElementById("commentInput");
     const submitComment = document.getElementById("submitComment");
     const commentsList = document.getElementById("commentsList");
