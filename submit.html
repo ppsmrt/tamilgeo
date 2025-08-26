@@ -3,8 +3,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TamilGeo - Submit Post</title>
+
+  <!-- ✅ Load Tailwind once -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <!-- ✅ FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- ✅ Custom Styles (after Tailwind so overrides work) -->
   <style>
     .bottom-nav {
       backdrop-filter: blur(15px);
@@ -42,41 +48,36 @@
       justify-content: center;
       box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
     }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
     .card { border-radius: 1.25rem; }
     .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.install-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00c853, #64dd17);
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s ease-in-out;
-}
-.install-btn:hover {
-  transform: scale(1.1);
-}
-.hidden {
-  display: none;
-}
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00c853, #64dd17);
+      color: white;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 9999;
+      transition: transform 0.2s ease-in-out;
+    }
+    .install-btn:hover {
+      transform: scale(1.1);
+    }
+    .hidden {
+      display: none;
+    }
   </style>
-<!-- ✅ Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- ✅ FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  
+
   <!-- ✅ Header -->
   <script type="module" src="assets/js/header.js"></script>
 </head>
@@ -178,16 +179,15 @@ body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, 
   </button>
 </form>
 </main>
+
 <script type="module">
   import { initFooter } from './assets/js/footer.js';
   initFooter();
 </script>       
-  <script>
-    feather.replace();
-  </script>
+<script>
+  feather.replace();
+</script>
 <script type="module" src="assets/js/submit.js"></script>
   
 </body>
 </html>
-
- 
