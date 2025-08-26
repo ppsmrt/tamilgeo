@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, push, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// ✅ Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
@@ -13,12 +13,10 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// ✅ Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// ✅ Get post ID from URL
 const postId = new URLSearchParams(window.location.search).get("id");
 const container = document.getElementById("post-container");
 
@@ -27,15 +25,13 @@ if (!postId) {
   throw new Error("Missing post ID");
 }
 
-// ✅ WordPress API URL (supports numeric ID and slug)
 const isNumeric = !isNaN(postId);
 const postURL = isNumeric
-  ? `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}`
-  : `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?slug=${postId}`;
+  ? `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts/${postId}?_embed`
+  : `https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?slug=${postId}&_embed`;
 
 let currentUser = null;
 
-// ✅ Wait for DOM
 document.addEventListener("DOMContentLoaded", async () => {
   onAuthStateChanged(auth, user => currentUser = user);
 
@@ -51,14 +47,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     console.log("Fetched post:", wpPost);
 
-    // ✅ Featured image
     const featuredImage = wpPost.jetpack_featured_media_url
       ? `<div class="aspect-video rounded-xl overflow-hidden mb-6 shadow-lg border border-gray-200">
            <img src="${wpPost.jetpack_featured_media_url}" class="w-full h-full object-cover rounded-lg shadow-md" alt="Featured Image">
          </div>`
       : "";
 
-    // ✅ Style post content
     let contentStyled = wpPost.content.rendered
       .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
       .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
@@ -73,49 +67,47 @@ document.addEventListener("DOMContentLoaded", async () => {
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-   // ✅ Inject HTML (simplified author & removed share section)
-container.innerHTML = `
+    // Inject HTML
+    container.innerHTML = `
   <div class="w-full max-w-3xl px-4 py-4">
     <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
       ${featuredImage}
       <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
       <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
 
-      <!-- Author (always visible) -->
+      <!-- Author -->
       <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md flex items-center">
-        <img src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.png" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+        <img id="authorImage" src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.png" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
         <div class="ml-4">
-          <h2 class="text-lg font-semibold text-gray-800">Admin</h2>
-          <p class="text-sm text-gray-500">@tamilgeo</p>
-          <p class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
-          <span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
+          <h2 id="authorName" class="text-lg font-semibold text-gray-800">Admin</h2>
+          <p id="authorUsernameEmail" class="text-sm text-gray-500">@tamilgeo</p>
+          <p id="authorPostDate" class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
+          <span id="authorCategory" class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
             ${wpPost.categories?.map(catId => wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name).filter(Boolean).join(', ') || ''}
           </span>
         </div>
       </div>
 
-      <!-- Reactions -->
+      <!-- Reactions with FA icons -->
       <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
         <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
         <div class="flex space-x-4" id="likeReactions">
-          <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
-          <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
-          <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
-          <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
-          <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+          <button data-reaction="love" class="text-2xl hover:scale-125 transition"><i class="fa fa-heart"></i></button>
+          <button data-reaction="laugh" class="text-2xl hover:scale-125 transition"><i class="fa fa-laugh"></i></button>
+          <button data-reaction="wow" class="text-2xl hover:scale-125 transition"><i class="fa fa-surprise"></i></button>
+          <button data-reaction="sad" class="text-2xl hover:scale-125 transition"><i class="fa fa-sad-tear"></i></button>
+          <button data-reaction="like" class="text-2xl hover:scale-125 transition"><i class="fa fa-thumbs-up"></i></button>
         </div>
         <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
       </div>
 
-      <!-- Comments -->
+      <!-- Comments Section -->
       <div id="commentSection" class="mt-10">
         <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
         <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
           <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
           <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+            <i class="fa fa-paper-plane"></i>
           </button>
         </div>
         <div id="commentsList" class="space-y-4"></div>
@@ -123,23 +115,14 @@ container.innerHTML = `
     </div>
   </div>
 `;
-    // ✅ Fade-in
+
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
       wrapper.classList.remove("opacity-0");
       wrapper.classList.add("opacity-100");
     });
 
-    // ✅ Author info
-    document.getElementById("authorImage").src = wpPost.isPulled
-      ? 'https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg'
-      : 'https://ui-avatars.com/api/?name=Admin&background=34D399&color=fff';
-    document.getElementById("authorName").textContent = wpPost.isPulled ? 'Admin' : 'Author';
-    document.getElementById("authorUsernameEmail").textContent = wpPost.isPulled ? '@admin • tamilgeo' : '@username • author@gmail.com';
-    document.getElementById("authorPostDate").textContent = `Posted on: ${new Date(wpPost.date).toDateString()}`;
-    document.getElementById("authorCategory").textContent = wpPost.categories?.length ? wpPost.categories[0] : '';
-
-    // ✅ Post reactions
+    // Reactions logic
     const likeButtons = document.querySelectorAll('#likeReactions button');
     const likeCounts = document.getElementById('likeCounts');
 
@@ -162,7 +145,7 @@ container.innerHTML = `
       likeCounts.textContent = Object.entries(counts).map(([k,v]) => `${k}: ${v}`).join(' | ');
     });
 
-    // ✅ Comments logic (safe version)
+    // Comments logic (unchanged)
     const commentInput = document.getElementById("commentInput");
     const submitComment = document.getElementById("submitComment");
     const commentsList = document.getElementById("commentsList");
@@ -192,14 +175,13 @@ container.innerHTML = `
             </div>
             <div class="flex space-x-2 text-gray-500">
               <button data-id="${id}" class="likeBtn hover:text-green-600">
-                <i class="fa-regular fa-heart"></i> <span class="likeCount">${comment.likes || 0}</span>
+                <i class="fa fa-heart"></i> <span class="likeCount">${comment.likes || 0}</span>
               </button>
               <button data-id="${id}" class="replyBtn hover:text-green-600">Reply</button>
             </div>
           </div>
           <div class="replies mt-2 ml-4 space-y-1"></div>
         `;
-        // Replies
         const repliesDiv = div.querySelector(".replies");
         (comment.replies || []).forEach(r => {
           const rDiv = document.createElement("div");
