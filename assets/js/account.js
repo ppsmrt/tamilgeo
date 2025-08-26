@@ -99,7 +99,7 @@ if (logoutBtn) {
     e.preventDefault();
     signOut(Auth)
       .then(() => {
-        window.location.href = "/index.html"; // 🔥 Adjust if homepage is different
+        window.location.href = "tamilgeo/index.html"; // 🔥 Adjust if homepage is different
       })
       .catch((error) => {
         console.error("Logout error:", error);
