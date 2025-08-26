@@ -28,7 +28,6 @@ const leftDiv = document.createElement("div");
 leftDiv.className = "flex items-center space-x-3";
 
 if (isHome) {
-  // Logo + TamilGeo
   const logo = document.createElement("img");
   logo.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg";
   logo.alt = "TamilGeo";
@@ -42,14 +41,10 @@ if (isHome) {
   leftDiv.appendChild(title);
 
 } else {
-  // Back arrow + Page title
   const backButton = document.createElement("button");
   backButton.onclick = () => {
-    if (document.referrer) {
-      window.history.back();
-    } else {
-      window.location.href = "index.html";
-    }
+    if (document.referrer) window.history.back();
+    else window.location.href = "index.html";
   };
   backButton.className = "text-gray-600 text-xl flex items-center space-x-2";
   backButton.innerHTML = `<i data-feather="chevron-left"></i>`;
@@ -87,20 +82,17 @@ document.body.prepend(header);
 
 // ----- Optional spacing below header -----
 const headerSpacer = document.createElement("div");
-headerSpacer.className = "h-5"; // adjust height as needed
+headerSpacer.className = "h-5";
 document.body.insertBefore(headerSpacer, header.nextSibling);
 
 // Feather icons init
-if (window.feather) {
-  feather.replace();
-}
+if (window.feather) feather.replace();
 
-// ===== Load Notifications Count (Firebase + Blog) =====
+// ===== Load Notifications Count =====
 async function updateNotificationCount() {
   let totalUnread = 0;
-
-  // Firebase notifications
   const username = localStorage.getItem("username");
+
   if (username) {
     const notificationsRef = ref(db, `notifications/${username}`);
     const snapshot = await get(notificationsRef);
@@ -111,7 +103,6 @@ async function updateNotificationCount() {
     }
   }
 
-  // WordPress Blog posts (RSS feed JSON)
   try {
     const res = await fetch("https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?per_page=5");
     const posts = await res.json();
@@ -124,7 +115,6 @@ async function updateNotificationCount() {
     console.error("Error fetching blog posts", e);
   }
 
-  // Update badge
   if (totalUnread > 0) {
     badge.textContent = totalUnread;
     badge.classList.remove("hidden");
@@ -135,31 +125,48 @@ async function updateNotificationCount() {
 
 updateNotificationCount();
 
-// ===== Pull-to-Refresh Feature =====
+// ===== Pull-to-Refresh (iOS-style premium) =====
 let startY = 0;
 let isPulling = false;
 const refreshThreshold = 80;
+let isRefreshing = false;
 
-// Pull-to-refresh indicator
-const ptrIndicator = document.createElement("div");
-ptrIndicator.style.position = "absolute";
-ptrIndicator.style.top = "0";
-ptrIndicator.style.left = "0";
-ptrIndicator.style.right = "0";
-ptrIndicator.style.height = "50px";
-ptrIndicator.style.display = "flex";
-ptrIndicator.style.alignItems = "center";
-ptrIndicator.style.justifyContent = "center";
-ptrIndicator.style.background = "#f3f3f3";
-ptrIndicator.style.color = "#333";
-ptrIndicator.style.fontWeight = "bold";
-ptrIndicator.style.transform = "translateY(-100%)";
-ptrIndicator.style.transition = "transform 0.3s";
-ptrIndicator.textContent = "Pull to refresh";
-document.body.prepend(ptrIndicator);
+const ptrContainer = document.createElement("div");
+ptrContainer.style.position = "absolute";
+ptrContainer.style.top = "0";
+ptrContainer.style.left = "50%";
+ptrContainer.style.transform = "translateX(-50%) translateY(-100%)";
+ptrContainer.style.width = "40px";
+ptrContainer.style.height = "40px";
+ptrContainer.style.zIndex = "1000";
+ptrContainer.style.transition = "transform 0.2s ease-out";
+document.body.prepend(ptrContainer);
 
+// SVG Spinner
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.createElementNS(svgNS, "svg");
+svg.setAttribute("width", "40");
+svg.setAttribute("height", "40");
+svg.setAttribute("viewBox", "0 0 50 50");
+
+const circle = document.createElementNS(svgNS, "circle");
+circle.setAttribute("cx", "25");
+circle.setAttribute("cy", "25");
+circle.setAttribute("r", "20");
+circle.setAttribute("fill", "none");
+circle.setAttribute("stroke", "#111");
+circle.setAttribute("stroke-width", "4");
+circle.setAttribute("stroke-linecap", "round");
+circle.setAttribute("stroke-dasharray", "125.6");
+circle.setAttribute("stroke-dashoffset", "125.6");
+circle.style.transition = "stroke-dashoffset 0.2s ease-out";
+
+svg.appendChild(circle);
+ptrContainer.appendChild(svg);
+
+// Pull logic
 window.addEventListener("touchstart", (e) => {
-  if (window.scrollY === 0) {
+  if (window.scrollY === 0 && !isRefreshing) {
     startY = e.touches[0].pageY;
     isPulling = true;
   }
@@ -169,22 +176,39 @@ window.addEventListener("touchmove", (e) => {
   if (!isPulling) return;
   const distance = e.touches[0].pageY - startY;
   if (distance > 0) {
-    ptrIndicator.style.transform = `translateY(${Math.min(distance, refreshThreshold)}px)`;
-    ptrIndicator.textContent = distance > refreshThreshold ? "Release to refresh" : "Pull to refresh";
+    const translateY = Math.min(distance, refreshThreshold);
+    ptrContainer.style.transform = `translateX(-50%) translateY(${translateY}px)`;
+    const progress = Math.min(translateY / refreshThreshold, 1);
+    const dashoffset = 125.6 * (1 - progress);
+    circle.setAttribute("stroke-dashoffset", dashoffset);
   }
 });
 
-window.addEventListener("touchend", (e) => {
+window.addEventListener("touchend", async (e) => {
   if (!isPulling) return;
   const distance = e.changedTouches[0].pageY - startY;
+
   if (distance > refreshThreshold) {
-    ptrIndicator.textContent = "Refreshing...";
-    refreshPageContent().then(() => {
-      ptrIndicator.style.transform = "translateY(-100%)";
-      ptrIndicator.textContent = "Pull to refresh";
-    });
+    isRefreshing = true;
+    ptrContainer.style.transform = `translateX(-50%) translateY(${refreshThreshold}px)`;
+
+    // Start spinning
+    circle.style.transition = "stroke-dasharray 0.6s linear infinite, stroke-dashoffset 0.2s ease-out";
+    circle.setAttribute("stroke-dasharray", "62.8 62.8");
+    circle.setAttribute("stroke-dashoffset", "0");
+
+    await refreshPageContent();
+
+    setTimeout(() => {
+      circle.style.transition = "stroke-dashoffset 0.2s ease-out";
+      circle.setAttribute("stroke-dasharray", "125.6");
+      circle.setAttribute("stroke-dashoffset", "125.6");
+      ptrContainer.style.transform = "translateX(-50%) translateY(-100%)";
+      isRefreshing = false;
+    }, 600);
+
   } else {
-    ptrIndicator.style.transform = "translateY(-100%)";
+    ptrContainer.style.transform = "translateX(-50%) translateY(-100%)";
   }
   isPulling = false;
 });
