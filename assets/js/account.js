@@ -32,7 +32,7 @@ const logoutBtn = document.getElementById("logoutBtn");
 // ✅ Auth check
 onAuthStateChanged(Auth, async (user) => {
   if (!user) {
-    window.location.href = "/login.html";
+    window.location.href = "tamilgeo/login.html";
     return;
   }
 
