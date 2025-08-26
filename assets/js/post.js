@@ -218,8 +218,14 @@ fetch(postURL)
       });
 
       document.querySelectorAll(".replyBtn").forEach(btn => {
-        btn.addEventListener("click", e => {
-          const id = e.currentTarget.dataset.id;
-          const replyText = prompt(`Reply to ${snapshot.val()[id].author}`);
-          if(replyText){
-            const replies = s
+  btn.addEventListener("click", e => {
+    const id = e.currentTarget.dataset.id;
+    const replyText = prompt(`Reply to ${snapshot.val()[id].author}`);
+    if (replyText) {
+      const comment = snapshot.val()[id];
+      const replies = comment.replies || [];
+      replies.push({ author: currentUser.displayName || "Anonymous", text: replyText });
+      update(ref(db, `comments/${postId}/${id}`), { replies });
+    }
+  });
+});
