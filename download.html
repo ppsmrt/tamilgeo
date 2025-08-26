@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TamilGeo - Download App</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
+  .install-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00c853, #64dd17);
+    color: white;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 9999;
+    transition: transform 0.2s ease-in-out;
+  }
+  .install-btn:hover { transform: scale(1.1); }
+  .hero-bg { background: linear-gradient(135deg, #32a852, #28b66f); }
+</style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Hero Section -->
+<section class="hero-bg text-white text-center py-20">
+  <div class="container mx-auto px-4">
+    <img src="assets/logo.png" alt="TamilGeo Logo" class="mx-auto w-32 mb-6">
+    <h1 class="text-4xl font-bold mb-2">TamilGeo</h1>
+    <p class="text-lg mb-6">Discover locations, track your routes, and explore Tamil Nadu like never before!</p>
+    <a href="https://play.google.com/store/apps/details?id=com.tamilgeo" class="bg-white text-green-600 px-8 py-3 rounded-full font-semibold shadow-lg hover:scale-105 transition transform inline-block">Download on Play Store</a>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-16">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">App Features</h2>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+        <i class="fas fa-map-marked-alt text-green-500 text-4xl mb-4"></i>
+        <h3 class="text-xl font-semibold mb-2">Explore Maps</h3>
+        <p class="text-gray-600">Interactive maps with accurate geolocation for Tamil Nadu.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+        <i class="fas fa-route text-green-500 text-4xl mb-4"></i>
+        <h3 class="text-xl font-semibold mb-2">Track Routes</h3>
+        <p class="text-gray-600">Track your daily routes and visualize your journeys easily.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-6 text-center">
+        <i class="fas fa-star text-green-500 text-4xl mb-4"></i>
+        <h3 class="text-xl font-semibold mb-2">Premium Features</h3>
+        <p class="text-gray-600">Unlock exclusive tools for advanced geolocation and insights.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Screenshots Section -->
+<section class="py-16 bg-gray-100">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold text-center mb-12">App Screenshots</h2>
+    <div class="flex overflow-x-auto space-x-6 py-4">
+      <img src="assets/screenshot1.png" alt="Screenshot 1" class="rounded-2xl shadow-lg w-64 flex-shrink-0">
+      <img src="assets/screenshot2.png" alt="Screenshot 2" class="rounded-2xl shadow-lg w-64 flex-shrink-0">
+      <img src="assets/screenshot3.png" alt="Screenshot 3" class="rounded-2xl shadow-lg w-64 flex-shrink-0">
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="text-center py-16">
+  <h2 class="text-3xl font-bold mb-6">Get TamilGeo Today!</h2>
+  <p class="text-gray-600 mb-6">Install now and start exploring the world around you with ease.</p>
+  <a href="https://play.google.com/store/apps/details?id=com.tamilgeo" class="bg-green-600 text-white px-10 py-4 rounded-full font-semibold shadow-lg hover:scale-105 transition transform inline-block">Install Now</a>
+</section>
+
+<!-- Floating Install Button -->
+<button class="install-btn" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.tamilgeo'">
+  <i class="fas fa-download"></i>
+</button>
+
+</body>
+</html>
