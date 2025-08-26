@@ -1,3 +1,4 @@
+// account.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -35,22 +36,30 @@ onAuthStateChanged(Auth, async (user) => {
     return;
   }
 
-  // ✅ Fetch profile from Realtime Database (publicly readable now)
+  // ✅ Fetch profile from Realtime Database
   onValue(ref(db, "users/" + user.uid), async (snapshot) => {
     const profile = snapshot.val() || {};
 
-    // ✅ Name
+    // ✅ Name handling (flexible)
     if (profileNameEl) {
-      const fullName =
-        (profile.firstName || "") +
-        (profile.secondName ? " " + profile.secondName : "");
-      profileNameEl.textContent =
-        fullName.trim() || profile.fullname || "No Name";
+      let fullName = "";
+
+      if (profile.firstName || profile.secondName) {
+        fullName = `${profile.firstName || ""} ${profile.secondName || ""}`.trim();
+      } else if (profile.fullname) {
+        fullName = profile.fullname;
+      } else if (user.displayName) {
+        fullName = user.displayName;
+      } else {
+        fullName = "No Name";
+      }
+
+      profileNameEl.textContent = fullName;
     }
 
     // ✅ Email
     if (profileEmailEl) {
-      profileEmailEl.textContent = profile.email || user.email;
+      profileEmailEl.textContent = profile.email || user.email || "No Email";
     }
 
     // ✅ Username
@@ -90,7 +99,7 @@ if (logoutBtn) {
     e.preventDefault();
     signOut(Auth)
       .then(() => {
-        window.location.href = "/index.html"; // 🔥 Adjust if your home page is different
+        window.location.href = "/index.html"; // 🔥 Adjust if homepage is different
       })
       .catch((error) => {
         console.error("Logout error:", error);
