@@ -1,55 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TamilGeo - Home</title>
+
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
+
+  <!-- Header Script -->
+  <script type="module" src="assets/js/header.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/img/favicon.ico" />
 </head>
-<body class="bg-gray-100 min-h-screen p-6 font-sans">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- Loader -->
-  <div id="loading" class="text-gray-600 text-lg">🔄 Checking admin access...</div>
+  <!-- Header placeholder -->
+  <header id="site-header"></header>
 
-  <!-- Main content (hidden until admin confirmed) -->
-  <div id="dashboard" class="hidden">
-    <h1 class="text-3xl font-bold mb-6 text-green-700">⚙️ Admin Dashboard</h1>
+<!-- Loader -->
+<div id="loading" class="text-gray-600 text-lg text-center py-12">
+  <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-green-500 mx-auto mb-4"></div>
+  <p class="font-medium text-gray-700">🔄 Checking admin access...</p>
+</div>
+
+<!-- Main content -->
+<main id="dashboard" class="hidden flex-1 max-w-7xl mx-auto w-full py-10 px-6">
+  <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 w-full">
+
+    <!-- Dashboard Header -->
+    <div class="flex items-center justify-between mb-10">
+      <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-700 via-emerald-500 to-green-400">
+        <i class="fa-solid fa-gauge-high text-green-600"></i> Admin Dashboard
+      </h1>
+      <span class="px-5 py-1 text-sm rounded-full bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold shadow-md">
+        Secure Access
+      </span>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="p-6 rounded-xl shadow-md bg-gradient-to-r from-green-600 to-emerald-500 text-white flex items-center gap-4">
+        <i class="fa-solid fa-clipboard-list text-3xl"></i>
+        <div>
+          <p class="text-sm opacity-80">Pending Posts</p>
+          <h3 class="text-2xl font-bold">12</h3>
+        </div>
+      </div>
+      <div class="p-6 rounded-xl shadow-md bg-gradient-to-r from-blue-600 to-sky-500 text-white flex items-center gap-4">
+        <i class="fa-solid fa-users text-3xl"></i>
+        <div>
+          <p class="text-sm opacity-80">Total Users</p>
+          <h3 class="text-2xl font-bold">347</h3>
+        </div>
+      </div>
+      <div class="p-6 rounded-xl shadow-md bg-gradient-to-r from-pink-600 to-rose-500 text-white flex items-center gap-4">
+        <i class="fa-solid fa-bell text-3xl"></i>
+        <div>
+          <p class="text-sm opacity-80">Notifications</p>
+          <h3 class="text-2xl font-bold">58</h3>
+        </div>
+      </div>
+    </div>
 
     <!-- Tabs -->
-    <div class="flex gap-4 mb-6">
-      <button class="tab-btn bg-green-500 text-white px-4 py-2 rounded" data-tab="posts">Pending Posts</button>
-      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="users">Manage Users</button>
-      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="notifications">Manage Notifications</button>
-      <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="send">Send Notification</button>
+    <div class="flex flex-wrap gap-4 mb-8 border-b pb-4">
+      <button class="tab-btn bg-gradient-to-r from-green-600 to-green-500 text-white px-5 py-2 rounded-xl shadow-md font-medium flex items-center gap-2" data-tab="posts">
+        <i class="fa-solid fa-clipboard-list"></i> Pending Posts
+      </button>
+      <button class="tab-btn bg-gray-200 hover:bg-gray-300 px-5 py-2 rounded-xl font-medium flex items-center gap-2" data-tab="users">
+        <i class="fa-solid fa-users"></i> Manage Users
+      </button>
+      <button class="tab-btn bg-gray-200 hover:bg-gray-300 px-5 py-2 rounded-xl font-medium flex items-center gap-2" data-tab="notifications">
+        <i class="fa-solid fa-bell"></i> Manage Notifications
+      </button>
+      <button class="tab-btn bg-gray-200 hover:bg-gray-300 px-5 py-2 rounded-xl font-medium flex items-center gap-2" data-tab="send">
+        <i class="fa-solid fa-paper-plane"></i> Send Notification
+      </button>
     </div>
 
     <!-- Sections -->
     <div id="posts" class="tab-content">
-      <h2 class="text-xl font-semibold mb-4">📝 Pending Posts</h2>
+      <h2 class="text-2xl font-semibold mb-6 text-green-700 flex items-center gap-2">
+        <i class="fa-solid fa-clipboard-list text-green-500"></i> Pending Posts
+      </h2>
       <div id="pendingPostsContainer" class="space-y-4"></div>
     </div>
 
     <div id="users" class="tab-content hidden">
-      <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>
+      <h2 class="text-2xl font-semibold mb-6 text-blue-600 flex items-center gap-2">
+        <i class="fa-solid fa-users text-blue-500"></i> Manage Users
+      </h2>
       <div id="usersContainer" class="space-y-4"></div>
     </div>
 
     <div id="notifications" class="tab-content hidden">
-      <h2 class="text-xl font-semibold mb-4">🔔 All Notifications</h2>
+      <h2 class="text-2xl font-semibold mb-6 text-pink-600 flex items-center gap-2">
+        <i class="fa-solid fa-bell text-pink-500"></i> All Notifications
+      </h2>
       <div id="notificationsContainer" class="space-y-4"></div>
     </div>
 
     <div id="send" class="tab-content hidden">
-      <h2 class="text-xl font-semibold mb-4">📢 Send Notification</h2>
-      <form id="notificationForm" class="space-y-3">
-        <input type="text" id="notifTitle" placeholder="Title" class="w-full p-2 border rounded" required>
-        <textarea id="notifMessage" placeholder="Message" class="w-full p-2 border rounded" required></textarea>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Send</button>
+      <h2 class="text-2xl font-semibold mb-6 text-emerald-600 flex items-center gap-2">
+        <i class="fa-solid fa-paper-plane text-emerald-500"></i> Send Notification
+      </h2>
+      <form id="notificationForm" class="space-y-4">
+        <input type="text" id="notifTitle" placeholder="Title" class="w-full p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-400 outline-none" required>
+        <textarea id="notifMessage" placeholder="Message" class="w-full p-3 border rounded-xl shadow-sm focus:ring-2 focus:ring-green-400 outline-none" required></textarea>
+        <button type="submit" class="bg-gradient-to-r from-green-600 to-green-500 text-white px-6 py-3 rounded-xl shadow-md hover:opacity-90 transition flex items-center gap-2">
+          <i class="fa-solid fa-paper-plane"></i> Send
+        </button>
       </form>
     </div>
-  </div>
 
-  <!-- Import JS -->
+  </div>
+</main>
+
+<!-- Footer Script -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
+  
+  <!-- Feed Script -->
   <script type="module" src="assets/js/admin.js"></script>
+
+  <!-- Feather Icons Init -->
+  <script>
+    feather.replace();
+  </script>
 </body>
 </html>
