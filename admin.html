@@ -16,7 +16,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getAuth, onAuthStateChanged, getIdTokenResult } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getDatabase, ref, onValue, set, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
     const firebaseConfig = {
@@ -36,13 +36,20 @@
     const container = document.getElementById("pendingPostsContainer");
 
     // ✅ Only admin can access
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.href = "/tamilgeo/login.html";
         return;
       }
-      if (!user.token || !user.token.admin) {
-        alert("⚠ You are not authorized to view this page.");
+      try {
+        const tokenResult = await getIdTokenResult(user);
+        if (!tokenResult.claims.admin) {
+          alert("⚠ You are not authorized to view this page.");
+          window.location.href = "/tamilgeo/index.html";
+        }
+      } catch (err) {
+        console.error("Error fetching token result:", err);
+        alert("⚠ Authentication error.");
         window.location.href = "/tamilgeo/index.html";
       }
     });
