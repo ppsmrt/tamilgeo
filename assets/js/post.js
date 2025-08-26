@@ -73,69 +73,56 @@ document.addEventListener("DOMContentLoaded", async () => {
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // ✅ Inject HTML
-    container.innerHTML = `
-      <div class="w-full max-w-3xl px-4 py-4">
-        <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
-          ${featuredImage}
-          <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
-          <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
+   // ✅ Inject HTML (simplified author & removed share section)
+container.innerHTML = `
+  <div class="w-full max-w-3xl px-4 py-4">
+    <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
+      ${featuredImage}
+      <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
+      <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
 
-          <!-- Author -->
-          <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md">
-            <div class="flex items-center mb-4">
-              <img id="authorImage" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
-              <div class="ml-4">
-                <h2 id="authorName" class="text-lg font-semibold text-gray-800">Author</h2>
-                <p id="authorUsernameEmail" class="text-sm text-gray-500">@username • email@example.com</p>
-                <p id="authorPostDate" class="text-xs text-gray-400">Posted on: DATE</p>
-              </div>
-            </div>
-            <span id="authorCategory" class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium"></span>
-          </div>
-
-          <!-- Reactions -->
-          <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
-            <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
-            <div class="flex space-x-4" id="likeReactions">
-              <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
-              <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
-              <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
-              <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
-              <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
-            </div>
-            <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
-          </div>
-
-          <!-- Share -->
-          <div id="shareSection" class="border-t border-gray-200 mt-4 pt-3">
-            <h3 class="text-gray-700 font-medium mb-2">Share this Post</h3>
-            <div class="flex space-x-3">
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="facebook"><i class="fab fa-facebook-f text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="twitter"><i class="fab fa-twitter text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="telegram"><i class="fab fa-telegram-plane text-lg"></i></a>
-              <a href="#" class="shareBtn w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white shadow-md hover:scale-110 transition" data-platform="whatsapp"><i class="fab fa-whatsapp text-lg"></i></a>
-            </div>
-          </div>
-
-          <!-- Comments -->
-          <div id="commentSection" class="mt-10">
-            <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
-            <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
-              <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
-              <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-              </button>
-            </div>
-            <div id="commentsList" class="space-y-4"></div>
-          </div>
-
+      <!-- Author (always visible) -->
+      <div id="authorSection" class="mt-8 p-4 bg-gray-50 rounded-2xl shadow-md flex items-center">
+        <img src="https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.png" class="w-14 h-14 rounded-full border-2 border-green-500" alt="Author">
+        <div class="ml-4">
+          <h2 class="text-lg font-semibold text-gray-800">Admin</h2>
+          <p class="text-sm text-gray-500">@tamilgeo</p>
+          <p class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
+          <span class="text-sm px-3 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
+            ${wpPost.categories?.map(catId => wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name).filter(Boolean).join(', ') || ''}
+          </span>
         </div>
       </div>
-    `;
 
+      <!-- Reactions -->
+      <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
+        <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
+        <div class="flex space-x-4" id="likeReactions">
+          <button data-reaction="love" class="text-2xl hover:scale-125 transition">❤️</button>
+          <button data-reaction="laugh" class="text-2xl hover:scale-125 transition">😂</button>
+          <button data-reaction="wow" class="text-2xl hover:scale-125 transition">😮</button>
+          <button data-reaction="sad" class="text-2xl hover:scale-125 transition">😢</button>
+          <button data-reaction="like" class="text-2xl hover:scale-125 transition">👍</button>
+        </div>
+        <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+      </div>
+
+      <!-- Comments -->
+      <div id="commentSection" class="mt-10">
+        <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+        <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+          <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+          <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        </div>
+        <div id="commentsList" class="space-y-4"></div>
+      </div>
+    </div>
+  </div>
+`;
     // ✅ Fade-in
     const wrapper = document.getElementById("post-content-wrapper");
     requestAnimationFrame(() => {
