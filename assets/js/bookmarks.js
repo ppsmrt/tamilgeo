@@ -20,7 +20,8 @@ function displayBookmarks(list) {
 
     const postHTML = `
       <div class="relative group mb-6">
-        <a href="${post.url}" class="block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1 card">
+        <!-- Open post in local post.html with id -->
+        <a href="post.html?id=${post.id}" class="block bg-white rounded-lg overflow-hidden shadow hover:shadow-lg transition duration-300 transform hover:-translate-y-1 card">
           ${image}
           <div class="p-4">
             <h2 class="text-lg font-bold mb-2">${post.title}</h2>
