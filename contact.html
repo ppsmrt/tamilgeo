@@ -1,83 +1,32 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TamilGeo - Contact</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .bottom-nav {
-      backdrop-filter: blur(15px);
-      background: linear-gradient(90deg, #32a852, #28b66f);
-      border-radius: 1.5rem 1.5rem 0 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .dial {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
-      margin: auto;
-      position: relative;
-    }
-    .dial-inner {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f0fff4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
-    }
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-    .card { border-radius: 1.25rem; }
-    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-    .install-btn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 60px;
-      height: 60px;
-      border: none;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00c853, #64dd17);
-      color: white;
-      font-size: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 9999;
-      transition: transform 0.2s ease-in-out;
-    }
-    .install-btn:hover {
-      transform: scale(1.1);
-    }
-    .hidden {
-      display: none;
-    }
-  </style>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-</head>
 
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
+
+  <!-- Header Script -->
+  <script type="module" src="assets/js/header.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/img/favicon.ico" />
+</head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
 
-  <!-- ✅ Header -->
-  <script type="module" src="assets/js/header.js"></script>
+  <!-- Header placeholder -->
+  <header id="site-header"></header>
 
   <!-- Main Content -->
   <main class="flex-grow flex items-center justify-center px-4 pt-6 sm:pt-12">
@@ -134,14 +83,18 @@
           </ul>
         </div>
       </div>
-
     </div>
   </main>
-<!-- ✅ Bottom Navigation -->
+
+<!-- Footer Script -->
   <script type="module">
     import { initFooter } from './assets/js/footer.js';
     initFooter();
   </script>
 
-  </body>
+  <!-- Feather Icons Init -->
+  <script>
+    feather.replace();
+  </script>
+</body>
 </html>
