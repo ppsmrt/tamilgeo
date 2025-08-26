@@ -20,35 +20,47 @@ const Auth = getAuth(app);
 const db = getDatabase(app);
 const storage = getStorage(app);
 
-// ✅ Check auth state
+// ✅ Elements
+const profilePicEl = document.getElementById("profilePic");
+const profileNameEl = document.getElementById("profileName");
+const profileEmailEl = document.getElementById("profileEmail");
+const logoutBtn = document.getElementById("logoutBtn");
+
+// ✅ Auth check
 onAuthStateChanged(Auth, async (user) => {
   if (!user) {
     window.location.href = "/login.html";
     return;
   }
 
-  const profilePicEl = document.getElementById("profilePic");
-  const profileNameEl = document.getElementById("profileName");
-  const profileEmailEl = document.getElementById("profileEmail");
-
-  // Fetch profile from Realtime Database
+  // ✅ Fetch profile from Realtime Database
   onValue(ref(db, "users/" + user.uid), async (snapshot) => {
-    const profile = snapshot.val();
+    const profile = snapshot.val() || {};
 
-    // ✅ Full name
-    if (profileNameEl) profileNameEl.textContent = profile?.fullname || "No Name";
+    // ✅ Full name / first name
+    if (profileNameEl) {
+      const fullName =
+        (profile.firstName || "") +
+        (profile.secondName ? " " + profile.secondName : "") ||
+        profile.fullname ||
+        profile.username ||
+        "No Name";
+      profileNameEl.textContent = fullName.trim();
+    }
 
     // ✅ Email
-    if (profileEmailEl) profileEmailEl.textContent = profile?.email || user.email;
+    if (profileEmailEl) {
+      profileEmailEl.textContent = profile.email || user.email;
+    }
 
-    // ✅ Profile Picture
+    // ✅ Profile picture
     if (profilePicEl) {
-      if (profile?.profilePicture) {
+      if (profile.profilePicture && profile.profilePicture.trim() !== "") {
         try {
           const url = await getDownloadURL(storageRef(storage, profile.profilePicture));
           profilePicEl.src = url;
         } catch (err) {
-          console.warn("Failed to load profile picture from Storage, using default:", err);
+          console.warn("Failed to load profile picture, using default:", err);
           profilePicEl.src = "https://ppsmrt.github.io/tamilgeo/assets/icon/dp.png";
         }
       } else {
@@ -58,21 +70,17 @@ onAuthStateChanged(Auth, async (user) => {
   });
 });
 
-// ✅ Logout button (fixed version from v9 style)
-document.addEventListener("DOMContentLoaded", () => {
-  const logoutBtn = document.getElementById("logoutBtn");
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      signOut(Auth)
-        .then(() => {
-          window.location.href = "/tamilgeo/index.html";
-        })
-        .catch((error) => {
-          console.error("Logout error:", error);
-          alert("Failed to logout. Please try again.");
-        });
-    });
-  }
-});
+// ✅ Logout
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    signOut(Auth)
+      .then(() => {
+        window.location.href = "/index.html"; // 🔥 Make sure this matches your home page
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        alert("Failed to logout. Please try again.");
+      });
+  });
+}
