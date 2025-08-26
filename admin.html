@@ -3,59 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pending Posts</title>
+  <title>Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen p-6 font-sans">
 
-  <h1 class="text-3xl font-bold mb-6 text-green-700">📝 Pending Posts</h1>
+  <h1 class="text-3xl font-bold mb-6 text-green-700">⚙️ Admin Dashboard</h1>
 
-  <div id="pendingPostsContainer" class="space-y-4">
-    <!-- Pending posts will be rendered here -->
+  <!-- Tabs -->
+  <div class="flex gap-4 mb-6">
+    <button class="tab-btn bg-green-500 text-white px-4 py-2 rounded" data-tab="posts">Pending Posts</button>
+    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="users">Manage Users</button>
+    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="notifications">Manage Notifications</button>
+    <button class="tab-btn bg-gray-300 px-4 py-2 rounded" data-tab="send">Send Notification</button>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getDatabase, ref, onValue, set, remove, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  <!-- Sections -->
+  <div id="posts" class="tab-content">
+    <h2 class="text-xl font-semibold mb-4">📝 Pending Posts</h2>
+    <div id="pendingPostsContainer" class="space-y-4"></div>
+  </div>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
-      authDomain: "tamilgeoapp.firebaseapp.com",
-      databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
-      projectId: "tamilgeoapp",
-      storageBucket: "tamilgeoapp.appspot.com",
-      messagingSenderId: "1092623024431",
-      appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
-    };
+  <div id="users" class="tab-content hidden">
+    <h2 class="text-xl font-semibold mb-4">👥 Manage Users</h2>
+    <div id="usersContainer" class="space-y-4"></div>
+  </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  <div id="notifications" class="tab-content hidden">
+    <h2 class="text-xl font-semibold mb-4">🔔 All Notifications</h2>
+    <div id="notificationsContainer" class="space-y-4"></div>
+  </div>
 
-    const container = document.getElementById("pendingPostsContainer");
+  <div id="send" class="tab-content hidden">
+    <h2 class="text-xl font-semibold mb-4">📢 Send Notification</h2>
+    <form id="notificationForm" class="space-y-3">
+      <input type="text" id="notifTitle" placeholder="Title" class="w-full p-2 border rounded" required>
+      <textarea id="notifMessage" placeholder="Message" class="w-full p-2 border rounded" required></textarea>
+      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Send</button>
+    </form>
+  </div>
 
-    // ✅ Fetch pending posts (anyone can view now)
-    const pendingRef = ref(db, "pendingPosts");
-    onValue(pendingRef, (snapshot) => {
-      container.innerHTML = "";
-      const data = snapshot.val();
-      if (!data) {
-        container.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
-        return;
-      }
-
-      Object.entries(data).forEach(([postId, post]) => {
-        const div = document.createElement("div");
-        div.className = "bg-white p-4 rounded-xl shadow-md";
-
-        div.innerHTML = `
-          <h2 class="text-xl font-semibold text-green-700">${post.title}</h2>
-          <p class="text-gray-700 my-2">${post.excerpt}</p>
-          <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(post.date).toLocaleString()}</p>
-        `;
-
-        container.appendChild(div);
-      });
-    });
-  </script>
+  <!-- Import JS -->
+  <script type="module" src="assets/js/admin.js"></script>
 </body>
 </html>
