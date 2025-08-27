@@ -59,11 +59,11 @@ async function loadUserData(uid, fallbackEmail = "") {
     lastName.value = data.lastName || "";
     bio.value = data.bio || "";
 
-    // Fill non-editable fields
-    username.value = data.username || "";
+    // ✅ Updated: Fill non-editable fields from DB
+    username.value = data.username || "Not Set";
     email.value = data.email || fallbackEmail;
-    locationEl.value = data.location || "";
-    roleEl.value = data.role || "";
+    locationEl.value = data.location || "Not Provided";  // ✅ Show DB location
+    roleEl.value = data.role || "User";  // ✅ Show role from DB
 
     // Profile picture
     profilePic.src = data.profilePicture || "/tamilgeo/assets/icon/dp.png";
@@ -77,7 +77,7 @@ async function loadUserData(uid, fallbackEmail = "") {
 // ✅ Monitor auth state and load user data
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/tamilgeo/login.html";
+    window.location.href = "/login.html";
     return;
   }
   await loadUserData(user.uid, user.email);
