@@ -27,8 +27,8 @@ const ADMIN_EMAIL = "ppsmart7@gmail.com";
 // Check auth
 onAuthStateChanged(auth, (user) => {
   if (!user || user.email !== ADMIN_EMAIL) {
-    alert("⚠ Access Denied. Only Palani can view this page.");
-    window.location.href = "/index.html";
+    alert("⚠ Access Denied. Only Admin can view this page.");
+    window.location.href = "/tamilgeo/index.html";
     return;
   }
 
