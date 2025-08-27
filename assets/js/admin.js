@@ -68,41 +68,72 @@ function loadPendingPosts() {
   const postsContainer = document.getElementById("pendingPostsContainer");
   const pendingRef = ref(db, "pendingPosts");
 
-  onValue(pendingRef, (snapshot) => {
-    postsContainer.innerHTML = "";
-    const data = snapshot.val();
-    if (!data) {
-      postsContainer.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
-      return;
+  console.log("🔹 Loading pending posts...");
+
+  onValue(
+    pendingRef,
+    (snapshot) => {
+      const data = snapshot.val();
+      console.log("🔹 Firebase snapshot:", data);
+
+      postsContainer.innerHTML = "";
+
+      if (!data) {
+        postsContainer.innerHTML =
+          "<p class='text-gray-500'>No pending posts.</p>";
+        console.log("🔹 No pending posts found.");
+        return;
+      }
+
+      Object.entries(data).forEach(([id, post]) => {
+        console.log(`🔹 Rendering post ID: ${id}`, post);
+
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow";
+        div.innerHTML = `
+          <h3 class="font-semibold text-green-700">${post.title}</h3>
+          <p>${post.excerpt}</p>
+          <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(
+          post.date
+        ).toLocaleString()}</p>
+          <div class="mt-2 flex gap-2">
+            <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
+            <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+          </div>
+        `;
+        postsContainer.appendChild(div);
+
+        div.querySelector(".approve").addEventListener("click", async () => {
+          console.log(`🔹 Approving post ID: ${id}`);
+          try {
+            const newRef = push(ref(db, "posts"));
+            await set(newRef, { ...post, status: "approved" });
+            await remove(ref(db, "pendingPosts/" + id));
+            alert("✅ Post approved");
+          } catch (err) {
+            console.error("❌ Error approving post:", err);
+            alert("❌ Failed to approve post. Check console.");
+          }
+        });
+
+        div.querySelector(".reject").addEventListener("click", async () => {
+          console.log(`🔹 Rejecting post ID: ${id}`);
+          try {
+            await remove(ref(db, "pendingPosts/" + id));
+            alert("❌ Post rejected");
+          } catch (err) {
+            console.error("❌ Error rejecting post:", err);
+            alert("❌ Failed to reject post. Check console.");
+          }
+        });
+      });
+    },
+    (error) => {
+      console.error("❌ Firebase read error:", error);
+      postsContainer.innerHTML =
+        "<p class='text-red-500'>Error loading pending posts.</p>";
     }
-
-    Object.entries(data).forEach(([id, post]) => {
-      const div = document.createElement("div");
-      div.className = "bg-white p-4 rounded shadow";
-      div.innerHTML = `
-        <h3 class="font-semibold text-green-700">${post.title}</h3>
-        <p>${post.excerpt}</p>
-        <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(post.date).toLocaleString()}</p>
-        <div class="mt-2 flex gap-2">
-          <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
-          <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
-        </div>
-      `;
-      postsContainer.appendChild(div);
-
-      div.querySelector(".approve").addEventListener("click", async () => {
-        const newRef = push(ref(db, "posts"));
-        await set(newRef, { ...post, status: "approved" });
-        await remove(ref(db, "pendingPosts/" + id));
-        alert("✅ Post approved");
-      });
-
-      div.querySelector(".reject").addEventListener("click", async () => {
-        await remove(ref(db, "pendingPosts/" + id));
-        alert("❌ Post rejected");
-      });
-    });
-  });
+  );
 }
 
 // --- Manage Users ---
