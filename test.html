@@ -120,28 +120,49 @@
 </div>
 
 
-        <!-- Account -->
-        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
-          <h3 class="text-xl font-semibold text-gray-700 mb-4">Account</h3>
-          <ul class="space-y-2 text-gray-700 font-medium">
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Account</a></li>
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Edit Account</a></li>
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Logout</a></li>
-          </ul>
-        </div>
+       <!-- Account -->
+<div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
+  <!-- Title with Icon -->
+  <h3 class="text-xl font-semibold flex items-center mb-6">
+    <i data-feather="user" class="w-6 h-6 mr-2"></i> Account
+  </h3>
 
-        <!-- More Links -->
-        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
-          <h3 class="text-xl font-semibold text-gray-700 mb-4">More Links</h3>
-          <ul class="space-y-2 text-gray-700 font-medium">
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">FAQ</a></li>
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Chat With Admin</a></li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
+  <!-- Links -->
+  <ul class="space-y-4">
+    <li class="flex items-center space-x-2">
+      <i data-feather="user-check" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Account</a>
+    </li>
+    <li class="flex items-center space-x-2">
+      <i data-feather="edit-3" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Edit Account</a>
+    </li>
+    <li class="flex items-center space-x-2">
+      <i data-feather="log-out" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Logout</a>
+    </li>
+  </ul>
+</div>
 
+<!-- More Links -->
+<div class="p-6 rounded-2xl bg-gradient-to-br from-purple-400 via-purple-500 to-purple-600 text-white shadow-xl hover:scale-105 transition-transform">
+  <!-- Title with Icon -->
+  <h3 class="text-xl font-semibold flex items-center mb-6">
+    <i data-feather="link" class="w-6 h-6 mr-2"></i> More Links
+  </h3>
+
+  <!-- Links -->
+  <ul class="space-y-4">
+    <li class="flex items-center space-x-2">
+      <i data-feather="help-circle" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">FAQ</a>
+    </li>
+    <li class="flex items-center space-x-2">
+      <i data-feather="message-circle" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Chat With Admin</a>
+    </li>
+  </ul>
+</div>
   <!-- Footer Script -->
   <script type="module">
     import { initFooter } from './assets/js/footer.js';
