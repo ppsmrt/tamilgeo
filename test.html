@@ -23,144 +23,123 @@
   <!-- Favicon -->
   <link rel="icon" href="assets/img/favicon.ico" />
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gray-100 min-h-screen flex flex-col">
 
   <!-- Header placeholder -->
   <header id="site-header"></header>
 
- <main class="flex-1 p-6 sm:p-10">
+  <main class="flex-1 p-6 sm:p-10 bg-gray-50">
 
-  <!-- Welcome Header -->
-  <h1 class="text-4xl font-extrabold mb-8 text-gray-800">
-    Welcome back, <span id="username">User</span> 🎉
-  </h1>
+    <!-- Top User Header -->
+    <div class="flex items-center justify-between mb-10">
+      <!-- Left: Name + Welcome -->
+      <div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900" id="fullname">
+          John Doe
+        </h1>
+        <p class="text-gray-500 text-lg">Welcome back 👋</p>
+      </div>
 
-  <!-- Stat Cards -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-    
-    <!-- Likes -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-400 to-green-600 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Likes</h2>
-          <p id="likesCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="thumbs-up" class="w-12 h-12 opacity-80"></i>
+      <!-- Right: Profile Picture -->
+      <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
+        <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
       </div>
     </div>
 
-    <!-- Comments -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-400 to-blue-600 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Comments</h2>
-          <p id="commentsCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="message-square" class="w-12 h-12 opacity-80"></i>
-      </div>
-    </div>
-
-    <!-- Pending Posts -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-yellow-400 to-orange-500 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Pending Posts</h2>
-          <p id="pendingCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="clock" class="w-12 h-12 opacity-80"></i>
-      </div>
-    </div>
-
-    <!-- Approved Posts -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-400 to-purple-600 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Approved Posts</h2>
-          <p id="approvedCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="check-circle" class="w-12 h-12 opacity-80"></i>
-      </div>
-    </div>
-
-    <!-- Published Posts -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-indigo-400 to-indigo-600 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Published Posts</h2>
-          <p id="publishedCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="file-text" class="w-12 h-12 opacity-80"></i>
-      </div>
-    </div>
-
-    <!-- Reports -->
-    <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-red-400 to-red-600 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="text-lg font-medium">Reports</h2>
-          <p id="reportsCount" class="text-3xl font-bold mt-2">0</p>
-        </div>
-        <i data-feather="alert-triangle" class="w-12 h-12 opacity-80"></i>
-      </div>
-    </div>
-  </div>
-
-  <!-- Site & Account Section -->
-  <section>
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Site & Account</h2>
-
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
       
-      <!-- Site Pages -->
-      <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-green-300 to-green-500 text-white">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <i data-feather="globe"></i> Site Pages
-        </h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="hover:underline">About</a></li>
-          <li><a href="#" class="hover:underline">Contact</a></li>
-          <li><a href="#" class="hover:underline">Donate</a></li>
-        </ul>
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-medium">Active Projects</h2>
+            <p class="text-3xl font-bold mt-2">23</p>
+          </div>
+          <i data-feather="briefcase" class="w-10 h-10 opacity-80"></i>
+        </div>
       </div>
 
-      <!-- Account -->
-      <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-blue-300 to-blue-500 text-white">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <i data-feather="user"></i> Account
-        </h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="hover:underline">Account</a></li>
-          <li><a href="#" class="hover:underline">Edit Account</a></li>
-          <li><a href="#" class="hover:underline">Logout</a></li>
-        </ul>
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl hover:scale-105 transition-transform">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-medium">Overdue</h2>
+            <p class="text-3xl font-bold mt-2">12</p>
+          </div>
+          <i data-feather="alert-circle" class="w-10 h-10 opacity-80"></i>
+        </div>
       </div>
 
-      <!-- More Links -->
-      <div class="p-6 rounded-2xl shadow-lg bg-gradient-to-br from-purple-300 to-purple-500 text-white">
-        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-          <i data-feather="more-horizontal"></i> More Links
-        </h3>
-        <ul class="space-y-2">
-          <li><a href="#" class="hover:underline">FAQ</a></li>
-          <li><a href="#" class="hover:underline">Chat With Admin</a></li>
-        </ul>
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl hover:scale-105 transition-transform">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-medium">Funding</h2>
+            <p class="text-3xl font-bold mt-2">35</p>
+          </div>
+          <i data-feather="dollar-sign" class="w-10 h-10 opacity-80"></i>
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-medium">Meetings</h2>
+            <p class="text-3xl font-bold mt-2">None</p>
+          </div>
+          <i data-feather="calendar" class="w-10 h-10 opacity-80"></i>
+        </div>
       </div>
     </div>
-  </section>
-</main>
 
-<!-- Footer Script -->
-<script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-</script>
+    <!-- Site & Account Section -->
+    <section class="mt-16">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-8">Site & Account</h2>
 
-<!-- Feed Script -->
-<script type="module" src="assets/js/feed.js"></script>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+        
+        <!-- Site Pages -->
+        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-700 mb-4">Site Pages</h3>
+          <ul class="space-y-2 text-gray-700 font-medium">
+            <li><a href="#" class="hover:text-green-600 transition-colors">About</a></li>
+            <li><a href="#" class="hover:text-green-600 transition-colors">Contact</a></li>
+            <li><a href="#" class="hover:text-green-600 transition-colors">Donate</a></li>
+          </ul>
+        </div>
 
-<!-- Feather Icons Init -->
-<script>
-  feather.replace();
-</script>
+        <!-- Account -->
+        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-700 mb-4">Account</h3>
+          <ul class="space-y-2 text-gray-700 font-medium">
+            <li><a href="#" class="hover:text-green-600 transition-colors">Account</a></li>
+            <li><a href="#" class="hover:text-green-600 transition-colors">Edit Account</a></li>
+            <li><a href="#" class="hover:text-green-600 transition-colors">Logout</a></li>
+          </ul>
+        </div>
+
+        <!-- More Links -->
+        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
+          <h3 class="text-xl font-semibold text-gray-700 mb-4">More Links</h3>
+          <ul class="space-y-2 text-gray-700 font-medium">
+            <li><a href="#" class="hover:text-green-600 transition-colors">FAQ</a></li>
+            <li><a href="#" class="hover:text-green-600 transition-colors">Chat With Admin</a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Script -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
+
+  <!-- Feed Script -->
+  <script type="module" src="assets/js/feed.js"></script>
+
+  <!-- Feather Icons Init -->
+  <script>
+    feather.replace();
+  </script>
 </body>
 </html>
