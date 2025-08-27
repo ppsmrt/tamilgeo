@@ -1,15 +1,16 @@
+// ✅ Import Firebase SDK Modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-// ✅ Firebase Config (FIXED storageBucket)
+// ✅ Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDt86oFFa-h04TsfMWSFGe3UHw26WYoR-U",
   authDomain: "tamilgeoapp.firebaseapp.com",
   databaseURL: "https://tamilgeoapp-default-rtdb.firebaseio.com",
   projectId: "tamilgeoapp",
-  storageBucket: "tamilgeoapp.appspot.com", // ✅ FIXED
+  storageBucket: "tamilgeoapp.appspot.com",
   messagingSenderId: "1092623024431",
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da",
   measurementId: "G-2D45G35PM2"
@@ -27,21 +28,23 @@ const editPicBtn = document.getElementById("edit-pic-btn");
 const form = document.getElementById("edit-profile-form");
 const saveBtn = form.querySelector("button[type='submit']");
 
-// Fields
+// Editable fields
 const firstName = document.getElementById("first-name");
-const lastName = document.getElementById("last-name"); // ✅ FIXED (was secondName)
+const lastName = document.getElementById("last-name");
+const bio = document.getElementById("bio");
+
+// Non-editable fields
 const username = document.getElementById("username");
 const email = document.getElementById("email");
-const bio = document.getElementById("bio");
 const locationEl = document.getElementById("location");
 const roleEl = document.getElementById("role");
 
-// ✅ Make non-editable fields readonly
+// Make non-editable fields readonly
 [username, email, locationEl, roleEl].forEach(el => el.setAttribute("readonly", true));
 
-let selectedFile = null; // store chosen profile picture
+let selectedFile = null; // For storing new profile picture file
 
-// ✅ Function to load user data
+// ✅ Load user data from Realtime Database
 async function loadUserData(uid, fallbackEmail = "") {
   const userRef = ref(db, "users/" + uid);
 
@@ -51,12 +54,12 @@ async function loadUserData(uid, fallbackEmail = "") {
 
     console.log("🔄 Loaded user data:", data);
 
-    // Editable fields
+    // Fill editable fields
     firstName.value = data.firstName || "";
-    lastName.value = data.lastName || ""; // ✅ FIXED (was secondName)
+    lastName.value = data.lastName || "";
     bio.value = data.bio || "";
 
-    // Non-editable fields
+    // Fill non-editable fields
     username.value = data.username || "";
     email.value = data.email || fallbackEmail;
     locationEl.value = data.location || "";
@@ -71,10 +74,10 @@ async function loadUserData(uid, fallbackEmail = "") {
   }
 }
 
-// ✅ Load user data after login
+// ✅ Monitor auth state and load user data
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/login.html";
+    window.location.href = "/tamilgeo/login.html";
     return;
   }
   await loadUserData(user.uid, user.email);
@@ -92,7 +95,7 @@ editPicBtn.addEventListener("click", () => {
       selectedFile = file;
       const reader = new FileReader();
       reader.onload = (e) => {
-        profilePic.src = e.target.result;
+        profilePic.src = e.target.result; // Show preview
       };
       reader.readAsDataURL(file);
     }
@@ -101,7 +104,7 @@ editPicBtn.addEventListener("click", () => {
   fileInput.click();
 });
 
-// ✅ Show spinner while saving
+// ✅ Show spinner during save
 function setSavingState(isSaving) {
   if (isSaving) {
     saveBtn.disabled = true;
@@ -118,7 +121,7 @@ function setSavingState(isSaving) {
   }
 }
 
-// ✅ Save profile updates
+// ✅ Save updated profile
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const user = auth.currentUser;
@@ -131,7 +134,7 @@ form.addEventListener("submit", async (e) => {
   try {
     setSavingState(true);
 
-    // Upload profile picture if new file selected
+    // Upload new profile picture if selected
     if (selectedFile) {
       const storagePath = `profilePictures/${uid}/${selectedFile.name}`;
       const storageReference = storageRef(storage, storagePath);
@@ -139,12 +142,12 @@ form.addEventListener("submit", async (e) => {
       profilePicUrl = await getDownloadURL(storageReference);
     }
 
-    // ✅ Only update editable fields
+    // Prepare updated data (editable fields only)
     const userData = {
       firstName: firstName.value.trim(),
       lastName: lastName.value.trim(),
       bio: bio.value.trim(),
-      profilePicture: profilePicUrl,
+      profilePicture: profilePicUrl
     };
 
     await update(userRef, userData);
