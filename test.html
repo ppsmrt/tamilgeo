@@ -96,14 +96,29 @@
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
         
         <!-- Site Pages -->
-        <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
-          <h3 class="text-xl font-semibold text-gray-700 mb-4"> <i data-feather="globe"></i> Site Pages</h3>
-          <ul class="space-y-2 text-gray-700 font-medium">
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">About</a></li>
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Contact</a></li>
-            <li><i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i><a href="#" class="hover:text-green-600 transition-colors">Donate</a></li>
-          </ul>
-        </div>
+<div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 via-green-500 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+  <!-- Title with Icon -->
+  <h3 class="text-xl font-semibold flex items-center mb-6">
+    <i data-feather="globe" class="w-6 h-6 mr-2"></i> Site Pages
+  </h3>
+
+  <!-- Links -->
+  <ul class="space-y-4">
+    <li class="flex items-center space-x-2">
+      <i data-feather="info" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">About</a>
+    </li>
+    <li class="flex items-center space-x-2">
+      <i data-feather="mail" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Contact</a>
+    </li>
+    <li class="flex items-center space-x-2">
+      <i data-feather="heart" class="w-5 h-5 opacity-80"></i>
+      <a href="#" class="font-medium hover:underline">Donate</a>
+    </li>
+  </ul>
+</div>
+
 
         <!-- Account -->
         <div class="p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl transition-shadow">
