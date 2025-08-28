@@ -21,24 +21,36 @@ const auth = getAuth(app);
 const loadingDiv = document.getElementById("loading");
 const dashboard = document.getElementById("dashboard");
 
-// --- Only Admin Access ---
+// --- Admin Email ---
 const ADMIN_EMAIL = "ppsmart7@gmail.com";
 
+// --- Check Admin Auth ---
 onAuthStateChanged(auth, (user) => {
-  if (!user || user.email !== ADMIN_EMAIL) {
+  console.log("🔹 onAuthStateChanged triggered", user);
+
+  if (!user) {
+    console.error("❌ No user logged in");
+    alert("⚠ Access Denied. Login required.");
+    window.location.href = "/tamilgeo/login.html";
+    return;
+  }
+
+  if (user.email !== ADMIN_EMAIL) {
+    console.error("❌ Logged-in user is not admin", user.email);
     alert("⚠ Access Denied. Only Admin can view this page.");
     window.location.href = "/tamilgeo/index.html";
     return;
   }
 
-  // Show dashboard if correct admin
+  console.log("✅ Admin access granted for", user.email);
+
   loadingDiv.classList.add("hidden");
   dashboard.classList.remove("hidden");
 
   initDashboard();
 });
 
-// --- Initialize dashboard ---
+// --- Initialize Dashboard ---
 function initDashboard() {
   setupTabs();
   loadPendingPosts();
@@ -47,7 +59,7 @@ function initDashboard() {
   setupNotificationForm();
 }
 
-// --- Tabs Setup ---
+// --- Tabs ---
 function setupTabs() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -64,77 +76,100 @@ function setupTabs() {
   });
 }
 
-// --- Load Pending Posts ---
+// --- Load Pending Posts with Debugging ---
 function loadPendingPosts() {
   const postsContainer = document.getElementById("pendingPostsContainer");
   const pendingRef = ref(db, "pendingPosts");
 
-  onValue(pendingRef, (snapshot) => {
-    const data = snapshot.val();
-    postsContainer.innerHTML = "";
+  console.log("🔹 Attempting to load pending posts...");
 
-    if (!data) {
-      postsContainer.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
-      return;
+  onValue(
+    pendingRef,
+    (snapshot) => {
+      console.log("🔹 onValue triggered for pendingPosts");
+
+      if (!snapshot.exists()) {
+        console.warn("🔹 No pending posts found in the database");
+        postsContainer.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
+        return;
+      }
+
+      const data = snapshot.val();
+      console.log("🔹 Snapshot data:", data);
+
+      postsContainer.innerHTML = "";
+
+      Object.entries(data).forEach(([id, post]) => {
+        console.log(`🔹 Rendering post ID: ${id}`, post);
+
+        const div = document.createElement("div");
+        div.className = "bg-white p-4 rounded shadow";
+        div.innerHTML = `
+          <h3 class="font-semibold text-green-700">${post.title}</h3>
+          <p>${post.excerpt}</p>
+          <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(post.date).toLocaleString()}</p>
+          <div class="mt-2 flex gap-2">
+            <button class="edit bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+            <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
+            <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+          </div>
+        `;
+        postsContainer.appendChild(div);
+
+        // --- Edit Post ---
+        div.querySelector(".edit").addEventListener("click", () => {
+          const newTitle = prompt("Edit Title:", post.title) || post.title;
+          const newExcerpt = prompt("Edit Excerpt:", post.excerpt) || post.excerpt;
+          const newContent = prompt("Edit Content:", post.content) || post.content;
+          const newCategory = prompt("Edit Category:", post.category) || post.category;
+
+          update(ref(db, "pendingPosts/" + id), {
+            title: newTitle,
+            excerpt: newExcerpt,
+            content: newContent,
+            category: newCategory,
+            lastEdited: Date.now()
+          }).then(() => {
+            console.log(`✏ Post ID ${id} updated`);
+            alert("✏ Post updated successfully!");
+          }).catch(err => {
+            console.error("❌ Error updating post:", err);
+            alert("❌ Failed to update post");
+          });
+        });
+
+        // --- Approve Post ---
+        div.querySelector(".approve").addEventListener("click", async () => {
+          try {
+            const newRef = push(ref(db, "posts"));
+            await set(newRef, { ...post, status: "approved" });
+            await remove(ref(db, "pendingPosts/" + id));
+            console.log(`✅ Post ID ${id} approved`);
+            alert("✅ Post approved");
+          } catch (err) {
+            console.error("❌ Error approving post:", err);
+            alert("❌ Failed to approve post");
+          }
+        });
+
+        // --- Reject Post ---
+        div.querySelector(".reject").addEventListener("click", async () => {
+          try {
+            await remove(ref(db, "pendingPosts/" + id));
+            console.log(`❌ Post ID ${id} rejected`);
+            alert("❌ Post rejected");
+          } catch (err) {
+            console.error("❌ Error rejecting post:", err);
+            alert("❌ Failed to reject post");
+          }
+        });
+      });
+    },
+    (error) => {
+      console.error("❌ Firebase read error on pendingPosts:", error);
+      postsContainer.innerHTML = "<p class='text-red-500'>Error loading pending posts.</p>";
     }
-
-    Object.entries(data).forEach(([id, post]) => {
-      const div = document.createElement("div");
-      div.className = "bg-white p-4 rounded shadow";
-      div.innerHTML = `
-        <h3 class="font-semibold text-green-700">${post.title}</h3>
-        <p>${post.excerpt}</p>
-        <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(post.date).toLocaleString()}</p>
-        <div class="mt-2 flex gap-2">
-          <button class="edit bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-          <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
-          <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
-        </div>
-      `;
-      postsContainer.appendChild(div);
-
-      // --- Edit Post ---
-      div.querySelector(".edit").addEventListener("click", () => {
-        const newTitle = prompt("Edit Title:", post.title) || post.title;
-        const newExcerpt = prompt("Edit Excerpt:", post.excerpt) || post.excerpt;
-        const newContent = prompt("Edit Content:", post.content) || post.content;
-        const newCategory = prompt("Edit Category:", post.category) || post.category;
-
-        update(ref(db, "pendingPosts/" + id), {
-          title: newTitle,
-          excerpt: newExcerpt,
-          content: newContent,
-          category: newCategory,
-          lastEdited: Date.now()
-        }).then(() => alert("✏ Post updated successfully!"))
-          .catch(err => console.error(err));
-      });
-
-      // --- Approve Post ---
-      div.querySelector(".approve").addEventListener("click", async () => {
-        try {
-          const newRef = push(ref(db, "posts"));
-          await set(newRef, { ...post, status: "approved" });
-          await remove(ref(db, "pendingPosts/" + id));
-          alert("✅ Post approved");
-        } catch (err) {
-          console.error(err);
-          alert("❌ Failed to approve post");
-        }
-      });
-
-      // --- Reject Post ---
-      div.querySelector(".reject").addEventListener("click", async () => {
-        try {
-          await remove(ref(db, "pendingPosts/" + id));
-          alert("❌ Post rejected");
-        } catch (err) {
-          console.error(err);
-          alert("❌ Failed to reject post");
-        }
-      });
-    });
-  });
+  );
 }
 
 // --- Manage Users ---
@@ -164,6 +199,7 @@ function loadUsers() {
 
       div.querySelector(".reset").addEventListener("click", async () => {
         await update(ref(db, "users/" + uid), { username: "resetUser" });
+        console.log(`🔄 Username reset for ${user.email}`);
         alert("🔄 Username reset for " + user.email);
       });
     });
@@ -212,6 +248,7 @@ function setupNotificationForm() {
       date: new Date().toISOString()
     });
     notifForm.reset();
+    console.log("📢 Notification sent:", { title, message });
     alert("📢 Notification sent!");
   });
 }
