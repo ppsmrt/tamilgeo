@@ -45,8 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    console.log("Fetched post:", wpPost);
-
     const featuredImage = wpPost.jetpack_featured_media_url
       ? `<div class="aspect-video rounded-xl overflow-hidden mb-6 shadow-lg border border-gray-200">
            <img src="${wpPost.jetpack_featured_media_url}" class="w-full h-full object-cover rounded-lg shadow-md" alt="Featured Image">
@@ -55,26 +53,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ---- CONTENT STYLING ----
     let contentStyled = wpPost.content.rendered
-      .replace(/<h1>([\s\S]*?)<\/h1>/gi, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
-      .replace(/<h2>([\s\S]*?)<\/h2>/gi, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
-      .replace(/<h3>([\s\S]*?)<\/h3>/gi, '<h3 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$1</h3>')
-      .replace(/<h4>([\s\S]*?)<\/h4>/gi, '<h4 class="text-green-700 font-semibold mt-3 mb-2 drop-shadow-sm text-[18px]">$1</h4>')
-      .replace(/<h5>([\s\S]*?)<\/h5>/gi, '<h5 class="text-green-700 font-semibold mt-2 mb-2 drop-shadow-sm text-[16px]">$1</h5>')
+      // Headings
+      .replace(/<h1>([\s\S]*?)<\/h1>/gi, '<h1 class="text-green-700 font-bold mt-6 mb-4 text-[32px]">$1</h1>')
+      .replace(/<h2>([\s\S]*?)<\/h2>/gi, '<h2 class="text-blue-600 font-bold mt-5 mb-3 text-[24px]">$1</h2>')
+      .replace(/<h3>([\s\S]*?)<\/h3>/gi, '<h3 class="text-blue-600 font-bold mt-4 mb-3 text-[20px]">$1</h3>')
+      .replace(/<h4>([\s\S]*?)<\/h4>/gi, '<h4 class="text-blue-600 font-bold mt-3 mb-2 text-[20px]">$1</h4>')
+      .replace(/<h5>([\s\S]*?)<\/h5>/gi, '<h5 class="text-blue-600 font-bold mt-2 mb-2 text-[20px]">$1</h5>')
+      // Paragraphs
       .replace(/<p>(.*?)<\/p>/gi, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
+      // Blockquote
       .replace(/<blockquote>([\s\S]*?)<\/blockquote>/gi, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
-      .replace(/<hr\s*\/?>/gi, `<div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>`)
+      // HR separator with padding
+      .replace(/<hr\s*\/?>/gi, `<div class="my-2 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>`)
+      // Code blocks
       .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/gi, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
+      // Tables
       .replace(/<table>/gi, `<div class="overflow-x-auto my-6"><table class="w-full border border-green-600 border-collapse rounded-lg">`)
       .replace(/<\/table>/gi, '</table></div>')
       .replace(/<th>(.*?)<\/th>/gi, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
       .replace(/<td>(.*?)<\/td>/gi, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
+      // Images
       .replace(/<img(.*?)>/gi, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>')
+      // YouTube / iframes
       .replace(/<iframe(.*?)<\/iframe>/gi, (match, p1) => {
         return `<div class="my-6 overflow-hidden rounded-xl relative w-full aspect-video">
                   <iframe${p1} class="w-full h-full rounded-xl" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
                 </div>`;
       })
-      // External links bold red
+      // External links
       .replace(/<a\s+(?![^>]*href="https:\/\/tamilgeo\.wordpress\.com)([^>]*?)>(.*?)<\/a>/gi, '<a $1 class="font-bold text-red-600" target="_blank" rel="noopener noreferrer">$2</a>');
 
     const categoryName = wpPost.categories?.map(catId =>
