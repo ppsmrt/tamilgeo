@@ -1,4 +1,4 @@
-// notifications.js (Debug Ready)
+// notifications.js
 const notificationsContainer = document.getElementById("notificationsContainer");
 const emptyState = document.getElementById("emptyState");
 
@@ -19,21 +19,19 @@ function markPostSeen(postId) {
   localStorage.setItem("seenPosts", JSON.stringify(seenPosts));
 }
 
-// Fetch recent 10 posts from WordPress
-async function fetchRecentPosts() {
+// Fetch posts directly from WordPress API
+async function fetchFromWordPress() {
   const apiURL = "https://tamilgeo.wordpress.com/wp-json/wp/v2/posts?per_page=10&_embed";
-  console.log("Fetching posts from:", apiURL);
+  console.log("Trying direct fetch:", apiURL);
 
   try {
     const response = await fetch(apiURL);
-    console.log("API Response Status:", response.status);
+    console.log("Direct API Response Status:", response.status);
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
     const posts = await response.json();
-    console.log("Fetched posts:", posts);
+    console.log("Direct fetch successful:", posts);
 
     return posts.map(post => ({
       id: post.id,
@@ -42,8 +40,36 @@ async function fetchRecentPosts() {
       timestamp: new Date(post.date).getTime()
     }));
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    return null; // return null for fallback
+    console.warn("Direct API fetch failed:", error);
+    return null;
+  }
+}
+
+// Fetch posts using AllOrigins proxy
+async function fetchFromProxy() {
+  const wpURL = "https://tamilgeo.wordpress.com/wp-json/wp/v2/posts?per_page=10&_embed";
+  const apiURL = `https://api.allorigins.win/get?url=${encodeURIComponent(wpURL)}`;
+  console.log("Trying proxy fetch:", apiURL);
+
+  try {
+    const response = await fetch(apiURL);
+    console.log("Proxy API Response Status:", response.status);
+
+    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+    const data = await response.json();
+    const posts = JSON.parse(data.contents);
+    console.log("Proxy fetch successful:", posts);
+
+    return posts.map(post => ({
+      id: post.id,
+      title: post.title.rendered,
+      date: new Date(post.date).toLocaleDateString(),
+      timestamp: new Date(post.date).getTime()
+    }));
+  } catch (error) {
+    console.error("Proxy fetch failed:", error);
+    return null;
   }
 }
 
@@ -54,7 +80,7 @@ function renderNotifications(posts) {
 
   if (!posts || posts.length === 0) {
     emptyState.classList.remove("hidden");
-    console.warn("No posts found or API failed.");
+    console.warn("No posts available.");
     return;
   }
   emptyState.classList.add("hidden");
@@ -96,10 +122,16 @@ function renderNotifications(posts) {
 
 // Initialize and auto-refresh every 5 minutes
 async function initNotifications() {
-  let posts = await fetchRecentPosts();
+  console.log("Initializing notifications...");
+  let posts = await fetchFromWordPress();
 
   if (!posts) {
-    console.warn("API failed. Loading mock data...");
+    console.warn("Trying proxy because direct fetch failed...");
+    posts = await fetchFromProxy();
+  }
+
+  if (!posts) {
+    console.warn("Both direct and proxy failed. Loading mock data...");
     posts = [
       { id: 1, title: "Sample Notification 1", date: "08/28/2025" },
       { id: 2, title: "Sample Notification 2", date: "08/27/2025" }
