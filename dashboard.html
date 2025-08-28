@@ -1,106 +1,211 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo - Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TamilGeo - Dashboard</title>
+
+  <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
-  <style>
-    .bottom-nav {
-      backdrop-filter: blur(15px);
-      background: linear-gradient(90deg, #32a852, #28b66f);
-      border-radius: 1.5rem 1.5rem 0 0;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-    .dial {
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: linear-gradient(145deg, #e0f2e9, #b0e0c6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 8px 8px 15px #a3cbb3, -8px -8px 15px #ffffff;
-      margin: auto;
-      position: relative;
-    }
-    .dial-inner {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f0fff4;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 6px 6px 10px #c8e6d2, inset -6px -6px 10px #ffffff;
-    }
-body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; }
-    .card { border-radius: 1.25rem; }
-    .tab-active { background: linear-gradient(to right, #22c55e, #16a34a); color: white; }
-.install-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border: none;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #00c853, #64dd17);
-  color: white;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  cursor: pointer;
-  z-index: 9999;
-  transition: transform 0.2s ease-in-out;
-}
-.install-btn:hover {
-  transform: scale(1.1);
-}
-.hidden {
-  display: none;
-}
-  </style>
-<!-- ✅ Tailwind -->
+  
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- ✅ FontAwesome -->
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-  
-  <!-- ✅ Header -->
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
+
+  <!-- Header Script -->
   <script type="module" src="assets/js/header.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/img/favicon.ico" />
 </head>
-  
-  <body class="bg-gray-100 min-h-screen flex flex-col">
-<body class="flex items-center justify-center h-screen bg-gradient-to-r from-emerald-200 via-white to-emerald-100 font-sans">
-  <div class="text-center p-10 rounded-2xl shadow-2xl bg-white max-w-lg animate__animated animate__zoomIn">
-    <img src="https://cdn-icons-png.flaticon.com/512/2721/2721296.png" 
-         alt="coming soon" 
-         class="w-32 mx-auto animate__animated animate__bounce animate__infinite animate__slow">
-    <h1 class="text-3xl font-bold mt-6 text-gray-800">🚀 Something amazing is coming!</h1>
-    <p class="mt-3 text-gray-600">We’re building our new Page. Stay tuned for the launch! 🎉</p>
-    <div class="mt-6 animate__animated animate__fadeInUp animate__delay-1s">
-      <div class="flex justify-center space-x-4 mt-6">
-        <div class="w-3 h-3 rounded-full bg-green-500 animate-bounce"></div>
-        <div class="w-3 h-3 rounded-full bg-green-500 animate-bounce delay-150"></div>
-        <div class="w-3 h-3 rounded-full bg-green-500 animate-bounce delay-300"></div>
-      </div>
-      <p class="text-sm text-gray-500 mt-2">Launching soon...</p>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header placeholder -->
+  <header id="site-header"></header>
+
+  <main class="flex-1 p-6 sm:p-10 bg-white-50">
+
+
+
+    <!-- Card Wrapper -->
+<div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
+  <!-- Top User Header -->
+  <div class="flex items-center justify-between">
+    <!-- Left: Name + Welcome -->
+    <div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900" id="fullname">
+        John Doe
+      </h1>
+      <p class="text-gray-500 text-lg">Welcome back 👋</p>
+    </div>
+
+    <!-- Right: Profile Picture -->
+    <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
+      <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
     </div>
   </div>
+</div>
+
+
+    <!-- Stat Cards -->
+<div class="grid grid-cols-2 gap-6 mb-12">
+  
+  <div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-medium">Likes</h2>
+        <p class="text-3xl font-bold mt-2">0</p>
+      </div>
+      <i data-feather="heart" class="w-10 h-10 opacity-80"></i>
+    </div>
+  </div>
+
+  <div class="p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-medium">Overdue</h2>
+        <p class="text-3xl font-bold mt-2">12</p>
+      </div>
+      <i data-feather="alert-circle" class="w-10 h-10 opacity-80"></i>
+    </div>
+  </div>
+
+  <div class="p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-medium">Funding</h2>
+        <p class="text-3xl font-bold mt-2">35</p>
+      </div>
+      <i data-feather="dollar-sign" class="w-10 h-10 opacity-80"></i>
+    </div>
+  </div>
+
+  <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-lg font-medium">Meetings</h2>
+        <p class="text-3xl font-bold mt-2">None</p>
+      </div>
+      <i data-feather="calendar" class="w-10 h-10 opacity-80"></i>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Site Pages -->
+<div class="bg-white rounded-2xl shadow overflow-hidden">
+  
+  <!-- Gradient Heading -->
+  <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg">
+    Site Pages
+  </div>
+
+  <!-- Links -->
+  <div class="divide-y">
+    <a href="/tamilgeo/about" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-circle-exclamation text-green-600"></i>
+        <span>About Us</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/contact" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-user-tie text-green-600"></i>
+        <span>Contact Us</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/donate" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-dollar-sign text-green-600"></i>
+        <span>Donate Us</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/disclaimer" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-triangle-exclamation text-green-600"></i>
+        <span>Disclaimer</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/privacy" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-shield text-green-600"></i>
+        <span>Privacy Policy</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/terms" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-desktop text-green-600"></i>
+        <span>Terms & Conditions</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+  </div>
+</div>
+
+<!-- Account & Settings -->
+<div class="bg-white rounded-2xl shadow overflow-hidden mt-8"> <!-- 👈 Added mt-8 -->
+  
+  <!-- Gradient Heading -->
+  <div class="px-5 py-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white font-semibold text-lg">
+    Account & Settings
+  </div>
+
+  <!-- Links -->
+  <div class="divide-y">
+    <a href="/tamilgeo/edit-profile" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-user-pen text-blue-600"></i>
+        <span>Edit Profile</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/change-password" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-key text-blue-600"></i>
+        <span>Change Password</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+
+    <a href="/tamilgeo/logout" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-right-from-bracket text-blue-600"></i>
+        <span>Log Out</span>
+      </div>
+      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+    </a>
+  </div>
+</div>
+
+<!-- Footer Script -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
+  
+  <!-- Feed Script -->
+  <script type="module" src="assets/js/dashboard.js"></script>
+
+  <!-- Feather Icons Init -->
+  <script>
+    feather.replace();
+  </script>
 </body>
-<script type="module">
-  import { initFooter } from './assets/js/footer.js';
-  initFooter();
-</script>       
 </html>
