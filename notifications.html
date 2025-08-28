@@ -12,16 +12,55 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif; background: #f0fdf4; }
-    #notificationsContainer { max-width: 600px; margin: 2rem auto; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif;
+      background: #f0fdf4;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      background: #16a34a;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    #notificationsContainer {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
     .hidden { display: none; }
+    .notification-card {
+      border-radius: 1rem;
+      background: white;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      position: relative;
+    }
+    .gradient-divider {
+      height: 4px;
+      width: 100%;
+      border-radius: 2px;
+      background: linear-gradient(to right, #00FF00, #008000);
+      margin: 12px 0;
+    }
   </style>
 </head>
-<body class="min-h-screen">
+<body>
 
-  <div class="text-center mt-8">
-    <h1 class="text-2xl font-bold text-green-700">Latest Notifications</h1>
-  </div>
+  <!-- Sticky Header -->
+  <header>Latest Notifications</header>
 
   <!-- Login Message -->
   <p id="loginMsg" class="text-center text-red-500 mt-4 hidden">
@@ -29,7 +68,7 @@
   </p>
 
   <!-- Notifications Container -->
-  <div id="notificationsContainer" class="mt-6 px-4"></div>
+  <div id="notificationsContainer"></div>
 
   <!-- Empty State -->
   <p id="emptyState" class="text-center text-gray-500 mt-4 hidden">
