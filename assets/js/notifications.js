@@ -1,3 +1,4 @@
+// notifications.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, onValue, set, get, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
@@ -21,7 +22,7 @@ const notificationsContainer = document.getElementById("notificationsContainer")
 const loginMsg = document.getElementById("loginMsg");
 const emptyState = document.getElementById("emptyState");
 
-// Fetch recent 10 posts
+// Fetch recent 10 posts from WordPress
 async function fetchRecentPosts() {
   try {
     const response = await fetch("https://tamilgeo.wordpress.com/wp-json/wp/v2/posts?per_page=10&_embed");
@@ -30,7 +31,6 @@ async function fetchRecentPosts() {
       id: post.id,
       title: post.title.rendered,
       date: new Date(post.date).toLocaleDateString(),
-      link: post.link,
       timestamp: new Date(post.date).getTime()
     }));
   } catch (error) {
@@ -47,13 +47,14 @@ async function updateNotifications() {
   const snapshot = await get(notifRef);
   const existing = snapshot.exists() ? snapshot.val() : {};
 
+  // Add new posts
   for (const post of recentPosts) {
     if (!existing[post.id]) {
       await set(ref(db, `notifications/${post.id}`), post);
     }
   }
 
-  // Keep latest 10
+  // Keep only latest 10 posts
   const allIds = Object.keys(existing).concat(recentPosts.map(p => p.id));
   const uniqueIds = [...new Set(allIds)];
   const sortedIds = uniqueIds
@@ -80,35 +81,33 @@ function renderNotifications(user, notifications, seenMap) {
 
   notifications.forEach((notif, index) => {
     const card = document.createElement("div");
-    card.className = "notification-card";
+    card.className = "notification-card relative";
 
-    // Check if notification is new for this user
     const isNew = !seenMap[notif.id];
 
     card.innerHTML = `
       <h2 class="text-lg font-semibold cursor-pointer hover:underline flex items-center justify-between">
         <span>${notif.title}</span>
-        ${isNew ? `<span class="ml-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full">New</span>` : ''}
+        ${isNew ? `<span class="ml-2 bg-green-500 text-white text-xs px-2 py-0.5 rounded-full animate-pulse">New</span>` : ''}
       </h2>
       <p class="text-gray-500 text-sm mt-1">${notif.date}</p>
-      ${notif.link ? `<a href="${notif.link}" target="_blank" class="text-blue-600 text-sm block mt-2">Open Link</a>` : ''}
       <button class="dismiss absolute top-3 right-3 text-red-500 hover:text-red-700 text-sm">Dismiss</button>
     `;
 
     notificationsContainer.appendChild(card);
 
-    // Dismiss
+    // ✅ Click notification opens internal page
+    const titleEl = card.querySelector("h2 span");
+    titleEl.addEventListener("click", () => {
+      window.location.href = `post.html?PostID=${notif.id}`;
+    });
+
+    // ✅ Dismiss button
     card.querySelector(".dismiss").addEventListener("click", () => {
       update(ref(db, `userNotifications/${user.uid}/dismissed/${notif.id}`), { dismissed: true });
     });
 
-    // Open link
-    const titleEl = card.querySelector("h2 span");
-    if (notif.link) {
-      titleEl.addEventListener("click", () => window.open(notif.link, "_blank"));
-    }
-
-    // Divider
+    // ✅ Divider between notifications
     if (index < notifications.length - 1) {
       const divider = document.createElement("div");
       divider.className = "gradient-divider";
@@ -116,7 +115,7 @@ function renderNotifications(user, notifications, seenMap) {
     }
   });
 
-  // Mark all displayed notifications as seen
+  // Mark displayed notifications as seen
   notifications.forEach(n => {
     if (!seenMap[n.id]) {
       update(ref(db, `userNotifications/${user.uid}/seen/${n.id}`), { seen: true });
@@ -144,17 +143,17 @@ onAuthStateChanged(auth, (user) => {
   let dismissed = {};
   let seenMap = {};
 
-  onValue(dismissedRef, (snap) => {
+  onValue(dismissedRef, snap => {
     dismissed = snap.exists() ? snap.val() : {};
     renderNotifications(user, allNotifications.filter(n => !dismissed[n.id]), seenMap);
   });
 
-  onValue(seenRef, (snap) => {
+  onValue(seenRef, snap => {
     seenMap = snap.exists() ? snap.val() : {};
     renderNotifications(user, allNotifications.filter(n => !dismissed[n.id]), seenMap);
   });
 
-  onValue(notifRef, (snap) => {
+  onValue(notifRef, snap => {
     allNotifications = [];
     if (snap.exists()) {
       snap.forEach(child => allNotifications.push({ id: child.key, ...child.val() }));
@@ -163,6 +162,7 @@ onAuthStateChanged(auth, (user) => {
     renderNotifications(user, allNotifications.filter(n => !dismissed[n.id]), seenMap);
   });
 
+  // Initial update and repeat every 5 minutes
   updateNotifications();
-  setInterval(updateNotifications, 5*60*1000);
+  setInterval(updateNotifications, 5 * 60 * 1000);
 });
