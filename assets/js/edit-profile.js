@@ -77,7 +77,7 @@ async function loadUserData(uid, fallbackEmail = "") {
 // ✅ Monitor auth state and load user data
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
-    window.location.href = "/login.html";
+    window.location.href = "/tamilgeo/login.html";
     return;
   }
   await loadUserData(user.uid, user.email);
