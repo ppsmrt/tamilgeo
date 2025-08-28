@@ -67,73 +67,55 @@ document.addEventListener("DOMContentLoaded", async () => {
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // Get category name
     const categoryName = wpPost.categories?.map(catId =>
       wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name
     ).filter(Boolean).join(', ') || 'General';
 
-    // Author panel
-    const authorLogo = "https://www.gravatar.com/avatar?d=mp"; // Default logo
+    const authorLogo = "https://ppsmrt.github.io/tamilgeo/assets/icon/Logo.jpg";
     const authorName = wpPost.author ? wpPost._embedded.author?.[0]?.name || "Admin" : "Admin";
     const username = "@tamilgeo";
 
     container.innerHTML = `
-  <div class="w-full max-w-3xl px-4 py-4">
-    <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
-      ${featuredImage}
-      <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
+<div class="w-full max-w-3xl px-4 py-4">
+  <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
+    ${featuredImage}
+    <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
 
-      <!-- Custom Author Panel -->
-      <div class="flex items-center justify-between bg-gray-50 rounded-xl shadow p-4 mb-6">
-        <!-- Left: Logo -->
-        <div>
-          <img src="${authorLogo}" alt="Author Logo" class="w-16 h-16 rounded-full border-2 border-green-500">
-        </div>
-        <!-- Center: Name, Username, Category -->
-        <div class="flex flex-col text-center px-4 flex-grow">
-          <h2 class="text-lg font-semibold">${authorName}</h2>
-          <p class="text-gray-500">${username}</p>
-          <span class="text-sm text-blue-500">${categoryName}</span>
-        </div>
-        <!-- Right: Heart Icon with Count -->
-        <div class="relative">
-          <button id="mainLikeBtn" class="relative flex items-center justify-center w-16 h-16 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.22 2.55C11.09 5.01 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-            <span id="mainLikeCount" class="absolute text-white font-bold text-lg">0</span>
-          </button>
-        </div>
+    <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
+
+    <!-- Admin/Author Panel (Moved Above Comments) -->
+    <div class="flex items-center justify-between bg-gray-50 rounded-xl shadow p-4 mb-6 mt-8">
+      <div>
+        <img src="${authorLogo}" alt="Author Logo" class="w-16 h-16 rounded-full border-2 border-green-500">
       </div>
-
-      <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
-
-      <!-- Reactions -->
-      <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
-        <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
-        <div class="flex space-x-4" id="likeReactions">
-          <button data-reaction="love" class="text-2xl"><i class="fa fa-heart"></i></button>
-          <button data-reaction="laugh" class="text-2xl"><i class="fa fa-laugh"></i></button>
-          <button data-reaction="wow" class="text-2xl"><i class="fa fa-surprise"></i></button>
-          <button data-reaction="sad" class="text-2xl"><i class="fa fa-sad-tear"></i></button>
-          <button data-reaction="like" class="text-2xl"><i class="fa fa-thumbs-up"></i></button>
-        </div>
-        <div id="likeCounts" class="mt-2 text-sm text-gray-500"></div>
+      <div class="flex flex-col text-center px-4 flex-grow">
+        <h2 class="text-lg font-semibold">${authorName}</h2>
+        <p class="text-gray-500">${username}</p>
+        <span class="text-sm text-blue-500">${categoryName}</span>
       </div>
-
-      <!-- Comments Section -->
-      <div id="commentSection" class="mt-10">
-        <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
-        <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
-          <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
-          <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
-            <i class="fa fa-paper-plane"></i>
-          </button>
-        </div>
-        <div id="commentsList" class="space-y-4"></div>
+      <div class="relative">
+        <button id="mainLikeBtn" class="relative flex items-center justify-center w-16 h-16 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.22 2.55C11.09 5.01 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+          <span id="mainLikeCount" class="absolute text-white font-bold text-lg">0</span>
+        </button>
       </div>
     </div>
+
+    <!-- Comments Section -->
+    <div id="commentSection" class="mt-10">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Comments</h2>
+      <div id="comment-box" class="flex items-center bg-gradient-to-r from-green-400 via-green-600 to-green-400 rounded-xl p-2 mb-6">
+        <input type="text" id="commentInput" placeholder="Write your comment..." class="flex-1 bg-white rounded-xl p-3 outline-none text-gray-800" />
+        <button id="submitComment" class="ml-2 text-white p-2 rounded-full hover:bg-green-700">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+      <div id="commentsList" class="space-y-4"></div>
+    </div>
   </div>
+</div>
 `;
 
     const wrapper = document.getElementById("post-content-wrapper");
@@ -142,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       wrapper.classList.add("opacity-100");
     });
 
-    // ✅ Like Button Logic for Author Panel
+    // ✅ Like Button Logic
     const mainLikeBtn = document.getElementById("mainLikeBtn");
     const mainLikeCount = document.getElementById("mainLikeCount");
     const mainLikeRef = ref(db, `mainLikes/${postId}`);
@@ -159,46 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       mainLikeCount.textContent = snap.val()?.count || 0;
     });
 
-    // ✅ Reactions logic (unchanged)
-    const likeButtons = document.querySelectorAll('#likeReactions button');
-    const likeCounts = document.getElementById('likeCounts');
-
-    const reactionColors = {
-      love: "text-red-500",
-      laugh: "text-yellow-400",
-      wow: "text-purple-500",
-      sad: "text-blue-400",
-      like: "text-green-500"
-    };
-
-    likeButtons.forEach(btn => {
-      const reaction = btn.dataset.reaction;
-      btn.classList.add(reactionColors[reaction], "transition-transform", "duration-300", "cursor-pointer");
-
-      btn.addEventListener("mouseenter", () => btn.classList.add("scale-125"));
-      btn.addEventListener("mouseleave", () => btn.classList.remove("scale-125"));
-
-      btn.addEventListener("click", async () => {
-        if (!currentUser) return alert("Login to react");
-        btn.classList.add("animate-pulse");
-        setTimeout(() => btn.classList.remove("animate-pulse"), 500);
-
-        const likesRef = ref(db, `likes/${postId}`);
-        const snap = await get(likesRef);
-        const currentData = snap.val() || {};
-        currentData[`${reaction}_${currentUser.uid}`] = reaction;
-        update(likesRef, currentData);
-      });
-    });
-
-    onValue(ref(db, `likes/${postId}`), snapshot => {
-      const likes = snapshot.val() || {};
-      const counts = {};
-      Object.values(likes).forEach(r => counts[r] = (counts[r] || 0) + 1);
-      likeCounts.textContent = Object.entries(counts).map(([k,v]) => `${k}: ${v}`).join(' | ');
-    });
-
-    // ✅ Comments logic (unchanged)
+    // ✅ Comments logic
     const commentInput = document.getElementById("commentInput");
     const submitComment = document.getElementById("submitComment");
     const commentsList = document.getElementById("commentsList");
