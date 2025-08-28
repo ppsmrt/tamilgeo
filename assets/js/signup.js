@@ -2,8 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebas
 import { 
   getAuth, 
   createUserWithEmailAndPassword, 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword 
+  onAuthStateChanged 
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { 
   getDatabase, 
@@ -11,6 +10,12 @@ import {
   get, 
   set 
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { 
+  getStorage, 
+  ref as storageRef, 
+  uploadBytes, 
+  getDownloadURL 
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-storage.js";
 
 // 🔹 Firebase Config
 const firebaseConfig = {
@@ -27,15 +32,30 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
+const storage = getStorage(app);
 
 // 🔹 DOM Elements
 const signupForm = document.getElementById("signup-form");
-let message = document.getElementById("message");
-if (!message) {
-  message = document.createElement("p");
-  message.id = "message";
-  message.className = "text-center mt-2 text-red-500";
-  signupForm.appendChild(message);
+
+// Toast container
+let toastContainer = document.getElementById("toast-container");
+if (!toastContainer) {
+  toastContainer = document.createElement("div");
+  toastContainer.id = "toast-container";
+  toastContainer.className = "fixed top-4 right-4 space-y-2 z-50";
+  document.body.appendChild(toastContainer);
+}
+
+// 🔹 Toast function
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  toast.className = `px-4 py-2 rounded shadow text-white ${type === "success" ? "bg-green-500" : "bg-red-500"}`;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 4000);
 }
 
 // 🔹 Redirect Function
@@ -44,19 +64,17 @@ async function redirectUser(uid) {
     const snapshot = await get(ref(db, `users/${uid}/role`));
     if (snapshot.exists()) {
       const role = snapshot.val();
-      console.log("User role:", role);
-
       if (role === "admin") {
         window.location.replace("/tamilgeo/admin.html");
       } else {
         window.location.replace("/tamilgeo/dashboard.html");
       }
     } else {
-      message.textContent = "❌ Role not found!";
+      showToast("Role not found!", "error");
     }
   } catch (error) {
     console.error("Error fetching role:", error);
-    message.textContent = "❌ Could not fetch role!";
+    showToast("Could not fetch role!", "error");
   }
 }
 
@@ -64,41 +82,69 @@ async function redirectUser(uid) {
 if (signupForm) {
   signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    message.textContent = "Creating account...";
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const firstName = document.getElementById("firstName").value.trim();
+    const lastName = document.getElementById("lastName").value.trim();
     const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const bio = document.getElementById("bio").value.trim();
+    const location = document.getElementById("location").value.trim() || "India";
+    const profilePicFile = document.getElementById("profilePicture").files[0];
+
+    // ✅ Username restrictions
+    if (!username || username.toLowerCase() === "admin" || username.toLowerCase() === "owner") {
+      showToast("Admin/owner username not allowed!", "error");
+      return;
+    }
 
     try {
-      // ✅ Create Firebase Auth User
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Check if username already exists
+      const usernameSnapshot = await get(ref(db, "users"));
+      if (usernameSnapshot.exists()) {
+        const users = usernameSnapshot.val();
+        for (const uid in users) {
+          if (users[uid].username.toLowerCase() === username.toLowerCase()) {
+            showToast("Username already exists!", "error");
+            return;
+          }
+        }
+      }
+
+      showToast("Creating account...");
+
+      // ✅ Create Auth user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, document.getElementById("password").value);
       const uid = userCredential.user.uid;
 
-      // ✅ Save user profile in Realtime DB using UID as key
+      // ✅ Upload profile picture if provided
+      let profilePictureURL = "";
+      if (profilePicFile) {
+        const picRef = storageRef(storage, `profilePictures/${uid}_${profilePicFile.name}`);
+        await uploadBytes(picRef, profilePicFile);
+        profilePictureURL = await getDownloadURL(picRef);
+      }
+
+      // ✅ Save user profile in Realtime DB
       await set(ref(db, `users/${uid}`), {
         UID: uid,
-        email: email,
-        username: username,
-        firstName: "",
-        lastName: "",
-        secondName: "",
-        bio: "",
-        profilePicture: "",
-        location: "India",
+        email,
+        username,
+        firstName,
+        lastName,
+        bio,
+        location,
+        profilePicture: profilePictureURL,
         role: "user",
         createdAt: new Date().toISOString()
       });
 
-      message.textContent = "✅ Account created! Redirecting...";
       signupForm.reset();
-
-      // ✅ Redirect based on role
+      showToast("Account created successfully! Redirecting...", "success");
       redirectUser(uid);
 
     } catch (error) {
       console.error("Signup error:", error);
-      message.textContent = `❌ ${error.message}`;
+      showToast(error.message, "error");
     }
   });
 }
@@ -106,7 +152,6 @@ if (signupForm) {
 // 🔹 Auto-redirect if already logged in
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    console.log("User already logged in:", user.uid);
     redirectUser(user.uid);
   }
 });
