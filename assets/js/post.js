@@ -67,25 +67,48 @@ document.addEventListener("DOMContentLoaded", async () => {
       .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
       .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
 
-    // Inject HTML
+    // Get category name
+    const categoryName = wpPost.categories?.map(catId =>
+      wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name
+    ).filter(Boolean).join(', ') || 'General';
+
+    // Author panel
+    const authorLogo = "https://www.gravatar.com/avatar?d=mp"; // Default logo
+    const authorName = wpPost.author ? wpPost._embedded.author?.[0]?.name || "Admin" : "Admin";
+    const username = "@tamilgeo";
+
     container.innerHTML = `
   <div class="w-full max-w-3xl px-4 py-4">
     <div class="bg-white p-6 rounded-2xl shadow-lg opacity-0 transition-opacity duration-700" id="post-content-wrapper">
       ${featuredImage}
       <h1 class="text-2xl font-bold mb-4 text-green-700 drop-shadow-sm">${wpPost.title.rendered}</h1>
-      <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
 
-      <!-- Author: simplified -->
-      <div id="authorSection" class="mt-6 mb-6">
-        <p class="text-gray-800 font-semibold">${wpPost.author?.name || "Admin"}</p>
-        <p class="text-sm text-gray-500">@tamilgeo</p>
-        <p class="text-xs text-gray-400">Posted on: ${new Date(wpPost.date).toDateString()}</p>
-        <span class="text-sm px-2 py-1 rounded-full bg-gradient-to-r from-green-500 to-green-700 text-white font-medium">
-          ${wpPost.categories?.map(catId => wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name).filter(Boolean).join(', ') || ''}
-        </span>
+      <!-- Custom Author Panel -->
+      <div class="flex items-center justify-between bg-gray-50 rounded-xl shadow p-4 mb-6">
+        <!-- Left: Logo -->
+        <div>
+          <img src="${authorLogo}" alt="Author Logo" class="w-16 h-16 rounded-full border-2 border-green-500">
+        </div>
+        <!-- Center: Name, Username, Category -->
+        <div class="flex flex-col text-center px-4 flex-grow">
+          <h2 class="text-lg font-semibold">${authorName}</h2>
+          <p class="text-gray-500">${username}</p>
+          <span class="text-sm text-blue-500">${categoryName}</span>
+        </div>
+        <!-- Right: Heart Icon with Count -->
+        <div class="relative">
+          <button id="mainLikeBtn" class="relative flex items-center justify-center w-16 h-16 bg-red-500 rounded-full shadow-lg hover:bg-red-600 transition duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6 4 4 6.5 4c1.74 0 3.41 1.01 4.22 2.55C11.09 5.01 12.76 4 14.5 4 17 4 19 6 19 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span id="mainLikeCount" class="absolute text-white font-bold text-lg">0</span>
+          </button>
+        </div>
       </div>
 
-      <!-- Reactions with FA icons -->
+      <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
+
+      <!-- Reactions -->
       <div id="likeSection" class="border-t border-gray-200 pt-3 mt-4">
         <h3 class="text-gray-700 font-medium mb-2">React to this Post</h3>
         <div class="flex space-x-4" id="likeReactions">
@@ -119,7 +142,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       wrapper.classList.add("opacity-100");
     });
 
-    // Reactions logic with colors and animations
+    // ✅ Like Button Logic for Author Panel
+    const mainLikeBtn = document.getElementById("mainLikeBtn");
+    const mainLikeCount = document.getElementById("mainLikeCount");
+    const mainLikeRef = ref(db, `mainLikes/${postId}`);
+
+    mainLikeBtn.addEventListener("click", async () => {
+      if (!currentUser) return alert("Login to like this post!");
+      const snap = await get(mainLikeRef);
+      let likes = snap.val()?.count || 0;
+      likes++;
+      await update(mainLikeRef, { count: likes });
+    });
+
+    onValue(mainLikeRef, snap => {
+      mainLikeCount.textContent = snap.val()?.count || 0;
+    });
+
+    // ✅ Reactions logic (unchanged)
     const likeButtons = document.querySelectorAll('#likeReactions button');
     const likeCounts = document.getElementById('likeCounts');
 
@@ -158,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       likeCounts.textContent = Object.entries(counts).map(([k,v]) => `${k}: ${v}`).join(' | ');
     });
 
-    // Comments logic
+    // ✅ Comments logic (unchanged)
     const commentInput = document.getElementById("commentInput");
     const submitComment = document.getElementById("submitComment");
     const commentsList = document.getElementById("commentsList");
