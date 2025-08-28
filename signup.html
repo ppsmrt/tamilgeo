@@ -31,7 +31,7 @@
   <!-- ✅ Signup Form -->
 <form id="signupForm" 
       class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6">
-  
+
   <!-- Title -->
   <div class="text-center">
     <i class="fa-solid fa-user-plus text-green-500 text-6xl mb-3"></i>
@@ -39,17 +39,17 @@
     <p class="text-gray-500">Sign up to get started</p>
   </div>
 
-  <!-- Full Name -->
+  <!-- First Name -->
   <div>
-    <label for="fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
-    <input id="fullname" name="fullname" type="text" required placeholder="Enter your name" 
+    <label for="firstName" class="block text-sm font-medium text-gray-700">First Name</label>
+    <input id="firstName" name="firstName" type="text" required placeholder="Enter your first name" 
            class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
   </div>
 
-  <!-- Email -->
+  <!-- Last Name -->
   <div>
-    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-    <input id="email" name="email" type="email" required placeholder="Enter your email" 
+    <label for="lastName" class="block text-sm font-medium text-gray-700">Last Name</label>
+    <input id="lastName" name="lastName" type="text" required placeholder="Enter your last name" 
            class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
   </div>
 
@@ -60,17 +60,10 @@
            class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
   </div>
 
-  <!-- Password -->
+  <!-- Email -->
   <div>
-    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-    <input id="password" name="password" type="password" required placeholder="Create a password" 
-           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
-  </div>
-
-  <!-- Location -->
-  <div>
-    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-    <input id="location" name="location" type="text" placeholder="Enter your location"
+    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+    <input id="email" name="email" type="email" required placeholder="Enter your email" 
            class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
   </div>
 
@@ -79,6 +72,13 @@
     <label for="bio" class="block text-sm font-medium text-gray-700">Bio</label>
     <textarea id="bio" name="bio" placeholder="Write a short bio"
               class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none"></textarea>
+  </div>
+
+  <!-- Location -->
+  <div>
+    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+    <input id="location" name="location" type="text" placeholder="Enter your location"
+           class="w-full mt-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none" />
   </div>
 
   <!-- Profile Picture -->
