@@ -1,10 +1,15 @@
-// notifications.js
+// notifications.js (Debug Ready)
 const notificationsContainer = document.getElementById("notificationsContainer");
 const emptyState = document.getElementById("emptyState");
 
 // Helper to get seen posts from localStorage
 function getSeenPosts() {
-  return JSON.parse(localStorage.getItem("seenPosts") || "{}");
+  try {
+    return JSON.parse(localStorage.getItem("seenPosts") || "{}");
+  } catch (e) {
+    console.error("Error reading seenPosts from localStorage:", e);
+    return {};
+  }
 }
 
 // Helper to mark a post as seen
@@ -16,9 +21,20 @@ function markPostSeen(postId) {
 
 // Fetch recent 10 posts from WordPress
 async function fetchRecentPosts() {
+  const apiURL = "https://tamilgeo.wordpress.com/wp-json/wp/v2/posts?per_page=10&_embed";
+  console.log("Fetching posts from:", apiURL);
+
   try {
-    const response = await fetch("https://tamilgeo.wordpress.com/wp-json/wp/v2/posts?per_page=10&_embed");
+    const response = await fetch(apiURL);
+    console.log("API Response Status:", response.status);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
     const posts = await response.json();
+    console.log("Fetched posts:", posts);
+
     return posts.map(post => ({
       id: post.id,
       title: post.title.rendered,
@@ -27,7 +43,7 @@ async function fetchRecentPosts() {
     }));
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return [];
+    return null; // return null for fallback
   }
 }
 
@@ -38,6 +54,7 @@ function renderNotifications(posts) {
 
   if (!posts || posts.length === 0) {
     emptyState.classList.remove("hidden");
+    console.warn("No posts found or API failed.");
     return;
   }
   emptyState.classList.add("hidden");
@@ -58,10 +75,10 @@ function renderNotifications(posts) {
 
     notificationsContainer.appendChild(card);
 
-    // Open internal post page and mark as seen
+    // Click event: mark as seen & go to post page
     card.addEventListener("click", () => {
       markPostSeen(post.id);
-      // Re-render to remove badge immediately
+      console.log(`Post ${post.id} marked as seen`);
       renderNotifications(posts);
       window.location.href = `post.html?PostID=${post.id}`;
     });
@@ -73,11 +90,22 @@ function renderNotifications(posts) {
       notificationsContainer.appendChild(divider);
     }
   });
+
+  console.log("Notifications rendered successfully");
 }
 
 // Initialize and auto-refresh every 5 minutes
 async function initNotifications() {
-  const posts = await fetchRecentPosts();
+  let posts = await fetchRecentPosts();
+
+  if (!posts) {
+    console.warn("API failed. Loading mock data...");
+    posts = [
+      { id: 1, title: "Sample Notification 1", date: "08/28/2025" },
+      { id: 2, title: "Sample Notification 2", date: "08/27/2025" }
+    ];
+  }
+
   renderNotifications(posts);
 }
 
