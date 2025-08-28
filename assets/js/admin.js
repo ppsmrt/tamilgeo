@@ -21,10 +21,9 @@ const auth = getAuth(app);
 const loadingDiv = document.getElementById("loading");
 const dashboard = document.getElementById("dashboard");
 
-// --- Only Palani is admin ---
+// --- Only Admin Access ---
 const ADMIN_EMAIL = "ppsmart7@gmail.com";
 
-// Check auth
 onAuthStateChanged(auth, (user) => {
   if (!user || user.email !== ADMIN_EMAIL) {
     alert("⚠ Access Denied. Only Admin can view this page.");
@@ -39,7 +38,7 @@ onAuthStateChanged(auth, (user) => {
   initDashboard();
 });
 
-// --- Initialize dashboard functions ---
+// --- Initialize dashboard ---
 function initDashboard() {
   setupTabs();
   loadPendingPosts();
@@ -48,12 +47,14 @@ function initDashboard() {
   setupNotificationForm();
 }
 
-// --- Tabs ---
+// --- Tabs Setup ---
 function setupTabs() {
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("bg-green-500", "text-white"));
-      document.querySelectorAll(".tab-btn").forEach(b => b.classList.add("bg-gray-300"));
+      document.querySelectorAll(".tab-btn").forEach(b => {
+        b.classList.remove("bg-green-500", "text-white");
+        b.classList.add("bg-gray-300");
+      });
       btn.classList.add("bg-green-500", "text-white");
 
       const tab = btn.getAttribute("data-tab");
@@ -63,77 +64,77 @@ function setupTabs() {
   });
 }
 
-// --- Pending Posts ---
+// --- Load Pending Posts ---
 function loadPendingPosts() {
   const postsContainer = document.getElementById("pendingPostsContainer");
   const pendingRef = ref(db, "pendingPosts");
 
-  console.log("🔹 Loading pending posts...");
+  onValue(pendingRef, (snapshot) => {
+    const data = snapshot.val();
+    postsContainer.innerHTML = "";
 
-  onValue(
-    pendingRef,
-    (snapshot) => {
-      const data = snapshot.val();
-      console.log("🔹 Firebase snapshot:", data);
-
-      postsContainer.innerHTML = "";
-
-      if (!data) {
-        postsContainer.innerHTML =
-          "<p class='text-gray-500'>No pending posts.</p>";
-        console.log("🔹 No pending posts found.");
-        return;
-      }
-
-      Object.entries(data).forEach(([id, post]) => {
-        console.log(`🔹 Rendering post ID: ${id}`, post);
-
-        const div = document.createElement("div");
-        div.className = "bg-white p-4 rounded shadow";
-        div.innerHTML = `
-          <h3 class="font-semibold text-green-700">${post.title}</h3>
-          <p>${post.excerpt}</p>
-          <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(
-          post.date
-        ).toLocaleString()}</p>
-          <div class="mt-2 flex gap-2">
-            <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
-            <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
-          </div>
-        `;
-        postsContainer.appendChild(div);
-
-        div.querySelector(".approve").addEventListener("click", async () => {
-          console.log(`🔹 Approving post ID: ${id}`);
-          try {
-            const newRef = push(ref(db, "posts"));
-            await set(newRef, { ...post, status: "approved" });
-            await remove(ref(db, "pendingPosts/" + id));
-            alert("✅ Post approved");
-          } catch (err) {
-            console.error("❌ Error approving post:", err);
-            alert("❌ Failed to approve post. Check console.");
-          }
-        });
-
-        div.querySelector(".reject").addEventListener("click", async () => {
-          console.log(`🔹 Rejecting post ID: ${id}`);
-          try {
-            await remove(ref(db, "pendingPosts/" + id));
-            alert("❌ Post rejected");
-          } catch (err) {
-            console.error("❌ Error rejecting post:", err);
-            alert("❌ Failed to reject post. Check console.");
-          }
-        });
-      });
-    },
-    (error) => {
-      console.error("❌ Firebase read error:", error);
-      postsContainer.innerHTML =
-        "<p class='text-red-500'>Error loading pending posts.</p>";
+    if (!data) {
+      postsContainer.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
+      return;
     }
-  );
+
+    Object.entries(data).forEach(([id, post]) => {
+      const div = document.createElement("div");
+      div.className = "bg-white p-4 rounded shadow";
+      div.innerHTML = `
+        <h3 class="font-semibold text-green-700">${post.title}</h3>
+        <p>${post.excerpt}</p>
+        <p class="text-sm text-gray-500">By ${post.authorName} • ${new Date(post.date).toLocaleString()}</p>
+        <div class="mt-2 flex gap-2">
+          <button class="edit bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+          <button class="approve bg-green-500 text-white px-3 py-1 rounded">Approve</button>
+          <button class="reject bg-red-500 text-white px-3 py-1 rounded">Reject</button>
+        </div>
+      `;
+      postsContainer.appendChild(div);
+
+      // --- Edit Post ---
+      div.querySelector(".edit").addEventListener("click", () => {
+        const newTitle = prompt("Edit Title:", post.title) || post.title;
+        const newExcerpt = prompt("Edit Excerpt:", post.excerpt) || post.excerpt;
+        const newContent = prompt("Edit Content:", post.content) || post.content;
+        const newCategory = prompt("Edit Category:", post.category) || post.category;
+
+        update(ref(db, "pendingPosts/" + id), {
+          title: newTitle,
+          excerpt: newExcerpt,
+          content: newContent,
+          category: newCategory,
+          lastEdited: Date.now()
+        }).then(() => alert("✏ Post updated successfully!"))
+          .catch(err => console.error(err));
+      });
+
+      // --- Approve Post ---
+      div.querySelector(".approve").addEventListener("click", async () => {
+        try {
+          const newRef = push(ref(db, "posts"));
+          await set(newRef, { ...post, status: "approved" });
+          await remove(ref(db, "pendingPosts/" + id));
+          alert("✅ Post approved");
+        } catch (err) {
+          console.error(err);
+          alert("❌ Failed to approve post");
+        }
+      });
+
+      // --- Reject Post ---
+      div.querySelector(".reject").addEventListener("click", async () => {
+        try {
+          await remove(ref(db, "pendingPosts/" + id));
+          alert("❌ Post rejected");
+        } catch (err) {
+          console.error(err);
+          alert("❌ Failed to reject post");
+        }
+      });
+    });
+  });
 }
 
 // --- Manage Users ---
@@ -169,7 +170,7 @@ function loadUsers() {
   });
 }
 
-// --- Manage Notifications ---
+// --- Load Notifications ---
 function loadNotifications() {
   const notifContainer = document.getElementById("notificationsContainer");
   const notifRef = ref(db, "notifications");
