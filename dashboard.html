@@ -30,73 +30,67 @@
 
   <main class="flex-1 p-6 sm:p-10 bg-white-50">
 
-
-
-    <!-- Card Wrapper -->
-<div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6">
-  <!-- Top User Header -->
-  <div class="flex items-center justify-between">
-    <!-- Left: Name + Welcome -->
-    <div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900" id="fullname">
-        John Doe
-      </h1>
-      <p class="text-gray-500 text-lg">Welcome back 👋</p>
-    </div>
-
-    <!-- Right: Profile Picture -->
-    <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
-      <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
-    </div>
-  </div>
-</div>
-
-
-    <!-- Stat Cards -->
-<div class="grid grid-cols-2 gap-6 mb-12">
-  
-  <div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+  <!-- Card Wrapper -->
+  <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6">
+    <!-- Top User Header -->
     <div class="flex items-center justify-between">
+      <!-- Left: Name + Welcome -->
       <div>
-        <h2 class="text-lg font-medium">Likes</h2>
-        <p class="text-3xl font-bold mt-2">0</p>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900" id="fullname">
+          John Doe
+        </h1>
+        <p class="text-gray-500 text-lg">Welcome back 👋</p>
       </div>
-      <i data-feather="heart" class="w-10 h-10 opacity-80"></i>
+
+      <!-- Right: Profile Picture -->
+      <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
+        <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
+      </div>
     </div>
   </div>
 
-  <div class="p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl hover:scale-105 transition-transform">
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-lg font-medium">Overdue</h2>
-        <p class="text-3xl font-bold mt-2">12</p>
+  <!-- Stat Cards -->
+  <div class="grid grid-cols-2 gap-6 mb-12">
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-medium">Likes</h2>
+          <p class="text-3xl font-bold mt-2">0</p>
+        </div>
+        <i data-feather="heart" class="w-10 h-10 opacity-80"></i>
       </div>
-      <i data-feather="alert-circle" class="w-10 h-10 opacity-80"></i>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl hover:scale-105 transition-transform">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-medium">Overdue</h2>
+          <p class="text-3xl font-bold mt-2">12</p>
+        </div>
+        <i data-feather="alert-circle" class="w-10 h-10 opacity-80"></i>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl hover:scale-105 transition-transform">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-medium">Funding</h2>
+          <p class="text-3xl font-bold mt-2">35</p>
+        </div>
+        <i data-feather="dollar-sign" class="w-10 h-10 opacity-80"></i>
+      </div>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-medium">Meetings</h2>
+          <p class="text-3xl font-bold mt-2">None</p>
+        </div>
+        <i data-feather="calendar" class="w-10 h-10 opacity-80"></i>
+      </div>
     </div>
   </div>
-
-  <div class="p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl hover:scale-105 transition-transform">
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-lg font-medium">Funding</h2>
-        <p class="text-3xl font-bold mt-2">35</p>
-      </div>
-      <i data-feather="dollar-sign" class="w-10 h-10 opacity-80"></i>
-    </div>
-  </div>
-
-  <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
-    <div class="flex items-center justify-between">
-      <div>
-        <h2 class="text-lg font-medium">Meetings</h2>
-        <p class="text-3xl font-bold mt-2">None</p>
-      </div>
-      <i data-feather="calendar" class="w-10 h-10 opacity-80"></i>
-    </div>
-  </div>
-
-</div>
-
 
 <!-- Site Pages -->
 <div class="bg-white rounded-2xl shadow overflow-hidden">
