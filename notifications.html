@@ -1,66 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TamilGeo - Notifications</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TamilGeo - Home</title>
 
-  <!-- TailwindCSS -->
+  <!-- Feather Icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
-
+  
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, sans-serif;
-      background: #f0fdf4;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      position: sticky;
-      top: 0;
-      background: #16a34a;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: bold;
-      z-index: 10;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    #notificationsContainer {
-      flex: 1;
-      overflow-y: auto;
-      padding: 1rem;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    .hidden { display: none; }
-    .notification-card {
-      border-radius: 1rem;
-      background: white;
-      padding: 1rem;
-      margin-bottom: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-      position: relative;
-    }
-    .gradient-divider {
-      height: 4px;
-      width: 100%;
-      border-radius: 2px;
-      background: linear-gradient(to right, #00FF00, #008000);
-      margin: 12px 0;
-    }
-  </style>
-</head>
-<body>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
 
-  <!-- Sticky Header -->
-  <header>Latest Notifications</header>
+  <!-- Header Script -->
+  <script type="module" src="assets/js/header.js"></script>
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/img/favicon.ico" />
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+  <!-- Header placeholder -->
+  <header id="site-header"></header>
 
   <!-- Login Message -->
   <p id="loginMsg" class="text-center text-red-500 mt-4 hidden">
@@ -75,8 +41,18 @@
     No notifications yet.
   </p>
 
-  <!-- Notifications Script -->
-  <script type="module" src="./assets/js/notifications.js"></script>
+ <!-- Footer Script -->
+  <script type="module">
+    import { initFooter } from './assets/js/footer.js';
+    initFooter();
+  </script>
+  
+  <!-- Feed Script -->
+  <script type="module" src="assets/js/notifications.js"></script>
 
+  <!-- Feather Icons Init -->
+  <script>
+    feather.replace();
+  </script>
 </body>
 </html>
