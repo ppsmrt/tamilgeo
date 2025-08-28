@@ -47,7 +47,6 @@ onAuthStateChanged(auth, (user) => {
 function initDashboard() {
   setupTabs();
   loadPendingPosts();
-  loadUsers();
   loadNotifications();
   setupNotificationForm();
 }
@@ -75,14 +74,13 @@ function loadPendingPosts() {
   const pendingRef = ref(db, "pendingPosts");
 
   onValue(pendingRef, (snapshot) => {
+    postsContainer.innerHTML = "";
     if (!snapshot.exists()) {
       postsContainer.innerHTML = "<p class='text-gray-500'>No pending posts.</p>";
       return;
     }
 
     const data = snapshot.val();
-    postsContainer.innerHTML = "";
-
     Object.entries(data).forEach(([id, post]) => {
       const div = document.createElement("div");
       div.className = "bg-white p-4 rounded shadow";
@@ -98,7 +96,7 @@ function loadPendingPosts() {
       `;
       postsContainer.appendChild(div);
 
-      // --- Edit Post ---
+      // Edit Post
       div.querySelector(".edit").addEventListener("click", () => {
         const newTitle = prompt("Edit Title:", post.title) || post.title;
         const newExcerpt = prompt("Edit Excerpt:", post.excerpt) || post.excerpt;
@@ -119,7 +117,7 @@ function loadPendingPosts() {
         });
       });
 
-      // --- Approve Post ---
+      // Approve Post
       div.querySelector(".approve").addEventListener("click", async () => {
         try {
           const newRef = push(ref(db, "posts"));
@@ -132,7 +130,7 @@ function loadPendingPosts() {
         }
       });
 
-      // --- Reject Post ---
+      // Reject Post
       div.querySelector(".reject").addEventListener("click", async () => {
         try {
           await remove(ref(db, "pendingPosts/" + id));
@@ -141,39 +139,6 @@ function loadPendingPosts() {
           console.error("❌ Error rejecting post:", err);
           alert("❌ Failed to reject post");
         }
-      });
-    });
-  });
-}
-
-// --- Manage Users ---
-function loadUsers() {
-  const usersContainer = document.getElementById("usersContainer");
-  const usersRef = ref(db, "users");
-
-  onValue(usersRef, (snapshot) => {
-    usersContainer.innerHTML = "";
-    const data = snapshot.val();
-    if (!data) {
-      usersContainer.innerHTML = "<p class='text-gray-500'>No users found.</p>";
-      return;
-    }
-
-    Object.entries(data).forEach(([uid, user]) => {
-      const div = document.createElement("div");
-      div.className = "bg-white p-4 rounded shadow flex justify-between items-center";
-      div.innerHTML = `
-        <div>
-          <p class="font-semibold">${user.username || "No username"}</p>
-          <p class="text-sm text-gray-500">${user.email}</p>
-        </div>
-        <button class="reset bg-blue-500 text-white px-3 py-1 rounded">Reset Username</button>
-      `;
-      usersContainer.appendChild(div);
-
-      div.querySelector(".reset").addEventListener("click", async () => {
-        await update(ref(db, "users/" + uid), { username: "resetUser" });
-        alert("🔄 Username reset for " + user.email);
       });
     });
   });
@@ -194,7 +159,7 @@ function loadNotifications() {
     const data = snapshot.val();
     Object.entries(data).forEach(([id, notif]) => {
       const div = document.createElement("div");
-      div.className = "bg-white p-4 rounded shadow";
+      div.className = "bg-white p-4 rounded shadow border-l-4 border-green-500";
       div.innerHTML = `
         <h3 class="font-semibold text-green-700">${notif.title}</h3>
         <p>${notif.message}</p>
@@ -213,17 +178,16 @@ function setupNotificationForm() {
     e.preventDefault();
     const title = document.getElementById("notifTitle").value.trim();
     const message = document.getElementById("notifMessage").value.trim();
-    const link = document.getElementById("notifLink")?.value.trim() || "";
-    const category = document.getElementById("notifCategory")?.value.trim() || "general";
 
-    if (!title) return alert("Title is required!");
+    if (!title || !message) {
+      alert("⚠ Please fill in all fields.");
+      return;
+    }
 
     const newNotifRef = push(ref(db, "notifications"));
     await set(newNotifRef, {
       title,
       message,
-      link: link || null,
-      category,
       date: new Date().toLocaleDateString("en-GB"), // e.g., 12.12.2024
       timestamp: Date.now()
     });
