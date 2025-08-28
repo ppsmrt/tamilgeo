@@ -53,19 +53,29 @@ document.addEventListener("DOMContentLoaded", async () => {
          </div>`
       : "";
 
+    // ---- CONTENT STYLING ----
     let contentStyled = wpPost.content.rendered
-      .replace(/<h1>(.*?)<\/h1>/g, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
-      .replace(/<h2>(.*?)<\/h2>/g, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
-      .replace(/<h([3-5])>(.*?)<\/h[3-5]>/g, '<h$1 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$2</h$1>')
-      .replace(/<p>(.*?)<\/p>/g, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
-      .replace(/<blockquote>(.*?)<\/blockquote>/gs, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
-      .replace(/<hr\s*\/?>/g, `<div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>`)
-      .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
-      .replace(/<table>/g, `<div class="overflow-x-auto my-6"><table class="w-full border border-green-600 border-collapse rounded-lg">`)
-      .replace(/<\/table>/g, '</table></div>')
-      .replace(/<th>(.*?)<\/th>/g, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
-      .replace(/<td>(.*?)<\/td>/g, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
-      .replace(/<img(.*?)>/g, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>');
+      .replace(/<h1>([\s\S]*?)<\/h1>/gi, '<h1 class="text-green-700 font-semibold mt-6 mb-4 drop-shadow-sm text-[32px]">$1</h1>')
+      .replace(/<h2>([\s\S]*?)<\/h2>/gi, '<h2 class="text-green-700 font-semibold mt-5 mb-3 drop-shadow-sm text-[24px]">$1</h2>')
+      .replace(/<h3>([\s\S]*?)<\/h3>/gi, '<h3 class="text-green-700 font-semibold mt-4 mb-3 drop-shadow-sm text-[20px]">$1</h3>')
+      .replace(/<h4>([\s\S]*?)<\/h4>/gi, '<h4 class="text-green-700 font-semibold mt-3 mb-2 drop-shadow-sm text-[18px]">$1</h4>')
+      .replace(/<h5>([\s\S]*?)<\/h5>/gi, '<h5 class="text-green-700 font-semibold mt-2 mb-2 drop-shadow-sm text-[16px]">$1</h5>')
+      .replace(/<p>(.*?)<\/p>/gi, '<p class="mb-4 leading-relaxed text-gray-800">$1</p>')
+      .replace(/<blockquote>([\s\S]*?)<\/blockquote>/gi, '<blockquote class="border-l-4 border-green-600 bg-green-50 text-green-800 italic pl-4 py-2 my-4 rounded-md">$1</blockquote>')
+      .replace(/<hr\s*\/?>/gi, `<div class="my-6 h-1 rounded-full bg-gradient-to-r from-green-400 via-green-600 to-green-400"></div>`)
+      .replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/gi, '<pre class="bg-gray-900 text-white rounded-lg overflow-auto p-4 text-sm my-6">$1</pre>')
+      .replace(/<table>/gi, `<div class="overflow-x-auto my-6"><table class="w-full border border-green-600 border-collapse rounded-lg">`)
+      .replace(/<\/table>/gi, '</table></div>')
+      .replace(/<th>(.*?)<\/th>/gi, '<th class="border border-green-600 text-black font-bold bg-orange-200 px-3 py-2 rounded-tl-lg rounded-tr-lg">$1</th>')
+      .replace(/<td>(.*?)<\/td>/gi, '<td class="border border-green-600 text-black px-3 py-2">$1</td>')
+      .replace(/<img(.*?)>/gi, '<div class="my-6 rounded-xl overflow-hidden border border-gray-200 shadow-md"><img$1 class="w-full h-auto object-cover rounded-lg"></div>')
+      .replace(/<iframe(.*?)<\/iframe>/gi, (match, p1) => {
+        return `<div class="my-6 overflow-hidden rounded-xl relative w-full aspect-video">
+                  <iframe${p1} class="w-full h-full rounded-xl" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+                </div>`;
+      })
+      // External links bold red
+      .replace(/<a\s+(?![^>]*href="https:\/\/tamilgeo\.wordpress\.com)([^>]*?)>(.*?)<\/a>/gi, '<a $1 class="font-bold text-red-600" target="_blank" rel="noopener noreferrer">$2</a>');
 
     const categoryName = wpPost.categories?.map(catId =>
       wpPost._embedded?.['wp:term']?.[0]?.find(c => c.id === catId)?.name
@@ -83,7 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     <div class="prose prose-green prose-lg max-w-none leading-relaxed">${contentStyled}</div>
 
-    <!-- Admin/Author Panel (Moved Above Comments) -->
+    <!-- Admin/Author Panel -->
     <div class="flex items-center justify-between bg-gray-50 rounded-xl shadow p-4 mb-6 mt-8">
       <div>
         <img src="${authorLogo}" alt="Author Logo" class="w-16 h-16 rounded-full border-2 border-green-500">
@@ -124,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       wrapper.classList.add("opacity-100");
     });
 
-    // ✅ Like Button Logic
+    // ---------- LIKE BUTTON ----------
     const mainLikeBtn = document.getElementById("mainLikeBtn");
     const mainLikeCount = document.getElementById("mainLikeCount");
     const mainLikeRef = ref(db, `mainLikes/${postId}`);
@@ -141,7 +151,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       mainLikeCount.textContent = snap.val()?.count || 0;
     });
 
-    // ✅ Comments logic
+    // ---------- COMMENTS ----------
     const commentInput = document.getElementById("commentInput");
     const submitComment = document.getElementById("submitComment");
     const commentsList = document.getElementById("commentsList");
