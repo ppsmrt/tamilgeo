@@ -1,13 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { 
   getAuth, 
-  signInWithEmailAndPassword, 
-  onAuthStateChanged 
+  createUserWithEmailAndPassword, 
+  onAuthStateChanged, 
+  signInWithEmailAndPassword 
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { 
   getDatabase, 
   ref, 
-  get 
+  get, 
+  set 
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
 // 🔹 Firebase Config
@@ -21,19 +23,19 @@ const firebaseConfig = {
   appId: "1:1092623024431:web:ea455dd68a9fcf480be1da"
 };
 
-// 🔹 Init
+// 🔹 Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-// Elements
-const loginForm = document.getElementById("login-form");
+// 🔹 DOM Elements
+const signupForm = document.getElementById("signup-form");
 let message = document.getElementById("message");
 if (!message) {
   message = document.createElement("p");
   message.id = "message";
   message.className = "text-center mt-2 text-red-500";
-  loginForm.appendChild(message);
+  signupForm.appendChild(message);
 }
 
 // 🔹 Redirect Function
@@ -45,9 +47,9 @@ async function redirectUser(uid) {
       console.log("User role:", role);
 
       if (role === "admin") {
-        window.location.replace("admin.html");
+        window.location.replace("/tamilgeo/admin.html");
       } else {
-        window.location.replace("dashboard.html");
+        window.location.replace("/tamilgeo/dashboard.html");
       }
     } else {
       message.textContent = "❌ Role not found!";
@@ -58,23 +60,44 @@ async function redirectUser(uid) {
   }
 }
 
-// 🔹 Login Submit
-if (loginForm) {
-  loginForm.addEventListener("submit", async (e) => {
+// 🔹 Signup Submit
+if (signupForm) {
+  signupForm.addEventListener("submit", async (e) => {
     e.preventDefault();
-    message.textContent = "Logging in...";
+    message.textContent = "Creating account...";
 
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      message.textContent = "✅ Logged in! Redirecting...";
-      loginForm.reset();
+      // ✅ Create Firebase Auth User
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCredential.user.uid;
 
-      redirectUser(userCredential.user.uid);
+      // ✅ Save user profile in Realtime DB using UID as key
+      await set(ref(db, `users/${uid}`), {
+        UID: uid,
+        email: email,
+        username: username,
+        firstName: "",
+        lastName: "",
+        secondName: "",
+        bio: "",
+        profilePicture: "",
+        location: "India",
+        role: "user",
+        createdAt: new Date().toISOString()
+      });
+
+      message.textContent = "✅ Account created! Redirecting...";
+      signupForm.reset();
+
+      // ✅ Redirect based on role
+      redirectUser(uid);
+
     } catch (error) {
-      console.error(error);
+      console.error("Signup error:", error);
       message.textContent = `❌ ${error.message}`;
     }
   });
