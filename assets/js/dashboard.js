@@ -21,7 +21,7 @@ const db = getDatabase(app);
 
 // DOM Elements
 const fullnameEl = document.getElementById("fullname");
-const logoutBtn = document.getElementById("logoutBtn");
+const logoutLink = document.getElementById("logoutLink");
 
 // Auth listener
 onAuthStateChanged(auth, (user) => {
@@ -36,7 +36,8 @@ onAuthStateChanged(auth, (user) => {
     });
 
     // Logout logic
-    logoutBtn.addEventListener("click", async () => {
+    logoutLink.addEventListener("click", async (e) => {
+      e.preventDefault(); // prevent default anchor behavior
       try {
         await signOut(auth);
         window.location.href = "/tamilgeo/logout"; // redirect after logout
@@ -46,7 +47,6 @@ onAuthStateChanged(auth, (user) => {
     });
 
   } else {
-    // Not logged in
     fullnameEl.textContent = "Guest";
   }
 });
