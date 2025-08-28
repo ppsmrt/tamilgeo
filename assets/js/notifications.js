@@ -1,6 +1,6 @@
 // notifications.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
 // ✅ Firebase Config
@@ -24,60 +24,98 @@ const notificationsContainer = document.getElementById("notificationsContainer")
 const loginMsg = document.getElementById("loginMsg");
 const emptyState = document.getElementById("emptyState");
 
-// 🔹 Show notifications only for logged-in users
+// ✅ Render Notifications
+function renderNotifications(user, notifications) {
+  notificationsContainer.innerHTML = "";
+
+  if (notifications.length === 0) {
+    emptyState.classList.remove("hidden");
+    return;
+  }
+  emptyState.classList.add("hidden");
+
+  notifications.forEach((notif, index) => {
+    const card = document.createElement("div");
+    card.className = "bg-white p-4 rounded shadow relative";
+
+    card.innerHTML = `
+      <h2 class="text-lg font-semibold cursor-pointer hover:underline" data-link="${notif.link || ''}">
+        ${notif.title}
+      </h2>
+      <p class="text-gray-500 text-sm">${notif.date}</p>
+      ${
+        notif.link
+          ? `<a href="${notif.link}" target="_blank" class="text-blue-600 text-sm block mt-2">Open Link</a>`
+          : ""
+      }
+      <button class="dismiss absolute top-3 right-3 text-red-500 hover:text-red-700 text-sm">Dismiss</button>
+    `;
+
+    // Divider (Green)
+    if (index < notifications.length - 1) {
+      const divider = document.createElement("hr");
+      divider.className = "border-t-2 border-green-500 my-2";
+      card.appendChild(divider);
+    }
+
+    notificationsContainer.appendChild(card);
+
+    // ✅ Dismiss button action
+    card.querySelector(".dismiss").addEventListener("click", () => {
+      update(ref(db, `userNotifications/${user.uid}/dismissed/${notif.id}`), {
+        dismissed: true
+      });
+    });
+
+    // ✅ Click title to open link if available
+    const titleEl = card.querySelector("h2");
+    if (notif.link) {
+      titleEl.addEventListener("click", () => {
+        window.open(notif.link, "_blank");
+      });
+    }
+  });
+}
+
+// ✅ Fetch notifications
 onAuthStateChanged(auth, (user) => {
   if (!user) {
-    // User not logged in → Show login message
     loginMsg.classList.remove("hidden");
     notificationsContainer.classList.add("hidden");
     emptyState.classList.add("hidden");
     return;
   }
 
-  // User logged in → Show notifications container
   loginMsg.classList.add("hidden");
   notificationsContainer.classList.remove("hidden");
 
-  // Listen for notifications in DB
   const notifRef = ref(db, "notifications");
-  onValue(notifRef, (snapshot) => {
-    notificationsContainer.innerHTML = ""; // Clear previous
+  const dismissedRef = ref(db, `userNotifications/${user.uid}/dismissed`);
 
+  let allNotifications = [];
+  let dismissed = {};
+
+  onValue(dismissedRef, (dismissedSnap) => {
+    dismissed = dismissedSnap.exists() ? dismissedSnap.val() : {};
+    // Re-render when dismissed updates
+    renderNotifications(user, allNotifications.filter(n => !dismissed[n.id]));
+  });
+
+  onValue(notifRef, (snapshot) => {
     if (!snapshot.exists()) {
-      emptyState.classList.remove("hidden");
+      allNotifications = [];
+      renderNotifications(user, []);
       return;
-    } else {
-      emptyState.classList.add("hidden");
     }
 
-    // Loop through notifications
-    const notifications = [];
+    allNotifications = [];
     snapshot.forEach((child) => {
-      notifications.push({ id: child.key, ...child.val() });
+      allNotifications.push({ id: child.key, ...child.val() });
     });
 
-    // Sort by timestamp (newest first)
-    notifications.sort((a, b) => b.timestamp - a.timestamp);
+    // Sort latest first
+    allNotifications.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-    // Render notifications
-    notifications.forEach((notif) => {
-      const card = document.createElement("div");
-      card.className =
-        "bg-white shadow-md rounded-xl p-4 mb-4 border border-gray-200";
-
-      card.innerHTML = `
-        <h2 class="text-lg font-semibold">${notif.title}</h2>
-        <p class="text-gray-600">${notif.description}</p>
-        ${notif.image ? `<img src="${notif.image}" class="mt-2 rounded-lg"/>` : ""}
-        ${
-          notif.link
-            ? `<a href="${notif.link}" target="_blank" class="text-blue-600 mt-2 block">Read More</a>`
-            : ""
-        }
-        <span class="text-xs text-gray-400 block mt-1">Category: ${notif.category}</span>
-      `;
-
-      notificationsContainer.appendChild(card);
-    });
+    renderNotifications(user, allNotifications.filter(n => !dismissed[n.id]));
   });
 });
