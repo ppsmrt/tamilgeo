@@ -1,5 +1,3 @@
-// notifications.js
-
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("notifications-container");
 
@@ -25,18 +23,24 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Build the list of notifications
+    // Build styled notifications in white rounded cards
     container.innerHTML = `
-      <ul class="divide-y divide-gray-200">
+      <div class="space-y-4">
         ${posts.map(post => `
-          <li class="p-4 hover:bg-gray-50 transition">
-            <a href="/tamilgeo/post.html?id=${post.id}" class="block">
-              <h3 class="text-lg font-semibold text-green-600">${post.title}</h3>
+          <div class="bg-white rounded-2xl shadow overflow-hidden">
+            <!-- Gradient Heading -->
+            <div class="px-5 py-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg">
+              Recent Post
+            </div>
+
+            <!-- Post Link -->
+            <a href="/tamilgeo/post.html?id=${post.id}" class="block px-5 py-4 hover:bg-gray-50 transition">
+              <h3 class="text-lg font-semibold text-green-600 mb-2">${post.title}</h3>
               <p class="text-sm text-gray-500">${post.date}</p>
             </a>
-          </li>
+          </div>
         `).join("")}
-      </ul>
+      </div>
     `;
   });
 });
