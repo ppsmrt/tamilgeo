@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <ul class="divide-y divide-gray-200">
         ${posts.map(post => `
           <li class="p-4 hover:bg-gray-50 transition">
-            <a href="/post.html?id=${post.id}" class="block">
+            <a href="/tamilgeo/post.html?id=${post.id}" class="block">
               <h3 class="text-lg font-semibold text-green-600">${post.title}</h3>
               <p class="text-sm text-gray-500">${post.date}</p>
             </a>
