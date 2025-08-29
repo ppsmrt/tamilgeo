@@ -27,64 +27,71 @@ document.addEventListener("DOMContentLoaded", () => {
     const openedPosts = JSON.parse(localStorage.getItem("openedPosts") || "[]");
     const dismissedPosts = JSON.parse(localStorage.getItem("dismissedPosts") || "[]");
 
-    container.innerHTML = `
-      <div class="space-y-4">
-        ${posts
-          .filter(post => !dismissedPosts.includes(post.id)) // Remove dismissed posts
-          .map(post => {
-            const isOpened = openedPosts.includes(post.id);
-            return `
-              <div class="bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition relative" data-id="${post.id}">
-                
-                <!-- Gradient Header -->
-                <div class="px-5 py-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center justify-between">
-                  
-                  <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-newspaper"></i>
-                    <span>Recent Post</span>
-                  </div>
-                  
-                  <div class="flex items-center gap-2">
-                    ${!isOpened ? `<span class="bg-white text-green-600 text-xs font-bold px-2 py-1 rounded-full">NEW</span>` : ""}
-                    <button class="ml-2 text-white hover:text-gray-200 focus:outline-none dismiss-btn">&times;</button>
-                  </div>
-                </div>
+    // Filter out dismissed posts
+    const filteredPosts = posts.filter(post => !dismissedPosts.includes(post.id));
 
-                <!-- Post Content -->
-                <a href="/tamilgeo/post.html?id=${post.id}" class="block px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
-                  <h3 class="text-lg font-semibold text-green-600 mb-2 truncate">${post.title}</h3>
-                  <p class="text-sm text-gray-500">${post.date}</p>
-                </a>
-              </div>
+    if (filteredPosts.length === 0) {
+      container.innerHTML = `<div class="text-center py-6 text-gray-500">No notifications available.</div>`;
+      return;
+    }
+
+    // Build grouped card
+    container.innerHTML = `
+      <div class="bg-white rounded-2xl shadow overflow-hidden max-w-xl mx-auto">
+        
+        <!-- Gradient Heading -->
+        <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bell"></i>
+            Notifications
+          </div>
+          <button class="text-white hover:text-gray-200 focus:outline-none dismiss-all-btn">&times;</button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="divide-y">
+          ${filteredPosts.map(post => {
+            const isOpened = openedPosts.includes(post.id);
+            const daysAgo = getDaysAgo(post.timestamp);
+            return `
+              <a href="/tamilgeo/post.html?id=${post.id}" class="block px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
+                <h3 class="text-lg font-semibold text-green-600 mb-1 truncate">${post.title}</h3>
+                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                  ${!isOpened ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>` : ""}
+                  <span>By ${post.author}</span>
+                  <span>|</span>
+                  <span>${post.category}</span>
+                  <span>|</span>
+                  <span>${daysAgo} ago</span>
+                </div>
+              </a>
             `;
           }).join("")}
+        </div>
       </div>
     `;
 
-    // Dismiss button functionality
-    document.querySelectorAll(".dismiss-btn").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent link click
-        const card = e.target.closest("[data-id]");
-        const postId = parseInt(card.getAttribute("data-id"));
+    // Handle dismiss-all button
+    document.querySelector(".dismiss-all-btn").addEventListener("click", () => {
+      // Animate fade-out then clear container
+      const card = document.querySelector(".bg-white.rounded-2xl");
+      card.classList.add("opacity-0", "transition", "duration-300");
+      setTimeout(() => (container.innerHTML = `<div class="text-center py-6 text-gray-500">All notifications dismissed.</div>`), 300);
 
-        // Remove from DOM
-        card.remove();
-
-        // Save dismissed state
-        let dismissedPosts = JSON.parse(localStorage.getItem("dismissedPosts") || "[]");
-        if (!dismissedPosts.includes(postId)) {
-          dismissedPosts.push(postId);
-          localStorage.setItem("dismissedPosts", JSON.stringify(dismissedPosts));
+      // Save dismissed posts
+      let dismissedPosts = JSON.parse(localStorage.getItem("dismissedPosts") || "[]");
+      filteredPosts.forEach(post => {
+        if (!dismissedPosts.includes(post.id)) {
+          dismissedPosts.push(post.id);
         }
       });
+      localStorage.setItem("dismissedPosts", JSON.stringify(dismissedPosts));
     });
 
     // Mark post as opened when clicked
     document.querySelectorAll(".open-post").forEach(link => {
       link.addEventListener("click", () => {
         const postId = parseInt(link.getAttribute("data-id"));
-
         let openedPosts = JSON.parse(localStorage.getItem("openedPosts") || "[]");
         if (!openedPosts.includes(postId)) {
           openedPosts.push(postId);
@@ -100,25 +107,41 @@ document.addEventListener("DOMContentLoaded", () => {
  */
 async function fetchRecentPosts() {
   const apiURL = "https://public-api.wordpress.com/wp/v2/sites/tamilgeo.wordpress.com/posts?per_page=10&_embed";
-  console.log("Fetching posts from:", apiURL);
 
   try {
     const response = await fetch(apiURL);
-    console.log("Response status:", response.status);
-
     if (!response.ok) throw new Error(`Failed to fetch: ${response.status}`);
 
     const posts = await response.json();
-    console.log("Posts fetched:", posts);
 
-    return posts.map(post => ({
-      id: post.id,
-      title: post.title.rendered,
-      date: new Date(post.date).toLocaleDateString(),
-      timestamp: new Date(post.date).getTime()
-    }));
+    return posts.map(post => {
+      const author = post._embedded.author ? post._embedded.author[0].name : "Unknown";
+      const category = post._embedded["wp:term"] && post._embedded["wp:term"][0].length > 0
+        ? post._embedded["wp:term"][0][0].name
+        : "Uncategorized";
+
+      return {
+        id: post.id,
+        title: post.title.rendered,
+        author: author,
+        category: category,
+        timestamp: new Date(post.date).getTime()
+      };
+    });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return []; // Return empty array on error
   }
+}
+
+/**
+ * Calculate days ago from timestamp
+ */
+function getDaysAgo(timestamp) {
+  const now = new Date().getTime();
+  const diff = now - timestamp;
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days === 0) return "Today";
+  if (days === 1) return "1 day";
+  return `${days} days`;
 }
