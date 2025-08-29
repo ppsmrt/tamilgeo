@@ -23,22 +23,25 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Build styled notifications in white rounded cards
+    // Build styled notifications as clickable cards
     container.innerHTML = `
       <div class="space-y-4">
         ${posts.map(post => `
-          <div class="bg-white rounded-2xl shadow overflow-hidden">
+          <a href="/tamilgeo/post.html?id=${post.id}" class="block bg-white rounded-2xl shadow overflow-hidden hover:shadow-lg transition">
+            
             <!-- Gradient Heading -->
-            <div class="px-5 py-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg">
+            <div class="px-5 py-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center gap-2">
+              <i class="fa-solid fa-newspaper"></i>
               Recent Post
             </div>
 
-            <!-- Post Link -->
-            <a href="/tamilgeo/post.html?id=${post.id}" class="block px-5 py-4 hover:bg-gray-50 transition">
+            <!-- Post Info -->
+            <div class="px-5 py-4">
               <h3 class="text-lg font-semibold text-green-600 mb-2">${post.title}</h3>
               <p class="text-sm text-gray-500">${post.date}</p>
-            </a>
-          </div>
+            </div>
+
+          </a>
         `).join("")}
       </div>
     `;
