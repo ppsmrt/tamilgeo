@@ -33,21 +33,23 @@
     Please login to see notifications.
   </p>
 
-  <!-- Notifications Container -->
-  <div id="notifications-container" class="max-w-md mx-auto bg-white rounded-lg shadow-md mt-6"></div>
+  <!-- Main Wrapper -->
+  <div class="max-w-4xl mx-auto px-4 space-y-6 mt-6">
+    
+    <!-- Notifications Card -->
+    <div id="notifications-container" class="bg-white rounded-2xl shadow overflow-hidden">
+      <!-- JS will inject content here -->
+    </div>
 
-  <!-- Empty State -->
-  <p id="emptyState" class="text-center text-gray-500 mt-4 hidden">
-    No notifications yet.
-  </p>
+  </div>
 
- <!-- Footer Script -->
+  <!-- Footer Script -->
   <script type="module">
     import { initFooter } from './assets/js/footer.js';
     initFooter();
   </script>
   
-  <!-- Feed Script -->
+  <!-- Notifications Script -->
   <script type="module" src="assets/js/notifications.js"></script>
 
   <!-- Feather Icons Init -->
