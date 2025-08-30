@@ -38,42 +38,39 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Build grouped card with same size as Site Pages
+    // Inject content inside existing card structure
     container.innerHTML = `
-      <div class="bg-white rounded-2xl shadow overflow-hidden">
-        
-        <!-- Gradient Heading -->
-        <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-bell"></i>
-            Notifications
-          </div>
-          <button class="text-white hover:text-gray-200 focus:outline-none dismiss-all-btn">&times;</button>
+      <!-- Gradient Heading -->
+      <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i class="fa-solid fa-bell"></i>
+          Notifications
         </div>
+        <button class="text-white hover:text-gray-200 focus:outline-none dismiss-all-btn">&times;</button>
+      </div>
 
-        <!-- Notifications List -->
-        <div class="divide-y">
-          ${filteredPosts.map(post => {
-            const isOpened = openedPosts.includes(post.id);
-            const daysAgo = getDaysAgo(post.timestamp);
-            return `
-              <a href="/tamilgeo/post.html?id=${post.id}" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
-                <div>
-                  <h3 class="text-lg font-semibold text-green-600 mb-1 truncate">${post.title}</h3>
-                  <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-                    ${!isOpened ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>` : ""}
-                    <span>By ${post.author}</span>
-                    <span>|</span>
-                    <span>${post.category}</span>
-                    <span>|</span>
-                    <span>${daysAgo} ago</span>
-                  </div>
+      <!-- Notifications List -->
+      <div class="divide-y">
+        ${filteredPosts.map(post => {
+          const isOpened = openedPosts.includes(post.id);
+          const daysAgo = getDaysAgo(post.timestamp);
+          return `
+            <a href="/tamilgeo/post.html?id=${post.id}" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
+              <div>
+                <h3 class="text-lg font-semibold text-green-600 mb-1 truncate">${post.title}</h3>
+                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                  ${!isOpened ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>` : ""}
+                  <span>By ${post.author}</span>
+                  <span>|</span>
+                  <span>${post.category}</span>
+                  <span>|</span>
+                  <span>${daysAgo} ago</span>
                 </div>
-                <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-              </a>
-            `;
-          }).join("")}
-        </div>
+              </div>
+              <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+            </a>
+          `;
+        }).join("")}
       </div>
     `;
 
@@ -82,8 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle dismiss-all button
     document.querySelector(".dismiss-all-btn").addEventListener("click", () => {
-      // Animate fade-out then clear container
-      const card = document.querySelector(".bg-white.rounded-2xl");
+      const card = container;
       card.classList.add("opacity-0", "transition", "duration-300");
       setTimeout(() => (container.innerHTML = `<div class="text-center py-6 text-gray-500">All notifications dismissed.</div>`), 300);
 
