@@ -28,6 +28,7 @@
 ✅ Bookmark for saving loves posts<br>
 ✅ Dashboard for users (Improving day by day)<br>
 ✅ Submit Your Post<br>
+✅ Notifications for new post<br>
 
 ---
 
