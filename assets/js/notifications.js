@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Limit to 5 posts
+    posts = posts.slice(0, 5);
+
     // Get opened and dismissed posts from localStorage
     const openedPosts = JSON.parse(localStorage.getItem("openedPosts") || "[]");
     const dismissedPosts = JSON.parse(localStorage.getItem("dismissedPosts") || "[]");
@@ -35,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Build grouped card
+    // Build grouped card with same size as Site Pages
     container.innerHTML = `
-      <div class="bg-white rounded-2xl shadow overflow-hidden max-w-xl mx-auto">
+      <div class="bg-white rounded-2xl shadow overflow-hidden">
         
         <!-- Gradient Heading -->
         <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg flex items-center justify-between">
@@ -54,22 +57,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const isOpened = openedPosts.includes(post.id);
             const daysAgo = getDaysAgo(post.timestamp);
             return `
-              <a href="/tamilgeo/post.html?id=${post.id}" class="block px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
-                <h3 class="text-lg font-semibold text-green-600 mb-1 truncate">${post.title}</h3>
-                <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-                  ${!isOpened ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>` : ""}
-                  <span>By ${post.author}</span>
-                  <span>|</span>
-                  <span>${post.category}</span>
-                  <span>|</span>
-                  <span>${daysAgo} ago</span>
+              <a href="/tamilgeo/post.html?id=${post.id}" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition open-post" data-id="${post.id}">
+                <div>
+                  <h3 class="text-lg font-semibold text-green-600 mb-1 truncate">${post.title}</h3>
+                  <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                    ${!isOpened ? `<span class="bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">NEW</span>` : ""}
+                    <span>By ${post.author}</span>
+                    <span>|</span>
+                    <span>${post.category}</span>
+                    <span>|</span>
+                    <span>${daysAgo} ago</span>
+                  </div>
                 </div>
+                <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
               </a>
             `;
           }).join("")}
         </div>
       </div>
     `;
+
+    // Replace feather icons
+    if (window.feather) feather.replace();
 
     // Handle dismiss-all button
     document.querySelector(".dismiss-all-btn").addEventListener("click", () => {
