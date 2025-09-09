@@ -1,202 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TamilGeo - Dashboard</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TamilGeo - Dashboard</title>
 
-  <!-- Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
-  
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
+<!-- Material Icons & Feather -->
+<script src="https://unpkg.com/feather-icons"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
 
-  <!-- Header Script -->
-  <script type="module" src="assets/js/header.js"></script>
+<!-- Font -->
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet"/>
 
-  <!-- Favicon -->
-  <link rel="icon" href="assets/img/favicon.ico" />
+<!-- Custom CSS -->
+<link rel="stylesheet" href="https://ppsmrt.github.io/tamilgeo/assets/css/style.css" />
+
+<!-- Header -->
+<script type="module" src="assets/js/header.js"></script>
+<link rel="icon" href="assets/img/favicon.ico"/>
+<style>
+  body { font-family: 'Baloo 2', cursive; background-color: #f3f4f6; }
+  .stat-card:hover { transform: scale(1.05); transition: 0.3s; }
+  .page-link:hover { background-color: #f9fafb; }
+</style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="flex flex-col min-h-screen">
 
-  <!-- Header placeholder -->
-  <header id="site-header"></header>
+<!-- Header -->
+<div id="header"></div>
 
-  <main class="flex-1 p-6 sm:p-10 bg-white-50">
+<main class="flex-1 p-6 sm:p-10">
 
-  <!-- Card Wrapper -->
-  <div class="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 p-6 mb-6">
-  <div class="flex items-center justify-between">
-    <div>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900" id="fullname">
-        Loading...
-      </h1>
-      <p class="text-gray-500 text-lg">Welcome back 👋</p>
-    </div>
-
-    <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
-      <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
+  <!-- Welcome Card -->
+  <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 id="fullname" class="text-3xl sm:text-4xl font-extrabold text-gray-900">Loading...</h1>
+        <p class="text-gray-500 text-lg">Welcome back 👋</p>
+      </div>
+      <div class="w-14 h-14 rounded-full overflow-hidden border-2 border-green-400 shadow-md">
+        <img src="https://via.placeholder.com/150" alt="Profile" class="w-full h-full object-cover">
+      </div>
     </div>
   </div>
-</div>
 
-  <!-- Stat Cards -->
-  <div class="grid grid-cols-2 gap-6 mb-12">
-    <div class="p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl hover:scale-105 transition-transform">
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-12">
+    <div class="stat-card p-6 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 text-white shadow-xl">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-medium">Likes</h2>
-          <p class="text-3xl font-bold mt-2">0</p>
+          <p id="likesCount" class="text-3xl font-bold mt-2">0</p>
         </div>
-        <i data-feather="heart" class="w-10 h-10 opacity-80"></i>
+        <span class="material-icons text-4xl opacity-80">favorite</span>
       </div>
     </div>
-
-    <div class="p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="stat-card p-6 rounded-2xl bg-gradient-to-br from-red-400 to-red-600 text-white shadow-xl">
       <div class="flex items-center justify-between">
         <div>
-          <h2 class="text-lg font-medium">Report</h2>
-          <p class="text-3xl font-bold mt-2">0</p>
+          <h2 class="text-lg font-medium">Reports</h2>
+          <p id="reportsCount" class="text-3xl font-bold mt-2">0</p>
         </div>
-        <i data-feather="alert-circle" class="w-10 h-10 opacity-80"></i>
+        <span class="material-icons text-4xl opacity-80">report_problem</span>
       </div>
     </div>
-
-    <div class="p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="stat-card p-6 rounded-2xl bg-gradient-to-br from-yellow-400 to-yellow-600 text-white shadow-xl">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-medium">Pending</h2>
-          <p class="text-3xl font-bold mt-2">0</p>
+          <p id="pendingCount" class="text-3xl font-bold mt-2">0</p>
         </div>
-        <i data-feather="dollar-sign" class="w-10 h-10 opacity-80"></i>
+        <span class="material-icons text-4xl opacity-80">hourglass_top</span>
       </div>
     </div>
-
-    <div class="p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl hover:scale-105 transition-transform">
+    <div class="stat-card p-6 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 text-white shadow-xl">
       <div class="flex items-center justify-between">
         <div>
           <h2 class="text-lg font-medium">Approved</h2>
-          <p class="text-3xl font-bold mt-2">None</p>
+          <p id="approvedCount" class="text-3xl font-bold mt-2">0</p>
         </div>
-        <i data-feather="calendar" class="w-10 h-10 opacity-80"></i>
+        <span class="material-icons text-4xl opacity-80">check_circle</span>
       </div>
     </div>
   </div>
 
-<!-- Site Pages -->
-<div class="bg-white rounded-2xl shadow overflow-hidden">
-  
-  <!-- Gradient Heading -->
-  <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg">
-    Site Pages
+  <!-- Site Pages -->
+  <div class="bg-white rounded-2xl shadow overflow-hidden mb-8">
+    <div class="px-5 py-4 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white font-semibold text-lg">Site Pages</div>
+    <div class="divide-y">
+      <a href="about" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">info</i><span>About Us</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="contact" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">contacts</i><span>Contact Us</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="donate" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">paid</i><span>Donate Us</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="disclaimer" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">warning</i><span>Disclaimer</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="privacy" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">shield</i><span>Privacy Policy</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="terms" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-green-600">description</i><span>Terms & Conditions</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+    </div>
   </div>
 
-  <!-- Links -->
-  <div class="divide-y">
-    <a href="/tamilgeo/about" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-circle-exclamation text-green-600"></i>
-        <span>About Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-
-    <a href="/tamilgeo/contact" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-user-tie text-green-600"></i>
-        <span>Contact Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-
-    <a href="/tamilgeo/donate" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-dollar-sign text-green-600"></i>
-        <span>Donate Us</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-
-    <a href="/tamilgeo/disclaimer" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-triangle-exclamation text-green-600"></i>
-        <span>Disclaimer</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-
-    <a href="/tamilgeo/privacy" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-shield text-green-600"></i>
-        <span>Privacy Policy</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-
-    <a href="/tamilgeo/terms" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-desktop text-green-600"></i>
-        <span>Terms & Conditions</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
-  </div>
-</div>
-
-<!-- Account & Settings -->
-<div class="bg-white rounded-2xl shadow overflow-hidden mt-8"> <!-- 👈 Added mt-8 -->
-  
-  <!-- Gradient Heading -->
-  <div class="px-5 py-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white font-semibold text-lg">
-    Account & Settings
+  <!-- Account & Settings -->
+  <div class="bg-white rounded-2xl shadow overflow-hidden mb-12">
+    <div class="px-5 py-4 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white font-semibold text-lg">Account & Settings</div>
+    <div class="divide-y">
+      <a href="edit-profile" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-blue-600">edit</i><span>Edit Profile</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="change-password" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-blue-600">key</i><span>Change Password</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+      <a href="#" id="logoutLink" class="page-link flex items-center justify-between px-5 py-4">
+        <div class="flex items-center gap-3"><i class="material-icons text-blue-600">logout</i><span>Log Out</span></div>
+        <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
+      </a>
+    </div>
   </div>
 
-  <!-- Links -->
-  <div class="divide-y">
-    <a href="/tamilgeo/edit-profile" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-user-pen text-blue-600"></i>
-        <span>Edit Profile</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+</main>
 
-    <a href="/tamilgeo/change-password" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-key text-blue-600"></i>
-        <span>Change Password</span>
-      </div>
-      <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-    </a>
+<!-- Footer -->
+<div id="footer"></div>
 
-    <a href="#" id="logoutLink" class="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
-  <div class="flex items-center gap-3">
-    <i class="fa-solid fa-right-from-bracket text-blue-600"></i>
-    <span>Log Out</span>
-  </div>
-  <i data-feather="chevron-right" class="w-5 h-5 text-gray-400"></i>
-</a>
-  </div>
-</div>
+<!-- Firebase + Dashboard Script -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+import { initFooter } from './assets/js/footer.js';
 
-<!-- Footer Script -->
-  <script type="module">
-    import { initFooter } from './assets/js/footer.js';
-    initFooter();
-  </script>
-  
-  <!-- Feed Script -->
-  <script type="module" src="assets/js/dashboard.js"></script>
+// Initialize Footer
+initFooter();
 
-  <!-- Feather Icons Init -->
-  <script>
-    feather.replace();
-  </script>
+// Firebase Config (Your Current Firebase)
+const firebaseConfig = {
+  apiKey: "AIzaSyB9GaCbYFH22WbiLs1pc_UJTsM_0Tetj6E",
+  authDomain: "tnm3ulive.firebaseapp.com",
+  databaseURL: "https://tnm3ulive-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tnm3ulive",
+  storageBucket: "tnm3ulive.firebasestorage.app",
+  messagingSenderId: "80664356882",
+  appId: "1:80664356882:web:c8464819b0515ec9b210cb",
+  measurementId: "G-FNS9JWZ9LS"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const likesEl = document.getElementById('likesCount');
+const reportsEl = document.getElementById('reportsCount');
+const pendingEl = document.getElementById('pendingCount');
+const approvedEl = document.getElementById('approvedCount');
+const fullnameEl = document.getElementById('fullname');
+
+// Example: Fetch Dashboard Stats
+onValue(ref(db, 'dashboard'), snapshot => {
+  const data = snapshot.val() || {};
+  likesEl.textContent = data.likes || 0;
+  reportsEl.textContent = data.reports || 0;
+  pendingEl.textContent = data.pending || 0;
+  approvedEl.textContent = data.approved || 'None';
+  fullnameEl.textContent = data.fullname || 'Admin';
+});
+
+// Logout
+document.getElementById('logoutLink').addEventListener('click', e => {
+  e.preventDefault();
+  // Implement your logout logic
+  alert('Logged out successfully!');
+});
+
+// Feather icons replacement
+feather.replace();
+</script>
+
 </body>
 </html>
